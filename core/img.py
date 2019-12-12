@@ -47,8 +47,8 @@ class ImagePlus(Array):
     #     #     self._meta[key] = val
     #     self._meta = meta
 
-    # def snapshot(self):
-    #     self._meta["snap"] = asarray(self).copy()
+    def take_snap(self):
+        self._meta["snap"] = asarray(self).copy()
 
     # def get_msk(self, mode='in'):
     #     if self.roi==None:return None
@@ -90,11 +90,16 @@ class ImagePlus(Array):
     #         self.img[:], self.snap[:] = self.snap, buf
 
 if __name__ == "__main__":
-    im = np.zeros([3, 3])
+    im = np.zeros([3, 4])
     ips = ImagePlus(im, {"a":123, "b":234})
 
+    # 经过asarray()后的im，丢失meta属性，类型恢复为
     im2 = asarray(ips)
     print(">> type of asarray(ips): ", type(im2))
+
+    # 简单的np.ndarray操作也会替换源对象
+    ips2 = ips.reshape([4,3])
+    print(">> type of asarray(ips): ", type(ips2))
 
     ips[0][0] = 1
     print("ips.view: ", ips)

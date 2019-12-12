@@ -4,10 +4,11 @@ import os.path
 import uuid
 import json
 from datetime import date
+import rsa
 
-from core.rcp.pub.routine import TcpClient
+from util.sock.routine import TcpClient
 from .regm.protocal import RegCodeTrans
-from .regm.encrypt import RsaCrypto, rsa
+from .regm.encrypt import RsaCrypto
 
 
 class ClientCrypto(RsaCrypto):
@@ -23,7 +24,7 @@ VrNkR/XfAv1NwzaOneSnSc82CY65kgu1/cB8Tm9+dpT8/qigQcai38QTZ+Vwj+E4
 
 #####################################################################
 
-class LicenseManager:
+class LicenseChecker:
     def __init__(self):
         self.crypto = ClientCrypto()
         self.dict_license = None
@@ -116,12 +117,12 @@ IPADDR = settings.get("server", "ipaddr")
 PORT = int(settings.get("server", "port"))
 PATH_CERT = settings.get("path", "certificate")
 
-checker = LicenseManager()
+checker = LicenseChecker()
 checker.setup_server(IPADDR, PORT, PATH_CERT)
 
 
 if __name__ == "__main__":
-    mngr = LicenseManager()
+    mngr = LicenseChecker()
     mngr.setup_server("122.51.162.231", 31618, "./certificate.txt")
     state, reason = mngr.check("experienced")
 

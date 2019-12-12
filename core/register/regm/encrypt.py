@@ -1,8 +1,5 @@
 import os
 import base64
-
-from util.expy import path_expand
-path_expand("runtime", __file__)
 import rsa
 
 from util.log import getLogger

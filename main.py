@@ -27,13 +27,15 @@ def getopt():
     import argparse
 
     parser = argparse.ArgumentParser("Python3-exe Template", description="")
-    parser.add_argument("core", action="store", help="which application to launch")
-    parser.add_argument("-l", "--loglevel", action="store", type=int, help="set the logging level")
+    parser.add_argument("core", action="store", help="选择执行的app(传入core.py路径)")
+    parser.add_argument("-r", "--runtime", action="store_true", help="使用系统python环境运行")
+    parser.add_argument("-l", "--loglevel", action="store", type=int, help="设置logging等级")
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     import logging
+    from util.expy import site_expand
     from util.base import import_plugin
 
     args = getopt()
@@ -43,10 +45,29 @@ if __name__ == '__main__':
     logging.basicConfig(level=args.loglevel)  # 更改全局默认的Level，仅用于未指定Level的logger对象
 
     #####################################################################
+    py_lib_dir = "runtime/win64/Lib"
+    py_lib_default = py_lib_dir + "/site-packages"
+    site_expand(py_lib_default)
+
     MAP_APP = {
-        "triage": "app/triage/core.py",
+        "triage": {
+            "path_core": "app/triage/core.py",
+            "lib_expand": ["$dir/rsa"]
+        },
     }
 
-    path_app_core = MAP_APP[args.core] if args.core in MAP_APP else args.core
-    core = import_plugin(path_app_core)
+    def expand_lib_dir(lib_expand):
+        for path in lib_expand:
+            if path.startswith("$dir/"):
+                path = path.replace("$dir", py_lib_dir)
+            site_expand(path)
+
+    if args.core in MAP_APP:
+        path_core = MAP_APP[args.core]["path_core"]
+        lib_expand = MAP_APP[args.core]["lib_expand"]
+        expand_lib_dir(lib_expand)
+    else:
+        path_core = args.core
+
+    core = import_plugin(path_core)
     core.run()

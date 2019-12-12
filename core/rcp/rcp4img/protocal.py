@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 import numpy as np
-from ..pub.trans import TransBase, json2dict
+from util.sock.trans import TransBase, json2dict
 
 from util.imgio import bytes2ndarray, shape2size, shape2mode
 from util.gmgr import g

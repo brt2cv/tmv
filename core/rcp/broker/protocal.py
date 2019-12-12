@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from ..pub.trans import TransBase, json2dict, dict2json
+from util.sock.trans import TransBase, json2dict, dict2json
 
 from util.log import getLogger
 logger = getLogger()

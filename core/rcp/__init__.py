@@ -1,6 +1,6 @@
 # 默认获取rcp4img的客户端
 
-from .pub.routine import UdpClient, UdpServer
+from util.sock.routine import UdpClient, UdpServer
 from .rcp4img.protocal import RemoteImageQtTrans
 
 RCP4IMG_ADDR = "127.0.0.1"

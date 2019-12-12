@@ -21,14 +21,10 @@ def rgb2gray(im_arr):
         print("敬请期待")
     return im2
 
-
-def gray2rgb(im_arr):
-    im2 = im_arr.copy()
-    if Backend == "pillow":
-        pass
-    else:
-        print("敬请期待")
-    return im2
-
-
-
+# def gray2rgb(im_arr):
+#     im2 = im_arr.copy()
+#     if Backend == "pillow":
+#         pass
+#     else:
+#         print("敬请期待")
+#     return im2

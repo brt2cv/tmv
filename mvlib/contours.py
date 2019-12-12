@@ -245,13 +245,14 @@ class ContoursCollection:
             cnt = Contour(array)
             self.list_cnts.append(cnt)
 
-    def traverse(self, str_method):
+    def traverse(self, method: str):
         """ 回调格式: callback(cnt) --> any
             return: list of any
         """
         list_created = []
         for cnt in self.list_cnts:
-            callback = eval(f"cnt.{str_method}")
+            # callback = eval(f"cnt.{str_method}")
+            callback = getattr(cnt, method)
             created = callback()
             if created is None:
                 continue
@@ -289,7 +290,8 @@ class ContoursCollection:
 
         results = []
         for cnt in self.list_cnts:
-            callback = eval(f"cnt.{str_method}")
+            # callback = eval(f"cnt.{str_method}")
+            callback = getattr(cnt, method)
             value = callback()
             # if min_ <= value <= max_:
             #     results.append(cnt)
