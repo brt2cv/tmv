@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 import sys
-import os.path
+import os
 # 当使用Python-embed-runtime时，需要手动加载cwd至sys.path
-curr_dir = os.path.abspath(".")  # os.path.curdir
-if curr_dir not in sys.path:
-    print(f"expy: 动态加载Lib目录【{curr_dir}】")
-    sys.path.append(curr_dir)
+root = os.path.abspath("../..")  # os.path.curdir
+if root not in sys.path:
+    print(f"expy: 动态加载Lib目录【{root}】")
+    sys.path.append(root)
+# os.chdir(root)
 
 from util.base import import_plugin
 from multiprocessing import freeze_support
@@ -24,7 +25,7 @@ from multiprocessing import freeze_support
 
 if __name__ == "__main__":
     freeze_support()  # pyinstaller "--onefile" mode 并不适用...
-    import app.demo.core  # 显示导入模块，用于pyinstaller导入模块
+    import app.demo.main  # 显示导入模块，用于pyinstaller导入模块
 
-    app_demo = import_plugin("app/demo/core.py")
+    app_demo = import_plugin("main.py", __file__)
     app_demo.run()

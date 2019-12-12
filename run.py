@@ -5,8 +5,8 @@
 # Purpose:
 # Author:       Bright Li
 # Modified by:
-# Created:      2019-11-14
-# Version:      [1.0.1]
+# Created:      2019-12-12
+# Version:      [2.0.1]
 # RCS-ID:       $$
 # Copyright:    (c)
 # Licence:
@@ -27,7 +27,7 @@ def getopt():
     import argparse
 
     parser = argparse.ArgumentParser("Python3-exe Template", description="")
-    parser.add_argument("core", action="store", help="选择执行的app(传入core.py路径)")
+    parser.add_argument("main", action="store", help="选择执行的app(传入main.py路径)")
     parser.add_argument("-r", "--runtime", action="store_true", help="使用系统python环境运行")
     parser.add_argument("-l", "--loglevel", action="store", type=int, help="设置logging等级")
     return parser.parse_args()
@@ -51,23 +51,23 @@ if __name__ == '__main__':
 
     MAP_APP = {
         "triage": {
-            "path_core": "app/triage/core.py",
+            "path_main": "app/triage/main.py",
             "lib_expand": ["$dir/rsa"]
         },
     }
 
-    def expand_lib_dir(lib_expand):
-        for path in lib_expand:
+    def expand_lib_dir(list_expand):
+        for path in list_expand:
             if path.startswith("$dir/"):
                 path = path.replace("$dir", py_lib_dir)
             site_expand(path)
 
-    if args.core in MAP_APP:
-        path_core = MAP_APP[args.core]["path_core"]
-        lib_expand = MAP_APP[args.core]["lib_expand"]
+    if args.main in MAP_APP:
+        path_main = MAP_APP[args.main]["path_main"]
+        lib_expand = MAP_APP[args.main]["lib_expand"]
         expand_lib_dir(lib_expand)
     else:
-        path_core = args.core
+        path_main = args.main
 
-    core = import_plugin(path_core)
-    core.run()
+    main = import_plugin(path_main)
+    main.run()
