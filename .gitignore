@@ -4,6 +4,7 @@ runtime/
 build/
 tmp/
 dist/
+user/
 __pycache__/
 
 *.user

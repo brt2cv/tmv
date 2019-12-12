@@ -1,0 +1,102 @@
+{
+	"build_systems":
+	[
+		{
+			"cmd":
+			[
+				"D:/Home/enpy/pylint/Scripts/python.exe",
+				"-u",
+				"$file"
+			],
+			"encoding": "cp936",
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Builder for PyMV",
+			"selector": "source.python",
+			"shell": true,
+			"working_dir": "$folder",
+			"variants":
+			[
+				{
+					"cmd":
+					[
+						"$folder/runtime/win64/Scripts/python",
+						"main.py",
+						"app/triage/core.py"
+					],
+					"name": "triage"
+				},
+				{
+					"cmd":
+					[
+						"$folder/runtime/win64/Scripts/python",
+						"main.py",
+						"OCRKit/core.py"
+					],
+					"name": "OCR-Kit"
+				},
+				{
+					"cmd":
+					[
+						"$folder/runtime/win64/Scripts/python",
+						"main.py",
+						"plugin/viewer/core.py"
+					],
+					"name": "MVTool-Plugin"
+				},
+				{
+					"cmd":
+					[
+						"$folder/runtime/win64/Scripts/python",
+						"main.py",
+						"DpmTool/core.py"
+					],
+					"name": "Herosys-DpmTool"
+				},
+				{
+					"name": "VirtualEnv Run Current File",
+					"cmd" : ["D:/Home/enpy/pylint/Scripts/python", "${file_path}/${file_base_name}.py"],
+					"working_dir": "$file_path"
+				},
+				{
+					"name": "MS-CMD Run",
+					"cmd" : ["start", "cmd", "/k", "python", "${file_path}/${file_base_name}.py"],
+					"encoding":"utf-8",
+					"working_dir": "$file_path"
+				}
+			]
+		},
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "\"/Home/enpy/pylint/Scripts/python.exe\" -u \"$file\""
+		}
+	],
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.pyc",
+				".gitignore"
+			],
+			"folder_exclude_patterns":
+			[
+				"__pycache__",
+				".vscode",
+				"runtime",
+				"tmp"
+			],
+			"path": "D:\\Home\\workspace\\pymv"
+		}
+	],
+	"settings":
+	{
+		"default_new_file_syntax": "Packages/Text/Plain_text.tmLanguage",
+		"rulers":
+		[
+			80
+		],
+		"use_current_file_syntax": false
+	}
+}

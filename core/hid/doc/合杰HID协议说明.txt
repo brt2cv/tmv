@@ -1,0 +1,52 @@
+【常规协议】（【通讯协议头】+【条码数据】+【当前帧图像数据】+【条码坐标数据】+【帧结束标志】）
+{
+	【通讯协议头】定长 64 Bytes：
+	typedef struct {
+			0	unsigned int Header;//固定帧头 0x802e2e80
+			4	unsigned int Crc32; //通讯协议头的crc值，从下一个成员开始计算，不计算Header和Crc32
+			8	unsigned short BarCodeLen;//条码的长度
+			10	unsigned char BarCodeType;//条码的类型数据
+			11	unsigned char ImageType; //图像的格式
+			12	unsigned short ImageWidth; //图像的宽
+			14	unsigned short ImageHeight; //图像的高
+			16	unsigned int ImageSize;  //图像数据区的长度
+			20	unsigned int DecodeTime;//解码时间 ms 作为单位
+			24	unsigned int DataSwitch;//传送数据项开关 24-28
+			28	unsigned int ParaCrc32;//参数区的CRC，重要。检测参数区数据是否正确，因为参数不能错
+			32	unsigned int ParaAction;//需要设备执行的动作
+			36	unsigned int DeviceID; //设备序列号
+			40	unsigned char BarCodeNum; //条码的个数
+			41	unsigned char Rfu[23]; //保留区域
+	}ProtocolHeaderStu;
+
+	【参数区】256 Bytes
+
+	【条码数据】可变长度 x Bytes：
+	设备读取到条码时候返回的条码数据，长度在通讯协议头里面有说明
+
+	【当前帧图像数据】可变长度 y Bytes:
+	当前设备采集到的图像数据，图像的大小格式信息在通讯协议头里面有说明，目前只支持IMAGE_TYPE_Gray_8Bit，格式为8位的灰度数据
+
+	【条码坐标数据】可变长度 z Bytes：
+	设备读取到条码时候返回的条码坐标信息，长度视条码个数而定，一个条码返回4个点坐标(32Bytes)，每个点坐标占用2个int型空间(8Bytes)
+
+	【帧结束标志】定长 4 Bytes ：2e 80 80 2e 
+}
+
+【特殊协议】(有几个特殊命令)
+
+【开始连接时候的读参数命令】定长 8 Bytes : 0x2e 0x80 0x80 0x2e 'R' 'e' 'a' 'd'
+
+下面的为物理串口连接时候的特殊指令:
+
+上位机到设备-》
+【退出调试模式命令】定长 7 Bytes : '2' '3' '2' 'C' 'M' 'D' '0' 
+【切换调试接口为HID命令】定长 7 Bytes : '2' '3' '2' 'C' 'M' 'D' '2' 
+【开启物理串口调试模式，并且波特率设置成9600】定长 7 Bytes : '2' '3' '2' 'C' 'M' 'D' '3' 
+【开启物理串口调试模式，并且波特率设置成19200】定长 7 Bytes : '2' '3' '2' 'C' 'M' 'D' '4' 
+【开启物理串口调试模式，并且波特率设置成38400】定长 7 Bytes : '2' '3' '2' 'C' 'M' 'D' '5' 
+【开启物理串口调试模式，并且波特率设置成57600】定长 7 Bytes : '2' '3' '2' 'C' 'M' 'D' '6' 
+【开启物理串口调试模式，并且波特率设置成115200】定长 7 Bytes : '2' '3' '2' 'C' 'M' 'D' '7' 
+
+设备到上位机-》
+【设备处于连接状态回传命令】定长 7 Bytes : '2' '3' '2' 'S' 'E' 'T' '1'
