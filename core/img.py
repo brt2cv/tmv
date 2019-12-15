@@ -2,6 +2,8 @@ import numpy as np
 from imageio.core.util import Array, asarray
 # asarray = np.asarray
 
+from util.imgio import guess_mode
+
 class ImagePlus(Array):
     """ ArrayPlus(array, meta=None)
 
@@ -37,15 +39,15 @@ class ImagePlus(Array):
         declare_member("mark")
         declare_member("contours", [])
 
-    # def _copy_meta(self, meta):
-    #     """ Make a 2-level deep copy of the meta dictionary.
-    #     """
-    #     # self._meta = Dict()
-    #     # for key, val in meta.items():
-    #     #     if isinstance(val, dict):
-    #     #         val = Dict(val)  # Copy this level
-    #     #     self._meta[key] = val
-    #     self._meta = meta
+    def _copy_meta(self, meta):
+        """ Make a 2-level deep copy of the meta dictionary.
+        """
+        # self._meta = Dict()
+        # for key, val in meta.items():
+        #     if isinstance(val, dict):
+        #         val = Dict(val)  # Copy this level
+        #     self._meta[key] = val
+        self._meta = meta
 
     def take_snap(self):
         self._meta["snap"] = asarray(self).copy()
@@ -67,6 +69,10 @@ class ImagePlus(Array):
     def get_snap(self):
         snapshot = self._meta["snap"]
         return snapshot
+
+    def get_mode(self):
+        mode = guess_mode(self)
+        return mode
 
     def reset(self):
         """ 使用快照恢复图像 """

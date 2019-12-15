@@ -20,8 +20,8 @@
 					"cmd":
 					[
 						"$folder/runtime/win64/Scripts/python",
-						"main.py",
-						"app/triage/core.py"
+						"run",
+						"triage"
 					],
 					"name": "triage"
 				},
@@ -29,8 +29,8 @@
 					"cmd":
 					[
 						"$folder/runtime/win64/Scripts/python",
-						"main.py",
-						"OCRKit/core.py"
+						"run",
+						"ocrkit"
 					],
 					"name": "OCR-Kit"
 				},
@@ -38,30 +38,19 @@
 					"cmd":
 					[
 						"$folder/runtime/win64/Scripts/python",
-						"main.py",
-						"plugin/viewer/core.py"
+						"run",
+						"mvtool"
 					],
-					"name": "MVTool-Plugin"
+					"name": "MVTool-MainWnd"
 				},
 				{
 					"cmd":
 					[
 						"$folder/runtime/win64/Scripts/python",
-						"main.py",
-						"DpmTool/core.py"
+						"run",
+						"app/gui/main.py"
 					],
-					"name": "Herosys-DpmTool"
-				},
-				{
-					"name": "VirtualEnv Run Current File",
-					"cmd" : ["D:/Home/enpy/pylint/Scripts/python", "${file_path}/${file_base_name}.py"],
-					"working_dir": "$file_path"
-				},
-				{
-					"name": "MS-CMD Run",
-					"cmd" : ["start", "cmd", "/k", "python", "${file_path}/${file_base_name}.py"],
-					"encoding":"utf-8",
-					"working_dir": "$file_path"
+					"name": "GUI-Demo"
 				}
 			]
 		},

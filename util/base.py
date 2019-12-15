@@ -3,8 +3,8 @@
 # Usage:
 # Author:       Bright Li
 # Modified by:
-# Created:      2019-12-11
-# Version:      [0.1.0]
+# Created:      2019-12-13
+# Version:      [0.1.1]
 # RCS-ID:       $$
 # Copyright:    (c) Bright Li
 # Licence:
@@ -12,6 +12,7 @@
 
 import os.path
 import sys
+from .debug import get_caller_path
 
 # from .log import make_logger
 # logger = make_logger()
@@ -30,6 +31,12 @@ if isPy3:
 
 def isDir(f):
     return isPath(f) and os.path.isdir(f)
+
+def rpath2curr(f):
+    """ 这个命名可能并不恰当，表示相对__file__的文件，转为绝对路径 """
+    path_caller = get_caller_path()
+    path_dir = os.path.dirname(path_caller)
+    return os.path.join(path_dir, f)
 
 #####################################################################
 
@@ -74,15 +81,17 @@ class IPluginObject:
     def run(self, *args, **kwargs):
         pass
 
-def import_plugin(module, package=None, **kwargs):
+def import_plugin(module, **kwargs):
     """ module:
           - 'top/package/module.py'
           - "top.package.module"
+        kwargs:
+          - "package": None
     """
     if isinstance(module, str):
         if module.find("/") >= 0 or module.rfind(".py") >= 0:
             module = path2module(module)
-        module = import_module(module, package)
+        module = import_module(module, kwargs.get("package"))
 
     plugin_obj = module.export_plugin(**kwargs)
     return plugin_obj

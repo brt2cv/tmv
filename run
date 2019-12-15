@@ -6,7 +6,7 @@
 # Author:       Bright Li
 # Modified by:
 # Created:      2019-12-12
-# Version:      [2.0.1]
+# Version:      [2.0.2]
 # RCS-ID:       $$
 # Copyright:    (c)
 # Licence:
@@ -50,6 +50,9 @@ if __name__ == '__main__':
     site_expand(py_lib_default)
 
     MAP_APP = {
+        "gui": {
+            "path_main": "app/gui/main.py"
+        },
         "triage": {
             "path_main": "app/triage/main.py",
             "lib_expand": ["$dir/rsa"]
@@ -64,7 +67,7 @@ if __name__ == '__main__':
 
     if args.main in MAP_APP:
         path_main = MAP_APP[args.main]["path_main"]
-        lib_expand = MAP_APP[args.main]["lib_expand"]
+        lib_expand = MAP_APP[args.main].get("lib_expand", [])
         expand_lib_dir(lib_expand)
     else:
         path_main = args.main

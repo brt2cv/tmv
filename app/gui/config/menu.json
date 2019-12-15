@@ -1,0 +1,67 @@
+{"menubar": [
+    {
+        "name": "File",
+        "members": [
+            {
+                "name": "Open",
+                "description": "打开图像",
+                "icon": "app/gui/res/open.png",
+                "shortcut": "Ctrl+O",
+                "plugin": {
+                    "path": "plugins/files.py",
+                    "class": "OpenImageFile"
+                }
+            },
+            {
+                "name": "Save",
+                "description": "打开图像",
+                "icon": "app/gui/res/save.png",
+                "shortcut": "Ctrl+S"
+            }
+        ]
+    },
+    {
+        "name": "Edit",
+        "members": []
+    },
+    {
+        "name": "Demo",
+        "members": [
+            {
+                "name": "Plugin",
+                "plugin": {
+                    "path": "plugins/demo.py",
+                    "class": "DemoDlg"
+                },
+                "icon": "app/gui/res/save.png"
+            }
+        ]
+    },
+    {
+        "name": "Help",
+        "members": []
+    }
+],
+"toolbar": [
+    {
+        "name": "Default",
+        "members": [
+            {
+                "name": "Open",
+                "description": "打开图像",
+                "icon": "app/gui/res/open.png",
+                "shortcut": "Ctrl+O",
+                "plugin": {
+                    "path": "plugins/files.py",
+                    "class": "OpenImageFile"
+                }
+            },
+            {
+                "name": "Save",
+                "description": "打开图像",
+                "icon": "app/gui/res/save.png",
+                "shortcut": "Ctrl+S"
+            }
+        ]
+    }
+]}

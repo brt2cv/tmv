@@ -4,8 +4,8 @@
 # Usage:
 # Author:       Bright Li
 # Modified by:
-# Created:      2019/11/26
-# Version:      [1.1.0]
+# Created:      2019-12-13
+# Version:      [1.1.1]
 # RCS-ID:       $$
 # Copyright:    (c) Bright Li
 # Licence:
@@ -44,11 +44,13 @@ if os.path.splitext(__file__)[1] != '.py':  # pyc or something...
 else:
     from PyQt5.uic import loadUi as _loadUi
 
-def loadUi(uifile_rpath, instance):
+def loadUi(uifile, instance, rpath=True):
     """ uifile相对当前模块的rpath
         instance固定传入self即可。
     """
-    path_caller = get_caller_path()
-    path_dir = os.path.dirname(path_caller)
-    uifile = os.path.join(path_dir, uifile_rpath)
+    if rpath:
+        path_caller = get_caller_path()
+        path_dir = os.path.dirname(path_caller)
+        uifile = os.path.join(path_dir, uifile)
+
     _loadUi(uifile, instance)

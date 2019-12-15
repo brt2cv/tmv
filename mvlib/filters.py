@@ -1,7 +1,10 @@
 
 Backend = "opencv"
 
-if Backend == "pillow":
+if Backend == "numpy":
+    pass
+
+elif Backend == "pillow":
     pass
 
 elif Backend == "skimage":
@@ -22,7 +25,10 @@ def threshold(im_arr, thresh, maxval=255, type_=0, otsu=False):
             cv2.THRESH_TOZERO
             cv2.THRESH_TOZERO_INV
     """
-    if Backend == "pillow":
+    if Backend == "numpy":
+        im2 = ((im_arr > thresh) * 255).astype("uint8")
+
+    elif Backend == "pillow":
         pass
 
     elif Backend == "opencv":
