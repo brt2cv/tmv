@@ -25,7 +25,8 @@ from multiprocessing import freeze_support
 
 if __name__ == "__main__":
     freeze_support()  # pyinstaller "--onefile" mode 并不适用...
-    import app.gui.main  # 显示导入模块，用于pyinstaller导入模块
+    # import app.mvtool.main  # 显示导入模块，用于pyinstaller导入模块
+    # 或者通过build.spec::hiddenimports指定隐式导入模块
 
     app_demo = import_plugin("main.py", package=__file__)
     app_demo.run()

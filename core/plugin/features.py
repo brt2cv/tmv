@@ -6,6 +6,12 @@ class FeatureTypeError(Exception):
 
 
 class IpsFeature:
+    mode2str = {
+        "L": "gray",
+        "RGB": "rgb",
+        "RGBAE": "rgba"
+    }
+
     def __init__(self, properties: dict):
         """
         Example of properties: {
@@ -40,24 +46,26 @@ class IpsFeature:
     def tolist(self):
         """ 用于转换为ImagePy::Filter::note格式 """
 
-    def check(self, ips):
+    def check(self, im_arr):
         """ return True if OK """
-        if ips is None:
+        if im_arr is None:
             warning = 'No image selected!'
             utils.alert(warning)
             raise FeatureTypeError(warning)
             # return
 
         mode = self.property.get("mode")
-        if mode and mode != guess_mode(ips):
-            warning = f'Mode error: 【{mode}】 image is required'
-            utils.alert(warning)
-            raise FeatureTypeError(warning)
-            # return
+        if mode:
+            curr_mode = self.mode2str[guess_mode(im_arr)]
+            if mode != curr_mode:
+                warning = f'Mode error: 【{mode}】 image is required, current image is 【{curr_mode}】'
+                utils.alert(warning)
+                raise FeatureTypeError(warning)
+                # return
 
         dtype = self.property.get("dtype")
-        if dtype and dtype != ips.dtype:
-            warning = f'Dtype error: 【{dtype}】 image is required'
+        if dtype and dtype != im_arr.dtype:
+            warning = f'Dtype error: 【{dtype}】 image is required, current image is 【{im_arr.dtype}】'
             utils.alert(warning)
             raise FeatureTypeError(warning)
             # return

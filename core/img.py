@@ -1,8 +1,7 @@
 import numpy as np
 from imageio.core.util import Array, asarray
-# asarray = np.asarray
 
-from util.imgio import guess_mode
+# asarray = np.asarray
 
 class ImagePlus(Array):
     """ ArrayPlus(array, meta=None)
@@ -32,11 +31,9 @@ class ImagePlus(Array):
         def declare_member(name, value=None):
             if name not in self._meta:
                 self._meta[name] = value
-        declare_member("snap", asarray(self).copy())  # 图像快照
+        # declare_member("snap", asarray(self).copy())
         declare_member("roi")
-        declare_member("msk")  # 由选区自动生成
-        declare_member("lut")  # 索引表
-        declare_member("mark")
+        declare_member("mask")  # 由选区自动生成
         declare_member("contours", [])
 
     def _copy_meta(self, meta):
@@ -49,8 +46,9 @@ class ImagePlus(Array):
         #     self._meta[key] = val
         self._meta = meta
 
-    def take_snap(self):
-        self._meta["snap"] = asarray(self).copy()
+    # @property
+    # def mode(self):
+    #     return guess_mode(self)
 
     # def get_msk(self, mode='in'):
     #     if self.roi==None:return None
@@ -66,34 +64,6 @@ class ImagePlus(Array):
     #         self.mskmode=mode
     #     return self.msk
 
-    def get_snap(self):
-        snapshot = self._meta["snap"]
-        return snapshot
-
-    def get_mode(self):
-        mode = guess_mode(self)
-        return mode
-
-    def reset(self):
-        """ 使用快照恢复图像 """
-        snapshot = self._meta["snap"]
-        # if snapshot is not None:
-        #     if msk and not self.get_msk('out') is None:
-        #         msk = self.get_msk('out')
-        #         self.imgs[self.cur][msk] = self.snap[msk]
-        #     else:
-        #         self.imgs[self.cur][:] = self.snap
-        return ImagePlus(snapshot, self._meta)
-
-    # def swap(self):
-    #     """ 交换快照和前景 """
-    #     print(type(self.snap), type(self.imgs[self.cur]), self.cur)
-    #     if self.snap is None:return
-    #     if isinstance(self.imgs, list):
-    #         self.snap, self.imgs[self.cur] = self.imgs[self.cur], self.snap
-    #     else:
-    #         buf = self.img.copy()
-    #         self.img[:], self.snap[:] = self.snap, buf
 
 if __name__ == "__main__":
     im = np.zeros([3, 4])
@@ -113,3 +83,95 @@ if __name__ == "__main__":
 
     ips = ips.reset()
     print("ips_reset.view: ", ips)
+
+
+#####################################################################
+from util.imgio import imread
+class ImageContainer:
+    """ 用于图像的收发管理 """
+    def get_image(self):
+        """ 返回一张ndarry图像 """
+        return self.im_arr
+
+    def set_image(self, im_arr):
+        """ 设值Canvas图像 """
+        self.im_arr = im_arr
+
+    def load_image(self, path_file):
+        """ 对get_image()的简单封装 """
+        im_arr = imread(path_file)
+        self.set_image(im_arr)
+
+
+# import numpy as np
+from .undo import UndoStack
+class ImageManager(ImageContainer):
+    """ 用于图像的多版本管理，包括：
+        * stack: 每次执行图像操作的processing（而不是存储快照）
+        * snap: 用于存储origin图像，用于连续测试时获取原始图像
+
+        目标：尽可能使其接口接近ImagePlus，无缝对接canvas
+    """
+    def __init__(self):
+        self.curr = None
+        self.snap = None
+        self.stack = UndoStack()
+
+    def take_snap(self):
+        self.snap = self.curr.copy()
+
+    def reset(self):
+        self.curr = self.snap.copy()
+
+    def get_image(self):
+        return self.curr
+
+    def get_snap(self):
+        return self.snap
+
+    def set_image(self, im_arr):
+        """ 注意：Manager中set_image() 只是临时显示图像
+            如确定存储图像，应使用commit()
+        """
+        assert isinstance(im_arr, np.ndarray), f"未识别的图像格式：【{type(im_arr)}】"
+        if isinstance(im_arr, ImagePlus):
+            self.curr = im_arr
+        else:
+            self.curr = ImagePlus(im_arr)
+
+    def load_image(self, path_file):
+        im_arr = imread(path_file)
+        self.commit(im_arr)
+
+    def commit(self, ips):
+        """ 类似set_image()，但会增加take_snap()操作，并写入UndoStack """
+        cmd = ImgSnapCommand(self.curr, ips)
+        self.stack.commit(cmd)
+
+        self.set_image(ips)
+        self.take_snap()
+
+    def undo(self):
+        """ 撤销操作 """
+        self.curr = self.stack.undo()
+        self.take_snap()
+
+    def redo(self):
+        self.curr = self.stack.redo()
+        self.take_snap()
+
+    def history(self):
+        """ 显示undostack列表 """
+
+    def dumps(self):
+        """ 导出commit的脚本形式 """
+
+
+from .undo import UndoCommand
+class ImgSnapCommand(UndoCommand):
+    def __init__(self, old, new):
+        self.old = old
+        self.new = new
+
+    def exacute(self):
+        pass

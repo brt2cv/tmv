@@ -6,7 +6,7 @@ from util.base import import_plugin, singleton
 from util.gmgr import g
 from .plugin.features import FeatureTypeError
 
-from .plugin import Plugin, DialogPlugin
+from .plugin import Filter, DialogFilter
 @singleton
 class PluginManager:
     def __init__(self):
@@ -29,9 +29,9 @@ class PluginManager:
             return key
 
         # factory
-        if issubclass(plug_cls, DialogPlugin):
+        if issubclass(plug_cls, DialogFilter):
             instance = plug_cls(g.get("mwnd"))
-        elif issubclass(plug_cls, Plugin):
+        elif issubclass(plug_cls, Filter):
             instance = plug_cls()
         else:
             raise Exception(f"未知的Plugin类型：【{plug_cls}】")

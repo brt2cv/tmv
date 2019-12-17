@@ -23,7 +23,7 @@
 						"run",
 						"triage"
 					],
-					"name": "triage"
+					"name": "Triage"
 				},
 				{
 					"cmd":
@@ -39,9 +39,9 @@
 					[
 						"$folder/runtime/win64/Scripts/python",
 						"run",
-						"mvtool"
+						"tmv"
 					],
-					"name": "MVTool-MainWnd"
+					"name": "MVTool"
 				},
 				{
 					"cmd":

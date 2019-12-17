@@ -50,8 +50,8 @@ if __name__ == '__main__':
     site_expand(py_lib_default)
 
     MAP_APP = {
-        "gui": {
-            "path_main": "app/gui/main.py"
+        "tmv": {
+            "path_main": "app/mvtool/main.py"
         },
         "triage": {
             "path_main": "app/triage/main.py",

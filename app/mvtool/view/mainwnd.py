@@ -49,10 +49,8 @@ class MainWnd(QWidget):
         # Ctrl-Zone:
         # self._setup_ctrl_zone()
 
-        from core.ui.scroll_canvas import ImageScrollCanvasWithPainter
-        # from core.ui.scroll_canvas import ImageScrollCanvas
-
-        self.canvas = ImageScrollCanvasWithPainter(self)
+        from core.canvas.viewer_scroll import ScrollCanvas, DrawableScrollCanvas
+        self.canvas = ScrollCanvas(self, container="mgr")
         self.ly_show.addWidget(self.canvas)
 
         from util.gmgr import g
@@ -62,7 +60,7 @@ class MainWnd(QWidget):
 
     def _setup_ctrl(self):
         from util.qt5wx.wx_unit import UnitSlider
-        slider = UnitSlider(self, "阈值", val_range=[0, 255], isCheckbox=False)
+        slider = UnitSlider(self, "阈值", val_range=[0, 255], isCheckbox=True, isChecked=False)
         self.ly_ctrl.addWidget(slider)
 
     def save_data(self):

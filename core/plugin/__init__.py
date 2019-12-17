@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox
+from PyQt5.QtCore import pyqtSignal
 from .. import g, ImagePlus
 from .features import IpsFeature, FeatureTypeError
 
@@ -8,36 +9,41 @@ class Plugin:
         """ Plugin的运行函数 """
 
 
-class Plugin4ImgProcessing(Plugin):
+class Filter(Plugin):  # Plugin4ImgProcessing
     features = {}
 
-    def processing(self, ips):
+    def processing(self, im_arr):
         """ 处理图像 """
 
     def get_image(self):
         """ 获取需要处理的图像，需要子类实现 """
-        im_curr = g.get("canvas").get_image()
-        return im_curr
+        im_arr = g.get("canvas").get_image()
+        return im_arr
 
     def set_image(self, im_arr):
         """ 将处理完成的图像，更新到主界面 """
         g.get("canvas").set_image(im_arr)
+        self.update_canvas()
 
-    def check_features(self, ips):
+    def update_canvas(self):
+        # print(">>>", g.get("canvas"))
+        g.get("canvas").update()
+
+    def check_features(self, im_arr):
         """ if check error, raise FeatureTypeError """
         fts = IpsFeature(self.features)
-        fts.check(ips)
+        fts.check(im_arr)
 
     def run(self):
-        ips = self.get_image()
-        self.check_features(ips)
+        im_arr = self.get_image()
+        self.check_features(im_arr)
 
-        im2 = self.processing(ips)
-        ips2 = ImagePlus(im2, ips.meta)
-        self.set_image(ips2)
+        im2 = self.processing(im_arr)
+        self.set_image(im2)
 
 
-class DialogPlugin(QDialog, Plugin4ImgProcessing):
+# from core.mgr import ImageManager
+class DialogFilter(QDialog, Filter):
     # def __init__(self, parent, attach=None):
     #     """ parent为逻辑上的父类，成员变量可能需要调用parent中的member/method
     #         attach为Qt的UI父类。
@@ -48,9 +54,16 @@ class DialogPlugin(QDialog, Plugin4ImgProcessing):
         """ parent为Qt的UI父类
             与父类的通讯，应由pyqtSignal负责，而非调用父类实例
         """
+        super().__init__(parent)
+        self.setup_ui()
+
+    # def _declare(self):
+    #     self.im_mgr
+    #     self.im_arr
+
+    def setup_ui(self):
         from util.qt5 import loadUi
 
-        super().__init__(parent)
         loadUi("template/base.ui", self)
         self.buttonBox.clicked.connect(self.on_btn_clicked)
 
@@ -60,9 +73,6 @@ class DialogPlugin(QDialog, Plugin4ImgProcessing):
     #     dlg = DlgTplBase(g.get("mwnd"))
     #     return dlg
 
-    def batch(self):
-        super().run()
-
     def on_btn_clicked(self, btn):
         try:
             role = self.buttonBox.standardButton(btn)
@@ -71,21 +81,40 @@ class DialogPlugin(QDialog, Plugin4ImgProcessing):
             elif role == QDialogButtonBox.Cancel:
                 self.rejected()
             else:  # Reset
-                self.batch()
+                self.preview()
         except FeatureTypeError:
             return
 
+    def get_image(self):
+        im_mgr = g.get("canvas").get_container()
+        im_arr = im_mgr.get_snap()
+        return im_arr
+
+    # def set_image(self, im_arr):
+    #     """ 将处理完成的图像，更新到主界面 """
+
+    def preview(self):
+        im_arr = self.get_image()
+        self.check_features(im_arr)
+
+        im2 = self.processing(im_arr)
+        self.set_image(im2)
+        self.update_canvas()
+
     def accepted(self):
         """ 将当前图像设置为image """
-        self.batch()
-        ips = self.get_image()
-        ips.take_snap()
+        im_mgr = g.get("canvas").get_container()
+        im_arr = im_mgr.get_snap()
+        self.check_features(im_arr)
+
+        im2 = self.processing(im_arr)
+        im_mgr.commit(im2)
 
     def rejected(self):
-        """ 取消图像 """
-        ips = self.get_image()
-        ips2 = ips.reset()
-        self.set_image(ips2)
+        """ 取消图像变更 """
+        im_mgr = g.get("canvas").get_container()
+        ips2 = im_mgr.reset()
+        self.update_canvas()
 
     def run(self):
         """ 调用的接口，显示主窗口 """

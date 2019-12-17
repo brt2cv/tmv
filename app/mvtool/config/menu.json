@@ -5,7 +5,7 @@
             {
                 "name": "Open",
                 "description": "打开图像",
-                "icon": "app/gui/res/open.png",
+                "icon": "app/mvtool/res/open.png",
                 "shortcut": "Ctrl+O",
                 "plugin": {
                     "path": "plugins/files.py",
@@ -15,25 +15,36 @@
             {
                 "name": "Save",
                 "description": "打开图像",
-                "icon": "app/gui/res/save.png",
+                "icon": "app/mvtool/res/save.png",
                 "shortcut": "Ctrl+S"
             }
         ]
     },
     {
         "name": "Edit",
-        "members": []
-    },
-    {
-        "name": "Demo",
         "members": [
             {
-                "name": "Plugin",
+                "name": "Undo",
+                "shortcut": "Ctrl+Z",
+                "icon": "app/mvtool/res/prev.png"
+            },
+            {
+                "name": "Redo",
+                "shortcut": "Ctrl+Y",
+                "icon": "app/mvtool/res/next.png"
+            }
+        ]
+    },
+    {
+        "name": "Plugin",
+        "members": [
+            {
+                "name": "Gray",
                 "plugin": {
-                    "path": "plugins/demo.py",
-                    "class": "DemoDlg"
+                    "path": "plugins/color.py",
+                    "class": "GrayDlg"
                 },
-                "icon": "app/gui/res/save.png"
+                "icon": "app/mvtool/res/pencil.png"
             }
         ]
     },
@@ -49,7 +60,7 @@
             {
                 "name": "Open",
                 "description": "打开图像",
-                "icon": "app/gui/res/open.png",
+                "icon": "app/mvtool/res/open.png",
                 "shortcut": "Ctrl+O",
                 "plugin": {
                     "path": "plugins/files.py",
@@ -59,7 +70,7 @@
             {
                 "name": "Save",
                 "description": "打开图像",
-                "icon": "app/gui/res/save.png",
+                "icon": "app/mvtool/res/save.png",
                 "shortcut": "Ctrl+S"
             }
         ]

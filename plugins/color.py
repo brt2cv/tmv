@@ -1,11 +1,11 @@
+# from PyQt5.QtWidgets import QMessageBox
 from core.plugin import DialogFilter
 
-def export_plugin(cls=None):  # cls并不建议直接提供默认值'DemoDlg'
-    if cls is None:
-        cls = "DemoDlg"
+def export_plugin(cls):
     return eval(cls)
 
-class DemoDlg(DialogFilter):
+
+class GrayDlg(DialogFilter):
     features = {
         "mode": "rgb",
         "dtype": "uint8"

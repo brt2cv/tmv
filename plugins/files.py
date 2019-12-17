@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import QMessageBox
 from util.qt5 import dialog_file_select
 from core import g
-from core.plugin import Plugin
+from core.plugin import Filter
 
-def export_plugin(cls):  # cls并不建议直接提供默认值'DemoDlg'
+def export_plugin(cls):
     return eval(cls)
 
-class OpenImageFile(Plugin):
+class OpenImageFile(Filter):
     def run(self):
         """ override: 无需打开图像 """
         file_path = dialog_file_select(g.get("mwnd"), "Images (*.png *.bmp *.jpg)")

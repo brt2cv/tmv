@@ -81,7 +81,7 @@ class IPluginObject:
     def run(self, *args, **kwargs):
         pass
 
-def import_plugin(module, **kwargs):
+def import_plugin(module, package=None, **kwargs):
     """ module:
           - 'top/package/module.py'
           - "top.package.module"
@@ -91,7 +91,7 @@ def import_plugin(module, **kwargs):
     if isinstance(module, str):
         if module.find("/") >= 0 or module.rfind(".py") >= 0:
             module = path2module(module)
-        module = import_module(module, kwargs.get("package"))
+        module = import_module(module, package)
 
     plugin_obj = module.export_plugin(**kwargs)
     return plugin_obj
