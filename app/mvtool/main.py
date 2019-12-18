@@ -1,5 +1,5 @@
 from util.log import getLogger
-logger = getLogger(1)
+logger = getLogger()
 
 def export_plugin():
     """ return a Plugin-Class Object """
@@ -17,9 +17,11 @@ class ModulePlugin:
         if callback_mwnd is None:
             try:
                 from .view.mainwnd import MainWnd
-            except:
+            except ImportError:
+                # 适配app/xxx/run.py作为顶级目录启动
+                logger.warning("当前并非在项目顶层目录运行...")
                 from view.mainwnd import MainWnd
-                print("________________________")
+
             self.mwnd = MainWnd(None)
         else:
             self.mwnd = callback_mwnd()

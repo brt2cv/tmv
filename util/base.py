@@ -69,11 +69,12 @@ from importlib import import_module  # reload
 
 def path2module(path):
     if os.path.isabs(path):
-        print("请使用相对路径载入项目模块")
-        return
+        raise Exception("请使用相对路径载入项目模块")
 
     without_ext, _ = os.path.splitext(path)
-    module = without_ext.replace("/", ".")
+    # path_linux = without_ext.replace("\\", "/")
+    path_linux = without_ext.replace("\\", ".")
+    module = path_linux.replace("/", ".")
     return module
 
 

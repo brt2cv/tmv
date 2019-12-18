@@ -11,7 +11,7 @@
 # Licence:
 ###############################################################################
 
-import os.path
+import os
 from PyQt5.QtWidgets import QLayout, QWidget
 
 qss_frame_color = """\
@@ -280,12 +280,12 @@ def make_submenu(menu, text, path_icon=None):
 
 from importlib import import_module
 from .debug import get_caller_path
+from .base import path2module
 
 def loadUi_by_Mixin(uifile, instance):
-    without_ext = os.path.splitext(uifile)[0]
+    """ uifile需要相对路径导入 """
     # path = without_ext.replace("ui/", "ui2py.")  # 默认规则：将res/ui目录改为res/ui2py
-    str_module = without_ext.replace("/", ".")
-
+    str_module = path2module(uifile)
     module = import_module(str_module)
     try:
         Ui_Form = getattr(module, "Ui_Form")
@@ -316,7 +316,9 @@ def loadUi(uifile, instance, rpath=True):
     """
     if rpath:
         path_caller = get_caller_path()
-        path_dir = os.path.dirname(path_caller)
-        uifile = os.path.join(path_dir, uifile)
+        caller_dir_abs = os.path.dirname(path_caller)
+        caller_dir_rel = os.path.relpath(caller_dir_abs,
+                                         os.getcwd())
+        uifile = os.path.join(caller_dir_rel, uifile)
 
     _loadUi(uifile, instance)

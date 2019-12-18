@@ -172,6 +172,7 @@ class ImageManager(ImageContainer):
 
 from .undo import UndoCommand
 class ImgSnapCommand(UndoCommand):
+    """ 功能仅限简单存储图像 """
     def __init__(self, ips_prev, ips_new):
         self.prev = ips_prev
         self.new = ips_new

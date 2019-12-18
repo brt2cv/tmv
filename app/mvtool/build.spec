@@ -3,17 +3,18 @@
 
 block_cipher = None
 
-a = Analysis(['../build_triage.py'],
+a = Analysis(['./run.py'],
              pathex=['../runtime/win64/Lib/site-packages'],
              binaries=[],
              datas=[
-                ("../core/viewer/config", "core/viewer/config"),
-                ("../core/viewer/res", "core/viewer/res"),
-                ("../core/viewer/view/ui", "core/viewer/view/ui"),
-                ("../app/mvtool/res", "app/mvtool/res"),
-                ("../app/mvtool/view/ui", "app/mvtool/view/ui"),
+                ("res", "app/mvtool/res"),
+                ("config", "app/mvtool/config"),
+                ("view/ui", "app/mvtool/view/ui"),
+                # ("res", "res"),
+                # ("config", "config"),
+                # ("view/ui", "view/ui"),
              ],
-             hiddenimports=["app.mvtool.main"],
+             hiddenimports=["main"],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -27,13 +28,13 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='Triage',
+          name='MVTool',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False,
-          icon='../app/ocrkit/res/ocr.ico')
+          console=True,
+          icon='res/logo.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -41,4 +42,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='Triage')
+               name='MVTool')
