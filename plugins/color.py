@@ -5,7 +5,8 @@ def export_plugin(cls):
     return eval(cls)
 
 
-class GrayDlg(DialogFilter):
+class Gray(DialogFilter):
+    title = 'Gray'
     features = {
         "mode": "rgb",
         "dtype": "uint8"

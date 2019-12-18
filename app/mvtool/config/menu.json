@@ -52,15 +52,34 @@
         ]
     },
     {
-        "name": "Plugin",
+        "name": "Color",
         "members": [
             {
                 "name": "Gray",
+                "icon": "app/mvtool/res/pencil.png",
                 "plugin": {
                     "path": "plugins/color.py",
-                    "class": "GrayDlg"
-                },
-                "icon": "app/mvtool/res/pencil.png"
+                    "class": "Gray"
+                }
+            }
+        ]
+    },
+    {
+        "name": "Morphology",
+        "members": [
+            {
+                "name": "Gaussian Filter",
+                "plugin": {
+                    "path": "plugins/morphology.py",
+                    "class": "GaussianBlur"
+                }
+            },
+            {
+                "name": "Median Filter",
+                "plugin": {
+                    "path": "plugins/morphology.py",
+                    "class": "MedianBlur"
+                }
             }
         ]
     },

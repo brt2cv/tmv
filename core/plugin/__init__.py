@@ -45,11 +45,7 @@ class Filter(Plugin):  # Plugin4ImgProcessing
 
 # from core.mgr import ImageManager
 class DialogFilter(QDialog, Filter):
-    # def __init__(self, parent, attach=None):
-    #     """ parent为逻辑上的父类，成员变量可能需要调用parent中的member/method
-    #         attach为Qt的UI父类。
-    #     """
-    #     super().__init__(parent if attach is None else attach)
+    title = "Filter"
 
     def __init__(self, parent):
         """ parent为Qt的UI父类
@@ -66,6 +62,7 @@ class DialogFilter(QDialog, Filter):
         from util.qt5 import loadUi
 
         loadUi("template/base.ui", self)
+        self.setWindowTitle(self.title)
         self.buttonBox.clicked.connect(self.on_btn_clicked)
 
     # def make_dialog(self, parent):
