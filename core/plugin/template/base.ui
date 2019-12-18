@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>49</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,11 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPlainTextEdit" name="plainTextEdit"/>
-     </item>
-    </layout>
+    <layout class="QVBoxLayout" name="mlayout"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

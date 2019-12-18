@@ -125,6 +125,10 @@ class ImageManager(ImageContainer):
     def reset(self):
         self.curr = self.snap.copy()
 
+    def load_image(self, path_file):
+        im_arr = imread(path_file)
+        self.commit(im_arr)
+
     def get_image(self):
         return self.curr
 
@@ -140,10 +144,6 @@ class ImageManager(ImageContainer):
             self.curr = im_arr
         else:
             self.curr = ImagePlus(im_arr)
-
-    def load_image(self, path_file):
-        im_arr = imread(path_file)
-        self.commit(im_arr)
 
     def commit(self, im_arr):
         """ 类似set_image()，但会增加take_snap()操作，并写入UndoStack """

@@ -46,6 +46,10 @@
                 "name": "Gray",
                 "icon": "app/mvtool/res/pencil.png",
                 "plugin": "Gray"
+            },
+            {
+                "name": "Threshold",
+                "plugin": "Threshold"
             }
         ]
     },

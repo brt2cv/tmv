@@ -19,6 +19,7 @@ class PluginAdapter4Ipy(DialogFilter):
         super().__init__(parent)
         self.title = self.proxy.title
         self.features = self.note2features(self.proxy.note)
+        self.setup_tpl_widgets()
 
     def note2features(self, note: list):
         features = {}
@@ -51,6 +52,12 @@ class PluginAdapter4Ipy(DialogFilter):
                        img=output,   # dst
                        para=self.proxy.para)
         return output
+
+    def setup_tpl_widgets(self):
+        for tuple_info in self.proxy.view:
+            pass
+
+
 
 
 def asFilter(IpyPlugin):

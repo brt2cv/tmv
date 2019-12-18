@@ -1,8 +1,8 @@
 
-Backend = "opencv"
+Backend = "numpy"
 
 if Backend == "numpy":
-    pass
+    import numpy as np
 
 elif Backend == "pillow":
     pass
@@ -17,7 +17,17 @@ else:
     raise Exception("当前Backend 【{Backend}】 不支持绘图功能")
 
 
-def threshold(im_arr, thresh, maxval=255, type_=0, otsu=False):
+def threshold(im_arr, thresh, thresh2=255):
+    if thresh2 == 255:
+        im2 = ((im_arr > thresh) * 255).astype("uint8")
+    else:
+        im2 = np.zeros(im_arr.shape, dtype="uint8")
+        im2[im_arr > thresh] = 255
+        im2[im_arr < thresh] = 255
+    return im2
+
+
+def threshold2(im_arr, thresh, maxval=255, type_=0, otsu=False):
     """ type_:
             cv2.THRESH_BINARY
             cv2.THRESH_BINARY_INV

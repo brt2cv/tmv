@@ -3,7 +3,7 @@ from .. import g
 from .features import IpsFeature, FeatureTypeError
 from . import Plugin
 
-class Filter(Plugin):  # Plugin4ImgProcessing
+class FilterBase(Plugin):  # Plugin4ImgProcessing
     features = {}
 
     def processing(self, im_arr):
@@ -17,12 +17,10 @@ class Filter(Plugin):  # Plugin4ImgProcessing
     def set_image(self, im_arr):
         """ 将处理完成的图像，更新到主界面 """
         g.get("canvas").set_image(im_arr)
-        self.update_canvas()
 
     def update_canvas(self):
         """ 刷新UI """
         g.get("canvas").update()
-        print("update canvas...")
 
     def check_features(self, im_arr):
         """ if check error, raise FeatureTypeError """
@@ -37,15 +35,40 @@ class Filter(Plugin):  # Plugin4ImgProcessing
         self.set_image(im2)
 
 
-# from core.mgr import ImageManager
+class Filter(FilterBase):
+    """ 对于ImageContainer进行操作 """
+    def get_image(self):
+        im_mgr = g.get("canvas").get_container()
+        im_arr = im_mgr.get_snap()
+        return im_arr
+
+    def set_image(self, im_arr):
+        """ 将处理完成的图像，更新到主界面 """
+        im_mgr = g.get("canvas").get_container()
+        im_mgr.commit(im_arr)
+        self.update_canvas()
+
+    def update_canvas(self):
+        """ 刷新UI """
+        g.get("canvas").canvas.update()
+
+
+from .widgets import TplWidgetsManager
 class DialogFilter(QDialog, Filter):
     title = "Filter"
+    view = []  # 简单的垂直布局
+    # { "type": "slider",
+    #   "val_range": [0, 100]
+    #   ...
+    #   "para4": "thresh"
+    # }
 
     def __init__(self, parent):
         """ parent为Qt的UI父类
             与父类的通讯，应由pyqtSignal负责，而非调用父类实例
         """
         super().__init__(parent)
+        self.para = {}  # para_name: wx_elem
         self.setup_ui()
 
     # def _declare(self):
@@ -57,7 +80,25 @@ class DialogFilter(QDialog, Filter):
 
         loadUi("template/base.ui", self)
         self.setWindowTitle(self.title)
+
+        tpl_wx_mgr = TplWidgetsManager(self)
+        for dict_wx in self.view:
+            wx = tpl_wx_mgr.parse_elem(dict_wx)
+            if "para" in dict_wx:
+                self.para[dict_wx["para"]] = wx
+            self.mlayout.addWidget(wx)
+
         self.buttonBox.clicked.connect(self.on_btn_clicked)
+
+    def get_para(self, para_name):
+        wx = self.para[para_name]
+        value = wx.get_value()
+        return value
+
+    def set_image(self, im_arr):
+        """ 将处理完成的图像，更新到主界面 """
+        im_mgr = g.get("canvas").get_container()
+        im_mgr.commit(im_arr)
 
     # def make_dialog(self, parent):
     #     # 延迟构造...
@@ -77,30 +118,23 @@ class DialogFilter(QDialog, Filter):
         except FeatureTypeError:
             return
 
-    def get_image(self):
-        im_mgr = g.get("canvas").get_container()
-        im_arr = im_mgr.get_snap()
-        return im_arr
-
-    # def set_image(self, im_arr):
-    #     """ 将处理完成的图像，更新到主界面 """
-
     def preview(self):
+        im_arr = self.get_image()
+        self.check_features(im_arr)
+
+        im2 = self.processing(im_arr)
+        im_mgr = g.get("canvas").get_container()
+        im_mgr.set_image(im2)
+        self.update_canvas()
+
+    def accepted(self):
+        """ 将当前图像设置为image """
         im_arr = self.get_image()
         self.check_features(im_arr)
 
         im2 = self.processing(im_arr)
         self.set_image(im2)
         self.update_canvas()
-
-    def accepted(self):
-        """ 将当前图像设置为image """
-        im_mgr = g.get("canvas").get_container()
-        im_arr = im_mgr.get_snap()
-        self.check_features(im_arr)
-
-        im2 = self.processing(im_arr)
-        im_mgr.commit(im2)
 
     def rejected(self):
         """ 取消图像变更 """

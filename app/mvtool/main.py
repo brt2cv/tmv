@@ -31,7 +31,8 @@ class ModulePlugin:
         app.exec_()
 
 
-def documents():  # never called...
-    """ 全局变量声明 """
-    g.get("mwnd")
-    g.get("canvas")
+""" 全局变量声明
+g.get("mwnd")
+g.get("canvas"): ScrollCanvas()
+
+"""

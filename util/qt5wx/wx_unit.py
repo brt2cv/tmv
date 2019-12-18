@@ -19,17 +19,19 @@ class UnitBase(QWidget):
 
 
 class UnitLineEdit(UnitBase):
-    def __init__(self, parent, name, val_default=0, isCheckbox=True, isChecked=False):
+    def __init__(self, parent, name, val_default=0, val_range=None, isCheckbox=True, isChecked=False):
         super().__init__(parent)
 
         self.edit = QLineEdit(self)
+        if val_range:
+            self.edit.setRange(*val_range)
         self.edit.setText(val_default if isinstance(val_default, str) else str(val_default))
 
         if isCheckbox:
             self.name = QCheckBox(name, self)
             self.name.setChecked(isChecked)
             self.edit.setEnabled(isChecked)
-            self.name.stateChanged.connect(lambda x: self.edit.setEnabled(x))
+            self.name.stateChanged.connect(self.edit.setEnabled)
         else:
             self.name = QLabel(name, self)
 
@@ -95,7 +97,7 @@ class UnitSlider(UnitBase):
             self.name = QCheckBox(name, self)
             self.name.setChecked(isChecked)
             self.slider.setEnabled(isChecked)
-            self.name.stateChanged.connect(lambda x: self.slider.setEnabled(x))
+            self.name.stateChanged.connect(self.slider.setEnabled)
         else:
             self.name = QLabel(name, self)
 
@@ -138,7 +140,7 @@ class UnitSpinbox(UnitBase):
             self.name = QCheckBox(name, self)
             self.name.setChecked(isChecked)
             self.spinbox.setEnabled(isChecked)
-            self.name.stateChanged.connect(lambda x: self.spinbox.setEnabled(x))
+            self.name.stateChanged.connect(self.spinbox.setEnabled)
         else:
             self.name = QLabel(name, self)
 
