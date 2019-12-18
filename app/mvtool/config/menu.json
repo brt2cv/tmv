@@ -7,10 +7,7 @@
                 "description": "打开图像",
                 "icon": "app/mvtool/res/open.png",
                 "shortcut": "Ctrl+O",
-                "plugin": {
-                    "path": "plugins/file.py",
-                    "class": "OpenImageFile"
-                }
+                "plugin": "OpenImageFile"
             },
             {
                 "name": "Save",
@@ -27,27 +24,18 @@
                 "name": "Undo",
                 "shortcut": "Ctrl+Z",
                 "icon": "app/mvtool/res/prev.png",
-                "plugin": {
-                    "path": "plugins/edit.py",
-                    "class": "Undo"
-                }
+                "plugin": "Undo"
             },
             {
                 "name": "Redo",
                 "shortcut": "Ctrl+Y",
                 "icon": "app/mvtool/res/next.png",
-                "plugin": {
-                    "path": "plugins/edit.py",
-                    "class": "Redo"
-                }
+                "plugin": "Redo"
             },
             {
                 "name": "UndoDebugger",
                 "icon": "app/mvtool/res/reset.png",
-                "plugin": {
-                    "path": "plugins/edit.py",
-                    "class": "UndoDebugger"
-                }
+                "plugin": "UndoDebugger"
             }
         ]
     },
@@ -57,10 +45,7 @@
             {
                 "name": "Gray",
                 "icon": "app/mvtool/res/pencil.png",
-                "plugin": {
-                    "path": "plugins/color.py",
-                    "class": "Gray"
-                }
+                "plugin": "Gray"
             }
         ]
     },
@@ -69,17 +54,11 @@
         "members": [
             {
                 "name": "Gaussian Filter",
-                "plugin": {
-                    "path": "plugins/morphology.py",
-                    "class": "GaussianBlur"
-                }
+                "plugin": "GaussianBlur"
             },
             {
                 "name": "Median Filter",
-                "plugin": {
-                    "path": "plugins/morphology.py",
-                    "class": "MedianBlur"
-                }
+                "plugin": "MedianBlur"
             }
         ]
     },
@@ -97,10 +76,7 @@
                 "description": "打开图像",
                 "icon": "app/mvtool/res/open.png",
                 "shortcut": "Ctrl+O",
-                "plugin": {
-                    "path": "plugins/file.py",
-                    "class": "OpenImageFile"
-                }
+                "plugin": "OpenImageFile"
             },
             {
                 "name": "Save",

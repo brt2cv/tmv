@@ -1,5 +1,5 @@
 # 用于转换ImagePy的插件为我所用
-from . import DialogFilter, Plugin
+from .filter import Plugin, DialogFilter
 
 class IpyPlugin(Plugin):
     title = 'Gaussian'
@@ -64,8 +64,11 @@ if __name__ == "__main__":
     import scipy.ndimage as nimg
     from core.plugin.adapter import asFilter, IpyPlugin as Filter
 
-    class Gaussian(Filter):
-        title = 'Gaussian'
+    class GaussianBlur(Filter):
+        """ 使用适配器定义插件
+            只需要修改: class_name、IpyFilter与title
+        """
+        title = 'Gaussian Smoothing'
         note = ['all', 'auto_msk', 'auto_snap','preview']
         para = {'sigma':2}
         view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]

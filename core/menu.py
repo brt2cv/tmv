@@ -2,11 +2,13 @@
 from util.log import getLogger
 logger = getLogger()
 
-from util.base import import_plugin, singleton
+from util.base import singleton
 from util.gmgr import g
+from .plugin import import_plugin
 from .plugin.features import FeatureTypeError
+from .plugin.filter import Filter, DialogFilter
 
-from .plugin import Filter, DialogFilter
+
 @singleton
 class PluginManager:
     def __init__(self):
@@ -18,11 +20,17 @@ class PluginManager:
         except FeatureTypeError:
             pass
 
-    def load_plugin(self, dict_plugin):
+    def load_plugin(self, plugin_info):
+        """ plugin_info: str or dict{"path": xxx, "class": yyy}"""
         # parse
-        path = dict_plugin["path"]
-        cls_name = dict_plugin.get("class")
-        plug_cls = import_plugin(path, cls=cls_name)
+        if isinstance(plugin_info, str):
+            path = "plugins"
+            cls_name = plugin_info
+        else:  # dict
+            path = plugin_info.get("path", "plugins")
+            cls_name = plugin_info.get("class")
+
+        plug_cls = import_plugin(path, cls_name)
         key = plug_cls.__name__
         if key in self.dict_plugins:
             logger.warning(f"插件【{key}】已存在，请勿重复导入")

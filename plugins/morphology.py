@@ -1,17 +1,8 @@
 # from PyQt5.QtWidgets import QMessageBox
-from core.plugin.adapter import asFilter, IpyPlugin
-
-def export_plugin(cls: str):
-    cls_obj = eval(cls)
-    if issubclass(cls_obj, IpyPlugin):
-        return asFilter(cls_obj)
-    else:
-        return cls_obj
-
-
 import scipy.ndimage as nimg
+from core.plugin.adapter import IpyPlugin as Filter
 
-# from core.plugin import DialogFilter
+# from core.plugin.filter import DialogFilter
 # class GaussianBlur_A(DialogFilter):
 #     """ 使用标准格式定义插件 """
 #     title = 'Gaussian Smoothing'
@@ -19,7 +10,7 @@ import scipy.ndimage as nimg
 #     def processing(self, im_arr):
 #         return nimg.filters.gaussian_filter(im_arr, 1)
 
-class GaussianBlur(IpyPlugin):
+class GaussianBlur(Filter):
     """ 使用适配器定义插件
         只需要修改: class_name、IpyFilter与title
     """
@@ -31,7 +22,7 @@ class GaussianBlur(IpyPlugin):
     def run(self, ips, snap, img, para = None):
         nimg.gaussian_filter(snap, para['sigma'], output=img)
 
-class MedianBlur(IpyPlugin):
+class MedianBlur(Filter):
     title = 'Uniform'
     note = ['all', 'auto_msk', 'auto_snap','preview']
 

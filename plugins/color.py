@@ -1,9 +1,5 @@
 # from PyQt5.QtWidgets import QMessageBox
-from core.plugin import DialogFilter
-
-def export_plugin(cls):
-    return eval(cls)
-
+from core.plugin.filter import DialogFilter
 
 class Gray(DialogFilter):
     title = 'Gray'
@@ -12,9 +8,9 @@ class Gray(DialogFilter):
         "dtype": "uint8"
     }
 
-    def processing(self, ips):
+    def processing(self, im_arr):
         from mvlib.color import rgb2gray
-        gray = rgb2gray(ips)
+        gray = rgb2gray(im_arr)
         return gray
 
     def run(self):

@@ -1,9 +1,4 @@
-from core.plugin import DialogFilter
-
-def export_plugin(cls=None):  # cls并不建议直接提供默认值'DemoDlg'
-    if cls is None:
-        cls = "DemoDlg"
-    return eval(cls)
+from core.plugin.filter import DialogFilter
 
 class DemoDlg(DialogFilter):
     features = {
@@ -11,9 +6,9 @@ class DemoDlg(DialogFilter):
         "dtype": "uint8"
     }
 
-    def processing(self, ips):
+    def processing(self, im_arr):
         from mvlib.color import rgb2gray
-        gray = rgb2gray(ips)
+        gray = rgb2gray(im_arr)
         return gray
 
     def run(self):
