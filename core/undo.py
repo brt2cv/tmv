@@ -20,7 +20,7 @@ class UndoStack:
     def _debug(self):
         total = len(self.stack_undo)
         for index, undo_cmd in enumerate(self.stack_undo):
-            logger.debug(f"stack memory [{index}/{total}] >> {undo_cmd}")
+            logger.debug(f"stack memory [{index +1}/{total}] >> {undo_cmd}")
 
     def undo(self):
         if not self.stack_undo:
@@ -51,4 +51,5 @@ class UndoStack:
         ret = undo_cmd.execute()
         # 将command压栈
         self.stack_undo.append(undo_cmd)
+        # print(">> UndoStack 压栈: ", undo_cmd)
         return ret

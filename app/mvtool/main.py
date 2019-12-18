@@ -15,7 +15,11 @@ class ModulePlugin:
 
         app = QApplication([])
         if callback_mwnd is None:
-            from .view.mainwnd import MainWnd
+            try:
+                from .view.mainwnd import MainWnd
+            except:
+                from view.mainwnd import MainWnd
+                print("________________________")
             self.mwnd = MainWnd(None)
         else:
             self.mwnd = callback_mwnd()

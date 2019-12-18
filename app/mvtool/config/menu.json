@@ -8,7 +8,7 @@
                 "icon": "app/mvtool/res/open.png",
                 "shortcut": "Ctrl+O",
                 "plugin": {
-                    "path": "plugins/files.py",
+                    "path": "plugins/file.py",
                     "class": "OpenImageFile"
                 }
             },
@@ -26,12 +26,28 @@
             {
                 "name": "Undo",
                 "shortcut": "Ctrl+Z",
-                "icon": "app/mvtool/res/prev.png"
+                "icon": "app/mvtool/res/prev.png",
+                "plugin": {
+                    "path": "plugins/edit.py",
+                    "class": "Undo"
+                }
             },
             {
                 "name": "Redo",
                 "shortcut": "Ctrl+Y",
-                "icon": "app/mvtool/res/next.png"
+                "icon": "app/mvtool/res/next.png",
+                "plugin": {
+                    "path": "plugins/edit.py",
+                    "class": "Redo"
+                }
+            },
+            {
+                "name": "UndoDebugger",
+                "icon": "app/mvtool/res/reset.png",
+                "plugin": {
+                    "path": "plugins/edit.py",
+                    "class": "UndoDebugger"
+                }
             }
         ]
     },
@@ -63,7 +79,7 @@
                 "icon": "app/mvtool/res/open.png",
                 "shortcut": "Ctrl+O",
                 "plugin": {
-                    "path": "plugins/files.py",
+                    "path": "plugins/file.py",
                     "class": "OpenImageFile"
                 }
             },

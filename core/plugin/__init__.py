@@ -26,8 +26,9 @@ class Filter(Plugin):  # Plugin4ImgProcessing
         self.update_canvas()
 
     def update_canvas(self):
-        # print(">>>", g.get("canvas"))
+        """ 刷新UI """
         g.get("canvas").update()
+        print("update canvas...")
 
     def check_features(self, im_arr):
         """ if check error, raise FeatureTypeError """

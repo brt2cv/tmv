@@ -75,14 +75,16 @@ if __name__ == "__main__":
 
     # 简单的np.ndarray操作也会替换源对象
     ips2 = ips.reshape([4,3])
-    print(">> type of asarray(ips): ", type(ips2))
+    print(">> type of ips2: ", type(ips2))  # ImagePlus
 
     ips[0][0] = 1
     print("ips.view: ", ips)
     print("ips.meta: ", ips._meta)
 
-    ips = ips.reset()
-    print("ips_reset.view: ", ips)
+    # copy()操作依旧可用
+    ips3 = ips.copy()
+    print(">> type of ips3: ", type(ips3))  # ImagePlus
+    print(ips3.meta)
 
 
 #####################################################################
@@ -113,12 +115,12 @@ class ImageManager(ImageContainer):
         目标：尽可能使其接口接近ImagePlus，无缝对接canvas
     """
     def __init__(self):
-        self.curr = None
-        self.snap = None
+        self.curr = None  # ips
+        self.snap = None  # ips
         self.stack = UndoStack()
 
     def take_snap(self):
-        self.snap = self.curr.copy()
+        self.snap = None if self.curr is None else self.curr.copy()
 
     def reset(self):
         self.curr = self.snap.copy()
@@ -143,13 +145,14 @@ class ImageManager(ImageContainer):
         im_arr = imread(path_file)
         self.commit(im_arr)
 
-    def commit(self, ips):
+    def commit(self, im_arr):
         """ 类似set_image()，但会增加take_snap()操作，并写入UndoStack """
-        cmd = ImgSnapCommand(self.curr, ips)
-        self.stack.commit(cmd)
-
-        self.set_image(ips)
+        ips_prev = None if self.curr is None else self.curr.copy()
+        self.set_image(im_arr)
         self.take_snap()
+
+        cmd = ImgSnapCommand(ips_prev, self.curr.copy())
+        self.stack.commit(cmd)
 
     def undo(self):
         """ 撤销操作 """
@@ -169,9 +172,12 @@ class ImageManager(ImageContainer):
 
 from .undo import UndoCommand
 class ImgSnapCommand(UndoCommand):
-    def __init__(self, old, new):
-        self.old = old
-        self.new = new
+    def __init__(self, ips_prev, ips_new):
+        self.prev = ips_prev
+        self.new = ips_new
 
-    def exacute(self):
-        pass
+    def execute(self):
+        return self.new.copy()
+
+    def rollback(self):
+        return None if self.prev is None else self.prev.copy()
