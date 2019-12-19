@@ -3,10 +3,19 @@ from .edit import *
 from .color import *
 from .morphology import *
 
-from core.plugin.adapter import asFilter, IpyPlugin
+from util.gmgr import g
+
+from core.plugin.filter import Filter, DialogFilter
+from core.plugin.adapter import IpyPlugin, PluginAdapter4Ipy
 def export_plugin(cls_name: str):
-    cls_obj = eval(cls_name)
-    if issubclass(cls_obj, IpyPlugin):
-        return asFilter(cls_obj)
+    plug_cls = eval(cls_name)
+    assert issubclass(plug_cls, Filter) or issubclass(plug_cls, IpyPlugin),\
+           f"未知的插件类型，非【Filter】的子类：【{cls_name}】"
+
+    # factory
+    if issubclass(plug_cls, IpyPlugin):
+        return PluginAdapter4Ipy(plug_cls)
+    elif issubclass(plug_cls, DialogFilter):
+        return plug_cls(g.get("mwnd"))
     else:
-        return cls_obj
+        return plug_cls()

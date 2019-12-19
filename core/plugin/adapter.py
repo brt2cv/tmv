@@ -12,14 +12,20 @@ class IpyPlugin(Plugin):
         # nimg.gaussian_filter(snap, para['sigma'], output=img)
 
 
-class PluginAdapter4Ipy(DialogFilter):
-    proxy = None  # IpyPlugin class
+# def asFilter(IpyPlugClass):
+#     """ return a class of PluginAdapter4Ipy """
+#     filter_plugin = PluginAdapter4Ipy(IpyPlugClass)
+#     return filter_plugin
 
-    def __init__(self, parent):
-        self.title = self.proxy.title
+
+from .. import g
+class PluginAdapter4Ipy(DialogFilter):
+    def __init__(self, ipy_plug_cls):
+        self.proxy = ipy_plug_cls  # IpyPlugin class
+        self.title = ipy_plug_cls.title
         self.note2features()
         self.setup_tpl_widgets()
-        super().__init__(parent)
+        super().__init__(g.get("mwnd"))
 
     def note2features(self):
         note = self.proxy.note  # list
@@ -80,27 +86,3 @@ class PluginAdapter4Ipy(DialogFilter):
                        img=output,   # dst
                        para=self.para)
         return output
-
-
-def asFilter(IpyPlugin):
-    """ return a class of PluginAdapter4Ipy """
-    cls = PluginAdapter4Ipy
-    cls.proxy = IpyPlugin
-    return cls
-
-
-if __name__ == "__main__":
-    import scipy.ndimage as nimg
-    from core.plugin.adapter import asFilter, IpyPlugin as Filter
-
-    class GaussianBlur(Filter):
-        """ 使用适配器定义插件
-            只需要修改: class_name、IpyFilter与title
-        """
-        title = 'Gaussian Smoothing'
-        note = ['all', 'auto_msk', 'auto_snap','preview']
-        para = {'sigma':2}
-        view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]
-
-        def run(self, ips, snap, img, para = None):
-            nimg.gaussian_filter(snap, para['sigma'], output=img)

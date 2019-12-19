@@ -3,10 +3,8 @@ from util.log import getLogger
 logger = getLogger()
 
 from util.base import singleton
-from util.gmgr import g
 from .plugin import import_plugin
 from .plugin.features import FeatureTypeError
-from .plugin.filter import Filter, DialogFilter
 
 
 @singleton
@@ -30,20 +28,11 @@ class PluginManager:
             path = plugin_info.get("path", "plugins")
             cls_name = plugin_info.get("class")
 
-        plug_cls = import_plugin(path, cls_name)
+        plug_obj = import_plugin(path, cls_name)
         if cls_name in self.dict_plugins:
             logger.warning(f"插件【{cls_name}】已存在，请勿重复导入")
-            return cls_name
-
-        # factory
-        if issubclass(plug_cls, DialogFilter):
-            instance = plug_cls(g.get("mwnd"))
-        elif issubclass(plug_cls, Filter):
-            instance = plug_cls()
         else:
-            raise Exception(f"未知的Plugin类型：【{plug_cls}】")
-
-        self.dict_plugins[cls_name] = instance
+            self.dict_plugins[cls_name] = plug_obj
         return cls_name
 
 plug_mgr = PluginManager()
