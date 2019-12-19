@@ -28,6 +28,7 @@ class Threshold(DialogFilter):
     },{
         "type": "slider",
         "name": "阈值2",
+        "val_default": 255,
         "val_range": [0, 255],
         "isCheckbox": False,
         "para": "thresh2"

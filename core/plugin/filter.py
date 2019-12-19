@@ -124,7 +124,7 @@ class DialogFilter(QDialog, Filter):
 
         im2 = self.processing(im_arr)
         im_mgr = g.get("canvas").get_container()
-        im_mgr.set_image(im2)
+        im_mgr.set_image(im2)  # 不更新snap
         self.update_canvas()
 
     def accepted(self):
@@ -133,7 +133,7 @@ class DialogFilter(QDialog, Filter):
         self.check_features(im_arr)
 
         im2 = self.processing(im_arr)
-        self.set_image(im2)
+        self.set_image(im2)  # 更新snap
         self.update_canvas()
 
     def rejected(self):

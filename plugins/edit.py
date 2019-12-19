@@ -3,17 +3,24 @@ from util.qt5 import dialog_file_select
 from core import g
 from core.plugin.filter import Filter
 
+from core.undo import UndoIndexError
 class Undo(Filter):
     def run(self):
-        im_mgr = g.get("canvas").get_container()
-        im_mgr.undo()
-        self.update_canvas()
+        try:
+            im_mgr = g.get("canvas").get_container()
+            im_mgr.undo()
+            self.update_canvas()
+        except UndoIndexError as e:
+            g.call("prompt", str(e), 5000)
 
 class Redo(Filter):
     def run(self):
-        im_mgr = g.get("canvas").get_container()
-        im_mgr.redo()
-        self.update_canvas()
+        try:
+            im_mgr = g.get("canvas").get_container()
+            im_mgr.redo()
+            self.update_canvas()
+        except UndoIndexError as e:
+            g.call("prompt", str(e), 5000)
 
 class UndoDebugger(Filter):
     def run(self):

@@ -55,6 +55,7 @@ class MainWnd(QWidget):
 
         from util.gmgr import g
         g.register("canvas", self.canvas)
+        g.register("prompt", self.status_bar.showMessage, True)
 
         self._setup_ctrl()
 

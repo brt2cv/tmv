@@ -147,12 +147,11 @@ class ImageManager(ImageContainer):
 
     def commit(self, im_arr):
         """ 类似set_image()，但会增加take_snap()操作，并写入UndoStack """
-        ips_prev = None if self.curr is None else self.curr.copy()
         self.set_image(im_arr)
-        self.take_snap()
-
+        ips_prev = None if self.snap is None else self.snap.copy()
         cmd = ImgSnapCommand(ips_prev, self.curr.copy())
         self.stack.commit(cmd)
+        self.take_snap()
 
     def undo(self):
         """ 撤销操作 """

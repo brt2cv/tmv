@@ -34,5 +34,6 @@ class ModulePlugin:
 """ 全局变量声明
 g.get("mwnd")
 g.get("canvas"): ScrollCanvas()
+g.call("prompt"): mwnd.status_bar.showMessage()
 
 """
