@@ -57,12 +57,16 @@
         "name": "Morphology",
         "members": [
             {
-                "name": "Gaussian Filter",
+                "name": "中值滤波",
+                "plugin": "MedianBlur"
+            },
+            {
+                "name": "高斯滤波",
                 "plugin": "GaussianBlur"
             },
             {
-                "name": "Median Filter",
-                "plugin": "MedianBlur"
+                "name": "均值滤波",
+                "plugin": "MeanBlur"
             }
         ]
     },

@@ -77,7 +77,7 @@ class MenubarCreator:
     def load_conf(self, path_conf):
         import json
         # self.dict_menu = {self.menubar: {}}
-        with open(path_conf, "r") as fp:
+        with open(path_conf, "r", encoding='utf8') as fp:
             dict_conf = json.load(fp)
         assert "menubar" in dict_conf, '格式错误，未发现【"menubar"】项，无法导入按钮'
         for menu_group_info in dict_conf["menubar"]:
@@ -106,7 +106,7 @@ class ToolbarCreator:
     def load_conf(self, path_conf):
         import json
 
-        with open(path_conf, "r") as fp:
+        with open(path_conf, "r", encoding='utf8') as fp:
             dict_conf = json.load(fp)
         assert "toolbar" in dict_conf, '格式错误，未发现【"toolbar"】项，无法导入按钮'
         for toolbar_info in dict_conf["toolbar"]:

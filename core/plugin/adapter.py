@@ -19,7 +19,7 @@ class PluginAdapter4Ipy(DialogFilter):
         super().__init__(parent)
         self.title = self.proxy.title
         self.features = self.note2features(self.proxy.note)
-        self.setup_tpl_widgets()
+        self.view = self.setup_tpl_widgets(self.proxy.view)
 
     def note2features(self, note: list):
         features = {}
@@ -43,6 +43,18 @@ class PluginAdapter4Ipy(DialogFilter):
 
         return features
 
+    def setup_tpl_widgets(self, list_view):
+        view = []
+        for tuple_info in list_view:
+            dict_wx = {"type": "edit", "isCheckbox": False}
+            dtyte, name, val_range, val_default, _x, _unit = tuple_info
+            dict_wx["name"] = name
+            dict_wx["val_default"] = val_default
+            dict_wx["val_range"] = val_range
+
+            view.append(dict_wx)
+        return view
+
     def processing(self, im_arr):
         import numpy as np
         output = np.zeros(im_arr.shape, dtype=np.uint8)
@@ -52,12 +64,6 @@ class PluginAdapter4Ipy(DialogFilter):
                        img=output,   # dst
                        para=self.proxy.para)
         return output
-
-    def setup_tpl_widgets(self):
-        for tuple_info in self.proxy.view:
-            pass
-
-
 
 
 def asFilter(IpyPlugin):
