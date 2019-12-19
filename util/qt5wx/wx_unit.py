@@ -19,12 +19,10 @@ class UnitBase(QWidget):
 
 
 class UnitLineEdit(UnitBase):
-    def __init__(self, parent, name, val_default=0, val_range=None, isCheckbox=True, isChecked=False):
+    def __init__(self, parent, name, val_default=0, isCheckbox=True, isChecked=False):
         super().__init__(parent)
 
         self.edit = QLineEdit(self)
-        if val_range:
-            self.edit.setRange(*val_range)
         self.edit.setText(val_default if isinstance(val_default, str) else str(val_default))
 
         if isCheckbox:

@@ -20,7 +20,7 @@
 					"cmd":
 					[
 						"$folder/runtime/win64/Scripts/python",
-						"run",
+						"run.py",
 						"triage"
 					],
 					"name": "Triage"
@@ -29,7 +29,7 @@
 					"cmd":
 					[
 						"$folder/runtime/win64/Scripts/python",
-						"run",
+						"run.py",
 						"ocrkit"
 					],
 					"name": "OCR-Kit"
@@ -38,19 +38,10 @@
 					"cmd":
 					[
 						"$folder/runtime/win64/Scripts/python",
-						"run",
+						"run.py",
 						"tmv"
 					],
 					"name": "MVTool"
-				},
-				{
-					"cmd":
-					[
-						"$folder/runtime/win64/Scripts/python",
-						"run",
-						"app/gui/main.py"
-					],
-					"name": "GUI-Demo"
 				}
 			]
 		},

@@ -31,15 +31,15 @@ class Threshold(DialogFilter):
         "val_default": 255,
         "val_range": [0, 255],
         "isCheckbox": False,
-        "para": "thresh2"
+        "para": "maxval"
     }]
-    # para = {"thresh": 128, "thresh2": 255}
+    # para = {"thresh": 128, "maxval": 255}
 
     def processing(self, im_arr):
         from mvlib.filters import threshold
         return threshold(im_arr,
                          self.get_para("thresh"),
-                         self.get_para("thresh2"))
+                         self.get_para("maxval"))
 
     def run(self):
         print("This is a plugin with dilog.")

@@ -33,7 +33,7 @@ def threshold(im_arr, thresh, maxval=255, otsu=False):
         ret, im2 = cv2.threshold(im_arr, thresh, maxval, type_)
     else:  # numpy
         if maxval == 255:
-            im2 = ((im_arr > thresh) * 255).astype("uint8")
+            im2 = ((im_arr < thresh) * 255).astype("uint8")
         else:
             im2 = np.zeros(im_arr.shape, dtype="uint8")
             im2[im_arr > maxval] = 255

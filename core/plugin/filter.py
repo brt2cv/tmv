@@ -86,6 +86,7 @@ class DialogFilter(QDialog, Filter):
             wx = tpl_wx_mgr.parse_elem(dict_wx)
             if "para" in dict_wx:
                 self.para[dict_wx["para"]] = wx
+            wx.set_slot(self.preview)  # 实时预览
             self.mlayout.addWidget(wx)
 
         self.buttonBox.clicked.connect(self.on_btn_clicked)
@@ -114,7 +115,7 @@ class DialogFilter(QDialog, Filter):
             elif role == QDialogButtonBox.Cancel:
                 self.rejected()
             else:  # Reset
-                self.preview()
+                self.reset()
         except FeatureTypeError:
             return
 
@@ -125,6 +126,11 @@ class DialogFilter(QDialog, Filter):
         im2 = self.processing(im_arr)
         im_mgr = g.get("canvas").get_container()
         im_mgr.set_image(im2)  # 不更新snap
+        self.update_canvas()
+
+    def reset(self):
+        im_mgr = g.get("canvas").get_container()
+        im_mgr.reset()
         self.update_canvas()
 
     def accepted(self):
@@ -138,12 +144,11 @@ class DialogFilter(QDialog, Filter):
 
     def rejected(self):
         """ 取消图像变更 """
-        im_mgr = g.get("canvas").get_container()
-        ips2 = im_mgr.reset()
-        self.update_canvas()
+        self.reset()
 
     def run(self):
         """ 调用的接口，显示主窗口 """
         ips = self.get_image()
         self.check_features(ips)
         self.show()
+        self.preview()  # 显示窗口时即应用预览
