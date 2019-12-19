@@ -55,8 +55,8 @@ class UnitLineEdit(UnitBase):
 
 
 class UnitRadio(QGroupBox):  # UnitBase
-    def __init__(self, parent, name,  list_item, list_val=None, id_checked=0):
-        """ list_item = [
+    def __init__(self, parent, name, choices, val_init=0, choices_id=None):
+        """ choices = [
             ["row0", "row0_1", "row0_2"],
             ["row1", "row1_1", "row1_2"]]
         """
@@ -66,15 +66,15 @@ class UnitRadio(QGroupBox):  # UnitBase
         layout = QGridLayout(self)
         self.btn_group = QButtonGroup(self)
 
-        for row, list_row in enumerate(list_item):
+        for row, list_row in enumerate(choices):
             for column, str_item in enumerate(list_row):
                 btn_radio = QRadioButton(str_item, self)
                 layout.addWidget(btn_radio, row, column)
-                radio_id = -1 if list_val is None else list_val[row][column]
+                radio_id = -1 if choices_id is None else choices_id[row][column]
                 self.btn_group.addButton(btn_radio, radio_id)
 
         # try:
-        btn = self.btn_group.button(id_checked)
+        btn = self.btn_group.button(val_init)
         btn.setChecked(True)
 
     def set_slot(self, func_slot):
@@ -85,7 +85,7 @@ class UnitRadio(QGroupBox):  # UnitBase
 
 
 class UnitSlider(UnitBase):
-    def __init__(self, parent, name, val_default=0, val_range=None, showValue=True, isCheckbox=True, isChecked=False):
+    def __init__(self, parent, name, val_range=None, val_default=0, showValue=True, isCheckbox=True, isChecked=False):
         super().__init__(parent)
 
         self.slider = QSlider(self)
@@ -126,7 +126,7 @@ class UnitSlider(UnitBase):
 
 
 class UnitSpinbox(UnitBase):
-    def __init__(self, parent, name, val_default=0, val_range=None, isCheckbox=True, isChecked=False):
+    def __init__(self, parent, name, val_range=None, val_default=0, isCheckbox=True, isChecked=False):
         super().__init__(parent)
 
         self.spinbox = QSpinBox(self)

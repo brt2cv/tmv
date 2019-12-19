@@ -28,7 +28,7 @@ class TplWidgetsManager:
 
     # def get_params(self):
     #     name = dict_elem.get("name", "")
-    #     val_default = dict_elem.get("val_default", 0)
+    #     val_init = dict_elem.get("val_init", 0)
     #     val_range = dict_elem.get("val_range", [0, 100])
     #     isCheckbox = dict_elem.get("isCheckbox", True)
     #     isChecked = dict_elem.get("isChecked", False)
@@ -37,8 +37,7 @@ class TplWidgetsManager:
         wx = UnitLineEdit(
                 self.parent,
                 dict_elem.get("name", ""),
-                dict_elem.get("val_default", 0),
-                dict_elem.get("val_range", [0, 100]),
+                dict_elem.get("val_init", 0),
                 dict_elem.get("isCheckbox", True),
                 dict_elem.get("isChecked", False)
             )
@@ -48,8 +47,8 @@ class TplWidgetsManager:
         wx = UnitSlider(
                 self.parent,
                 dict_elem.get("name", ""),
-                dict_elem.get("val_default", 0),
                 dict_elem.get("val_range", [0, 100]),
+                dict_elem.get("val_init", 0),
                 dict_elem.get("showValue", True),
                 dict_elem.get("isCheckbox", True),
                 dict_elem.get("isChecked", False)
@@ -60,8 +59,8 @@ class TplWidgetsManager:
         wx = UnitSpinbox(
                 self.parent,
                 dict_elem.get("name", ""),
-                dict_elem.get("val_default", 0),
                 dict_elem.get("val_range", [0, 100]),
+                dict_elem.get("val_init", 0),
                 dict_elem.get("isCheckbox", True),
                 dict_elem.get("isChecked", False)
             )
@@ -69,12 +68,12 @@ class TplWidgetsManager:
 
     def make_radio(self, dict_elem):
         """ radio 选项 """
-        # wx = UnitRadio(
-        #         self.parent,
-        #         dict_elem.get("name", ""),
-        #         dict_elem.get("val_default", 0),
-        #         dict_elem.get("val_range", [0, 100]),
-        #         dict_elem.get("isCheckbox", True),
-        #         dict_elem.get("isChecked", False)
-        #     )
-        # return wx
+        wx = UnitRadio(
+                self.parent,
+                dict_elem.get("name", ""),
+                dict_elem["val_range"],
+                dict_elem.get("val_init", 0),
+                # dict_elem.get("isCheckbox", True),
+                # dict_elem.get("isChecked", False)
+            )
+        return wx

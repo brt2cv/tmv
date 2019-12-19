@@ -67,6 +67,10 @@
             {
                 "name": "均值滤波",
                 "plugin": "MeanBlur"
+            },
+            {
+                "name": "USM锐化",
+                "plugin": "USM"
             }
         ]
     },

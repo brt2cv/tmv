@@ -53,6 +53,7 @@ class Filter(FilterBase):
         g.get("canvas").canvas.update()
 
 
+from functools import partial
 from .widgets import TplWidgetsManager
 class DialogFilter(QDialog, Filter):
     title = "Filter"
@@ -60,7 +61,7 @@ class DialogFilter(QDialog, Filter):
     # { "type": "slider",
     #   "val_range": [0, 100]
     #   ...
-    #   "para4": "thresh"
+    #   "para": "thresh"
     # }
 
     def __init__(self, parent):
@@ -68,7 +69,7 @@ class DialogFilter(QDialog, Filter):
             与父类的通讯，应由pyqtSignal负责，而非调用父类实例
         """
         super().__init__(parent)
-        self.para = {}  # para_name: wx_elem
+        self.para = {}  # para_name: value
         self.setup_ui()
 
     # def _declare(self):
@@ -83,18 +84,21 @@ class DialogFilter(QDialog, Filter):
 
         tpl_wx_mgr = TplWidgetsManager(self)
         for dict_wx in self.view:
+            para_name = dict_wx["para"]
+            para_val = dict_wx["val_init"]
+
             wx = tpl_wx_mgr.parse_elem(dict_wx)
             if "para" in dict_wx:
-                self.para[dict_wx["para"]] = wx
-            wx.set_slot(self.preview)  # 实时预览
+                self.para[para_name] = para_val
+
+            def on_value_changed(para_name, wx):
+                self.para[para_name] = wx.get_value()
+                self.preview()  # 实时预览
+
+            wx.set_slot(partial(on_value_changed, para_name, wx))
             self.mlayout.addWidget(wx)
 
         self.buttonBox.clicked.connect(self.on_btn_clicked)
-
-    def get_para(self, para_name):
-        wx = self.para[para_name]
-        value = wx.get_value()
-        return value
 
     def set_image(self, im_arr):
         """ 将处理完成的图像，更新到主界面 """

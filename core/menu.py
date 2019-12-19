@@ -31,10 +31,9 @@ class PluginManager:
             cls_name = plugin_info.get("class")
 
         plug_cls = import_plugin(path, cls_name)
-        key = plug_cls.__name__
-        if key in self.dict_plugins:
-            logger.warning(f"插件【{key}】已存在，请勿重复导入")
-            return key
+        if cls_name in self.dict_plugins:
+            logger.warning(f"插件【{cls_name}】已存在，请勿重复导入")
+            return cls_name
 
         # factory
         if issubclass(plug_cls, DialogFilter):
@@ -44,8 +43,8 @@ class PluginManager:
         else:
             raise Exception(f"未知的Plugin类型：【{plug_cls}】")
 
-        self.dict_plugins[key] = instance
-        return key
+        self.dict_plugins[cls_name] = instance
+        return cls_name
 
 plug_mgr = PluginManager()
 

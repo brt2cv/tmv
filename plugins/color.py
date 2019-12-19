@@ -22,13 +22,14 @@ class Threshold(DialogFilter):
     view = [{
         "type": "slider",
         "name": "阈值",
+        "val_init": 128,
         "val_range": [0, 255],
         "isCheckbox": False,
         "para": "thresh"
     },{
         "type": "slider",
         "name": "阈值2",
-        "val_default": 255,
+        "val_init": 255,
         "val_range": [0, 255],
         "isCheckbox": False,
         "para": "maxval"
@@ -38,8 +39,8 @@ class Threshold(DialogFilter):
     def processing(self, im_arr):
         from mvlib.filters import threshold
         return threshold(im_arr,
-                         self.get_para("thresh"),
-                         self.get_para("maxval"))
+                         self.para["thresh"],
+                         self.para["maxval"])
 
     def run(self):
         print("This is a plugin with dilog.")

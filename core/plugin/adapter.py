@@ -17,11 +17,12 @@ class PluginAdapter4Ipy(DialogFilter):
 
     def __init__(self, parent):
         self.title = self.proxy.title
-        self.features = self.note2features(self.proxy.note)
-        self.view = self.setup_tpl_widgets(self.proxy.view)
+        self.note2features()
+        self.setup_tpl_widgets()
         super().__init__(parent)
 
-    def note2features(self, note: list):
+    def note2features(self):
+        note = self.proxy.note  # list
         features = {}
         def conflict_check(key, value):
             if key in features:
@@ -41,29 +42,34 @@ class PluginAdapter4Ipy(DialogFilter):
         if "float" in note:
             conflict_check("dtype", "float")
 
-        return features
+        self.features = features
 
-    def setup_tpl_widgets(self, list_view):
-        view = []
-        for tuple_info in list_view:
+    def setup_tpl_widgets(self):
+        self.view = []
+        for tuple_info in self.proxy.view:
             dict_wx = {"isCheckbox": False}
-            dtype, name, val_range, val_default, _x, _unit = tuple_info
-            wx2type = {
+            ctrl, para, val_range, _, name, _unit = tuple_info
+            # widgets = { 'ctrl':None, 'slide':FloatSlider, int:NumCtrl, 'path':PathCtrl,
+            #             float:NumCtrl, 'lab':Label, bool:Check, str:TextCtrl,
+            #             list:Choice, 'img':ImageList, 'tab':TableList, 'color':ColorCtrl,
+            #             'any':AnyType, 'chos':Choices, 'fields':TableFields,
+            #             'field':TableField, 'hist':HistCanvas, 'cmap':ColorMap}
+            wx2ctrls = {
                 "edit": [float],
                 "spinbox": [int],
-                "slider": [],
+                "slider": ["slide"],
                 "radio": [list]
             }
-            for wx_name, types in wx2type.items():
-                if dtype in types:
+            for wx_name, ctrls in wx2ctrls.items():
+                if ctrl in ctrls:
                     dict_wx["type"] = wx_name
                     break
             dict_wx["name"] = name
-            dict_wx["val_default"] = val_default
             dict_wx["val_range"] = val_range
+            dict_wx["val_init"] = self.proxy.para[para]
+            dict_wx["para"] = para
 
-            view.append(dict_wx)
-        return view
+            self.view.append(dict_wx)
 
     def processing(self, im_arr):
         import numpy as np
@@ -72,7 +78,7 @@ class PluginAdapter4Ipy(DialogFilter):
                        ips=None,
                        snap=im_arr,  # src
                        img=output,   # dst
-                       para=self.proxy.para)
+                       para=self.para)
         return output
 
 
