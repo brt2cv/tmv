@@ -5,7 +5,7 @@ if Backend == "numpy":
     import numpy as np
 
 elif Backend == "pillow":
-    from util.imgio import convert_mode
+    from utils.imgio import convert_mode
 
 elif Backend == "skimage":
     from skimage import draw

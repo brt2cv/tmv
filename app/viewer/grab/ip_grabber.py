@@ -1,7 +1,7 @@
 from threading import Thread, Event
 from .grabbase import IImageGrabber
 
-from util.log import make_logger
+from utils.log import make_logger
 logger = make_logger()
 
 from ..setting import PluginSettings

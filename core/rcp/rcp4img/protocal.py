@@ -1,11 +1,11 @@
 # encoding: utf-8
 
 import numpy as np
-from util.sock.trans import TransBase, json2dict
+from utils.sock.trans import TransBase, json2dict
 
-from util.imgio import bytes2ndarray, shape2size, shape2mode
-from util.gmgr import g
-from util.log import getLogger
+from utils.imgio import bytes2ndarray, shape2size, shape2mode
+from utils.gmgr import g
+from utils.log import getLogger
 logger = getLogger()
 
 from PyQt5.QtCore import QObject, pyqtSignal

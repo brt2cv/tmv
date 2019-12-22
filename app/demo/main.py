@@ -1,4 +1,4 @@
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger(1)
 
 def export_plugin():
@@ -77,7 +77,7 @@ class ModulePlugin:
             # self.timer.join()
 
     def run_console(self):
-        from util.imgio import imread
+        from utils.imgio import imread
 
         path_file = "tmp/test.jpg"
         im = imread(path_file)

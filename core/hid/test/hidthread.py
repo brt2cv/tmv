@@ -4,7 +4,7 @@ import numpy as np
 from ..hiddev import HerosysHidDevice, extract_img
 from .hidsub import HerosysHidTcpDevice
 
-from util.log import make_logger
+from utils.log import make_logger
 logger = make_logger(10)
 
 class HerosysHidThread(Thread, QObject):

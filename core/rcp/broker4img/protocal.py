@@ -3,10 +3,10 @@
 from PyQt5.QtCore import QObject, pyqtSignal
 import numpy as np
 
-from util.imgio import bytes2ndarray
+from utils.imgio import bytes2ndarray
 from ..broker.protocal import ForwardTrans, BROKER_PORT
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger()
 
 class HerosysImageQtTrans(ForwardTrans, QObject):

@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QPen, QColor, QPainterPath
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger(1)
 
 class ShapeBuilder:

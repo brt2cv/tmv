@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QScrollArea
 from PyQt5.QtCore import Qt, pyqtSignal
 
-from util.log import make_logger
+from utils.log import make_logger
 logger = make_logger(1)
 
 def delta2units(delta):

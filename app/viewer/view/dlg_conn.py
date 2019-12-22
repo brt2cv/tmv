@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QDialog, QMessageBox
-from util.uic import loadUi
+from utils.uic import loadUi
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger()
 
 class DlgUdpConnect(QDialog):

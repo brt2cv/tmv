@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from PyQt5.QtCore import pyqtSignal
-from util.uic import loadUi
-from util.qt5wx.wx_unit import UnitSlider
+from utils.uic import loadUi
+from utils.qt5wx.wx_unit import UnitSlider
 
 from ..grab.grabbase import IImageGrabber
 from ..grab.ip_grabber import *
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger()
 
 from ..setting import PluginSettings

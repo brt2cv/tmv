@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from PyQt5.QtGui import QIcon
 
-from util.qt5 import dialog_file_select
+from utils.qt5 import dialog_file_select
 
 from mvlib.contours import *
 from mvlib import draw
@@ -11,7 +11,7 @@ from mvlib.filters import threshold
 
 from core.img import ImagePlus
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger(1)
 
 import os.path
@@ -19,7 +19,7 @@ dir_res = os.path.join(os.path.dirname(__file__), "../res")
 
 class MainWnd(QWidget):
     def __init__(self, parent, attach=None):
-        from util.uic import loadUi
+        from utils.uic import loadUi
 
         super().__init__(attach if attach is not None else parent)
         loadUi("ui/wx_viewer.ui", self)
@@ -87,7 +87,7 @@ class MainWnd(QWidget):
         self._setup_ctrl()
 
     def _setup_ctrl(self):
-        from util.qt5wx.wx_unit import UnitSlider
+        from utils.qt5wx.wx_unit import UnitSlider
         slider = UnitSlider(self, "阈值", val_range=[0, 255], isCheckbox=False)
         self.ly_ctrl.addWidget(slider)
 

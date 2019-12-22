@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import pyqtSignal, Qt, QSize, QPointF
 from PyQt5.QtGui import QPainter
-from util.imgio import ndarray2pixmap
+from utils.imgio import ndarray2pixmap
 
 CURSOR_DEFAULT  = Qt.ArrowCursor
 CURSOR_POINT    = Qt.PointingHandCursor
@@ -9,7 +9,7 @@ CURSOR_DRAW     = Qt.CrossCursor
 CURSOR_MOVE     = Qt.ClosedHandCursor
 CURSOR_GRAB     = Qt.OpenHandCursor
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger(1)
 
 

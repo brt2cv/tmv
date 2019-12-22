@@ -9,7 +9,7 @@ if root not in sys.path:
     sys.path.append(root)
 os.chdir(root)
 
-from util.base import import_plugin
+from utils.base import import_plugin
 from multiprocessing import freeze_support
 
 # 注意，此处必须使用 __main__，因为multiprocess.Process() 在Windows环境中：

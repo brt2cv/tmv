@@ -1,4 +1,4 @@
-from util.expy import path_append
+from utils.expy import path_append
 path_append("runtime", __file__)
 
 import hid
@@ -6,8 +6,8 @@ import numpy as np
 from time import sleep
 from threading import Thread, Event
 
-from util.base import Deletable
-from util.log import make_logger
+from utils.base import Deletable
+from utils.log import make_logger
 logger = make_logger(1)
 
 BLOCK_TIMEOUT = 0.5

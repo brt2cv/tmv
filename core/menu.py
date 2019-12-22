@@ -1,8 +1,8 @@
 # 罗列了关于menu.json解析相关类
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger()
 
-from util.base import singleton
+from utils.base import singleton
 from .plugin import import_plugin
 from .plugin.features import FeatureTypeError
 
@@ -39,7 +39,7 @@ plug_mgr = PluginManager()
 
 #####################################################################
 
-from util.qt5 import make_action, make_submenu
+from utils.qt5 import make_action, make_submenu
 
 def add_action(parent_menu, dict_member):
     plug_info = dict_member.get("plugin")

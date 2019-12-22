@@ -1,10 +1,10 @@
 import struct
 from threading import Thread
 
-from util.sock.routine import UdpClient, UdpServer, TIMEOUT_RECV
-from util.socket import UdpFrame
+from utils.sock.routine import UdpClient, UdpServer, TIMEOUT_RECV
+from utils.socket import UdpFrame
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger()
 
 class ImgFrame(UdpFrame):

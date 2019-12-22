@@ -3,7 +3,7 @@ from .grabbase import IImageGrabber
 
 from core.hid.hiddev import extract_img, HerosysHidDevice
 
-from util.log import make_logger
+from utils.log import make_logger
 logger = make_logger(1)
 
 class HidGrabber(IImageGrabber, Thread):

@@ -1,15 +1,15 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from PyQt5.QtGui import QIcon
 
-from util.base import rpath2curr
-from util.log import getLogger
+from utils.base import rpath2curr
+from utils.log import getLogger
 logger = getLogger(1)
 
 
 class MainWnd(QWidget):
     def __init__(self, parent, attach=None):
-        from util.qt5 import loadUi
-        from util.gmgr import g
+        from utils.qt5 import loadUi
+        from utils.gmgr import g
 
         super().__init__(attach if attach is not None else parent)
         loadUi("ui/wx_viewer.ui", self)
@@ -53,14 +53,14 @@ class MainWnd(QWidget):
         self.canvas = ScrollCanvas(self, container="mgr")
         self.ly_show.addWidget(self.canvas)
 
-        from util.gmgr import g
+        from utils.gmgr import g
         g.register("canvas", self.canvas)
         g.register("prompt", self.status_bar.showMessage, True)
 
         self._setup_ctrl()
 
     def _setup_ctrl(self):
-        from util.qt5wx.wx_unit import UnitSlider
+        from utils.qt5wx.wx_unit import UnitSlider
         slider = UnitSlider(self, "阈值", val_range=[0, 255], isCheckbox=True, isChecked=False)
         self.ly_ctrl.addWidget(slider)
 

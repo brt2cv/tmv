@@ -6,7 +6,7 @@ import json
 from datetime import date
 import rsa
 
-from util.sock.routine import TcpClient
+from utils.sock.routine import TcpClient
 from .regm.protocal import RegCodeTrans
 from .regm.encrypt import RsaCrypto
 

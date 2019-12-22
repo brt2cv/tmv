@@ -1,4 +1,4 @@
-from util.qt5wx.wx_unit import *
+from utils.qt5wx.wx_unit import *
 
 class TplWidgetsManager:
 

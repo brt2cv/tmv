@@ -3,9 +3,9 @@
 import os
 import json
 from datetime import date, timedelta
-from util.sock.trans import TransBase, json2dict
+from utils.sock.trans import TransBase, json2dict
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger()
 
 class RegCodeTrans(TransBase):

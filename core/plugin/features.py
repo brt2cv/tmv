@@ -1,4 +1,4 @@
-from util.imgio import guess_mode
+from utils.imgio import guess_mode
 from .. import utils
 
 class FeatureTypeError(Exception):

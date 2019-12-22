@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMessageBox
-from util.qt5 import dialog_file_select
+from utils.qt5 import dialog_file_select
 from core import g
 from core.plugin.filter import Filter
 

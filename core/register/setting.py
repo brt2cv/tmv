@@ -1,7 +1,7 @@
 import os.path
 
-from util.base import singleton
-from util.settings import IniConfigSettings
+from utils.base import singleton
+from utils.settings import IniConfigSettings
 
 PATH_SETTING = "config/settings.ini"
 

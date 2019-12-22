@@ -24,7 +24,7 @@ Backend = "pillow"
 
 if Backend == "pillow":
     from PIL import Image, ImageDraw
-    from util.imgio import guess_mode, pillow2ndarray
+    from utils.imgio import guess_mode, pillow2ndarray
 
 elif Backend == "skimage":
     from skimage import draw
@@ -38,7 +38,7 @@ else:
 # from collections import namedtuple
 # Point = namedtuple("Point", ["x", "y"])
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger(1)
 
 

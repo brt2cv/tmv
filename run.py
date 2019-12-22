@@ -35,8 +35,8 @@ def getopt():
 
 if __name__ == '__main__':
     import logging
-    from util.expy import site_expand
-    from util.base import import_plugin
+    from utils.expy import site_expand
+    from utils.base import import_plugin
 
     args = getopt()
     if not args.loglevel:  # 设置默认Log-Level

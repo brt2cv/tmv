@@ -3,7 +3,7 @@ from .edit import *
 from .color import *
 from .morphology import *
 
-from util.gmgr import g
+from utils.gmgr import g
 
 from core.plugin.filter import Filter, DialogFilter
 from core.plugin.adapter import IpyPlugin, PluginAdapter4Ipy

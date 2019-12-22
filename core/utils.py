@@ -1,7 +1,7 @@
 import os.path as osp
 from PyQt5.QtWidgets import QMessageBox
 
-from util.gmgr import g
+from utils.gmgr import g
 
 root_dir = osp.abspath(osp.join(osp.dirname(__file__), ".."))
 

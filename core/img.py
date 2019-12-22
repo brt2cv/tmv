@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
 
 #####################################################################
-from util.imgio import imread
+from utils.imgio import imread
 class ImageContainer:
     """ 用于图像的收发管理 """
     def get_image(self):

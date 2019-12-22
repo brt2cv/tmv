@@ -77,7 +77,7 @@ class DialogFilter(QDialog, Filter):
     #     self.im_arr
 
     def setup_ui(self):
-        from util.qt5 import loadUi
+        from utils.qt5 import loadUi
 
         loadUi("template/base.ui", self)
         self.setWindowTitle(self.title)
@@ -107,7 +107,7 @@ class DialogFilter(QDialog, Filter):
 
     # def make_dialog(self, parent):
     #     # 延迟构造...
-    #     from util.gmgr import g
+    #     from utils.gmgr import g
     #     dlg = DlgTplBase(g.get("mwnd"))
     #     return dlg
 

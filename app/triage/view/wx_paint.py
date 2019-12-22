@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget, QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter, QPen, QColor, QPolygon
 
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger(1)
 
 # 使用以下方式进行绘图：

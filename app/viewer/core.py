@@ -1,5 +1,5 @@
 # 加载特定的venv环境
-from util.expy import path_append
+from utils.expy import path_append
 path_append('runtime/win32/python37/lib')
 
 # # 加载全局设置

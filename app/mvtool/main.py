@@ -1,4 +1,4 @@
-from util.log import getLogger
+from utils.log import getLogger
 logger = getLogger()
 
 def export_plugin():
