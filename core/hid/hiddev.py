@@ -7,8 +7,8 @@ from time import sleep
 from threading import Thread, Event
 
 from utils.base import Deletable
-from utils.log import make_logger
-logger = make_logger(1)
+from utils.log import getLogger
+logger = getLogger(1)
 
 BLOCK_TIMEOUT = 0.5
 BLOCK_TIMEOUT_ms = BLOCK_TIMEOUT * 1000

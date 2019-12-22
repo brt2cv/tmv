@@ -4,8 +4,8 @@ import numpy as np
 from ..hiddev import HerosysHidDevice, extract_img
 from .hidsub import HerosysHidTcpDevice
 
-from utils.log import make_logger
-logger = make_logger(10)
+from utils.log import getLogger
+logger = getLogger(10)
 
 class HerosysHidThread(Thread, QObject):
     dataUpdated = pyqtSignal(np.ndarray)

@@ -49,8 +49,8 @@ class MainWnd(QWidget):
         # Ctrl-Zone:
         # self._setup_ctrl_zone()
 
-        from core.canvas.viewer_scroll import ScrollCanvas, DrawableScrollCanvas
-        self.canvas = ScrollCanvas(self, container="mgr")
+        from .viewer import Viewer
+        self.canvas = Viewer(self)
         self.ly_show.addWidget(self.canvas)
 
         from utils.gmgr import g
