@@ -21,8 +21,9 @@ CURSOR_GRAB = Qt.OpenHandCursor
 
 
 class Canvas(QWidget):
-    zoomRequest = pyqtSignal(int)
-    scrollRequest = pyqtSignal(int, int)
+    """ 使用QPixmap存储图像 """
+    # zoomRequest = pyqtSignal(int)
+    # scrollRequest = pyqtSignal(int, int)
     newShape = pyqtSignal()
     selectionChanged = pyqtSignal(bool)
     shapeMoved = pyqtSignal()
@@ -102,13 +103,17 @@ class Canvas(QWidget):
 
     def mouseMoveEvent(self, ev):
         """Update line with last point and current coordinates."""
-        pos = self.transformPos(ev.pos())
+        # pos = self.transformPos(ev.pos())
+        pos = self.transformPos(ev.localPos())
 
         # Update coordinates in status bar if image is opened
-        window = self.parent().window()
-        if window.filePath is not None:
-            self.parent().window().labelCoordinates.setText(
-                'X: %d; Y: %d' % (pos.x(), pos.y()))
+        # window = self.parent().window()
+        # if window.filePath is not None:
+        #     self.parent().window().labelCoordinates.setText(
+        #         'X: %d; Y: %d' % (pos.x(), pos.y()))
+
+        self.prevMovePoint = pos
+        self.restoreCursor()
 
         # Polygon drawing.
         if self.drawing():
@@ -583,27 +588,27 @@ class Canvas(QWidget):
             return self.scale * self.pixmap.size()
         return super(Canvas, self).minimumSizeHint()
 
-    def wheelEvent(self, ev):
-        qt_version = 4 if hasattr(ev, "delta") else 5
-        if qt_version == 4:
-            if ev.orientation() == Qt.Vertical:
-                v_delta = ev.delta()
-                h_delta = 0
-            else:
-                h_delta = ev.delta()
-                v_delta = 0
-        else:
-            delta = ev.angleDelta()
-            h_delta = delta.x()
-            v_delta = delta.y()
+    # def wheelEvent(self, ev):
+    #     qt_version = 4 if hasattr(ev, "delta") else 5
+    #     if qt_version == 4:
+    #         if ev.orientation() == Qt.Vertical:
+    #             v_delta = ev.delta()
+    #             h_delta = 0
+    #         else:
+    #             h_delta = ev.delta()
+    #             v_delta = 0
+    #     else:
+    #         delta = ev.angleDelta()
+    #         h_delta = delta.x()
+    #         v_delta = delta.y()
 
-        mods = ev.modifiers()
-        if Qt.ControlModifier == int(mods) and v_delta:
-            self.zoomRequest.emit(v_delta)
-        else:
-            v_delta and self.scrollRequest.emit(v_delta, Qt.Vertical)
-            h_delta and self.scrollRequest.emit(h_delta, Qt.Horizontal)
-        ev.accept()
+    #     mods = ev.modifiers()
+    #     if Qt.ControlModifier == int(mods) and v_delta:
+    #         self.zoomRequest.emit(v_delta)
+    #     else:
+    #         v_delta and self.scrollRequest.emit(v_delta, Qt.Vertical)
+    #         h_delta and self.scrollRequest.emit(h_delta, Qt.Horizontal)
+    #     ev.accept()
 
     def keyPressEvent(self, ev):
         key = ev.key()
@@ -716,7 +721,7 @@ class Canvas(QWidget):
 
     def resetState(self):
         self.restoreCursor()
-        self.pixmap = None
+        self.pixmap = QPixmap()
         self.update()
 
     def setDrawingShapeToSquare(self, status):

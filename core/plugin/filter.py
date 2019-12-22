@@ -50,7 +50,7 @@ class Filter(FilterBase):
 
     def update_canvas(self):
         """ 刷新UI """
-        g.get("canvas").canvas.update()
+        g.get("canvas").repaint()
 
 
 from functools import partial

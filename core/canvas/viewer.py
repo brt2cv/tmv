@@ -1,8 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QScrollArea
 from PyQt5.QtCore import Qt, pyqtSignal
 
-from .canvas import Canvas
-
 from utils.log import getLogger
 logger = getLogger(1)
 
@@ -13,27 +11,40 @@ def delta2units(delta):
     return units
 
 
+from PyQt5.QtGui import QCursor
 class ViewerBase(QScrollArea):
     """ 基本Canvas集成单元，本质上是一个包装器：
         - 通过LabelImg::Canvas显示和勾勒图像
         - 利用ImageContainer存储和管理/输出图像
     """
+    MIN_ZOOM_RATIO = 0.05
+
     def __init__(self, parent):
+        from ..img import QImageManager
+        from utils.imgio import ndarray2pixmap
+
         super().__init__(parent)
         self.setWidgetResizable(True)
 
-        self.imgr = None
+        self.imgr = QImageManager()
+        def update_canvas():
+            # 更新canvas画面
+            im_arr = self.imgr.get_image()
+            if im_arr is None:
+                self.canvas.resetState()
+            else:
+                pixmap = ndarray2pixmap(im_arr)
+                self.canvas.loadPixmap(pixmap)
+        self.imgr.updateImage.connect(update_canvas)
+
         self.zoom_val = 100
         # self.setBackgroundRole()  # 背景色
         # self.setAlignment(Qt.AlignCenter)  # 居中对齐
         self.setup_canvas()
-        self._activate()
-
-    def _activate(self):
-        self.scrollChanged.connect(self.on_scroll)
-        self.zoomChanged.connect(self.on_zoom)
 
     def setup_canvas(self):
+        from .canvas import Canvas
+
         self.canvas = Canvas()
         self.setWidget(self.canvas)
 
@@ -41,14 +52,14 @@ class ViewerBase(QScrollArea):
         return self.imgr
 
     def get_image(self):
-        return self.canvas.get_image()
+        return self.imgr.get_image()
 
-    def set_image(self, ndarray):
-        self.canvas.set_image(ndarray)
+    def set_image(self, im_arr):
+        self.imgr.set_image(im_arr)
         self.set_fit_window()
 
     def load_image(self, path_file):
-        self.canvas.load_image(path_file)
+        self.imgr.load_image(path_file)
         self.set_fit_window()
 
     def wheelEvent(self, event):
@@ -59,16 +70,21 @@ class ViewerBase(QScrollArea):
 
         mods = event.modifiers()
         if Qt.ControlModifier == int(mods) and v_delta:
-            self.zoomChanged.emit(v_delta)
+            self.on_zoom(v_delta)
         else:
-            v_delta and self.scrollChanged.emit(Qt.Vertical, v_delta)
-            h_delta and self.scrollChanged.emit(Qt.Horizontal, h_delta)
+            v_delta and self.on_scroll(Qt.Vertical, v_delta)
+            h_delta and self.on_scroll(Qt.Horizontal, h_delta)
 
         event.accept()
 
     #####################################################################
 
-    def paint_canvas(self):
+    def _img_size(self):
+        im = self.get_image()
+        h, w = im.shape[:2]
+        return (w, h)
+
+    def repaint(self):
         self.canvas.scale = 0.01 * self.zoom_val
         self.canvas.adjustSize()
         # logger.debug(f"当前的幕布尺寸：{self.canvas.size()}")
@@ -76,7 +92,7 @@ class ViewerBase(QScrollArea):
 
     def set_fit_origin(self):
         self.zoom_val = 100
-        self.paint_canvas()
+        self.repaint()
 
     def set_fit_window(self):
         """Figure out the size of the pixmap in order to fit the main widget."""
@@ -87,19 +103,19 @@ class ViewerBase(QScrollArea):
         # Calculate a new scale value based on the pixmap's aspect ratio.
         # w2 = self.canvas.pixmap.width()
         # h2 = self.canvas.pixmap.height()
-        w2, h2 = self.canvas.img_size()
+        w2, h2 = self._img_size()
         a2 = w2 / h2
         val = w1 / w2 if a2 >= a1 else h1 / h2
         self.zoom_val = int(val * 100)
-        self.paint_canvas()
+        self.repaint()
 
     def set_fit_width(self):
         # The epsilon does not seem to work too well here.
         w = self.width() - 2
         # val = w / self.canvas.pixmap.width()
-        val = w / self.canvas.img_size()[0]
+        val = w / self._img_size()[0]
         self.zoom_val = int(val * 100)
-        self.paint_canvas()
+        self.repaint()
 
     def on_scroll(self, orientation, delta):
         # logger.debug(f"delta: {delta}, orientation: {orientation}")
@@ -120,8 +136,8 @@ class ViewerBase(QScrollArea):
             return
         self.zoom_val = zoom_val
         # logger.debug(f"reset the zoom-scale to: {self.zoom_val}")
-        # self.adjust_bar_pos()  # 重定位当前的bar.position
-        self.paint_canvas()
+        self.adjust_bar_pos()  # 重定位当前的bar.position
+        self.repaint()
 
     def adjust_bar_pos(self):
         # get the current scrollbar positions

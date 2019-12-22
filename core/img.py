@@ -169,6 +169,26 @@ class ImageManager(ImageContainer):
         """ 导出commit的脚本形式 """
 
 
+from PyQt5.QtCore import QObject, pyqtSignal
+class QImageManager(QObject, ImageManager):
+    """ 对于不以ImageManager作为直接的图像显示对象的Canvas容器而言，
+        需要通过Qt信号通知canvas更新视图显示
+    """
+    updateImage = pyqtSignal()
+
+    def set_image(self, im_arr):
+        super().set_image(im_arr)
+        self.updateImage.emit()
+
+    def undo(self):
+        super().undo()
+        self.updateImage.emit()
+
+    def redo(self):
+        super().redo()
+        self.updateImage.emit()
+
+
 from .undo import UndoCommand
 class ImgSnapCommand(UndoCommand):
     """ 功能仅限简单存储图像 """
