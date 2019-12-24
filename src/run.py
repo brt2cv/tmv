@@ -45,7 +45,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=args.loglevel)  # 更改全局默认的Level，仅用于未指定Level的logger对象
 
     #####################################################################
-    py_lib_dir = "runtime/win64/Lib"
+    py_lib_dir = "../runtime/win64/Lib"
     py_lib_default = py_lib_dir + "/site-packages"
     site_expand(py_lib_default)
 

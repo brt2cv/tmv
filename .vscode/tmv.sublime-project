@@ -13,7 +13,6 @@
 			"name": "Builder for PyMV",
 			"selector": "source.python",
 			"shell": true,
-			"working_dir": "$folder",
 			"variants":
 			[
 				{
@@ -43,7 +42,8 @@
 					],
 					"name": "MVTool"
 				}
-			]
+			],
+			"working_dir": "$folder"
 		},
 		{
 			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
@@ -68,6 +68,9 @@
 				"tmp"
 			],
 			"path": "D:\\Home\\workspace\\tmv"
+		},
+		{
+			"path": "D:\\Home\\workspace\\src\\imagepy\\imagepy"
 		}
 	],
 	"settings":
