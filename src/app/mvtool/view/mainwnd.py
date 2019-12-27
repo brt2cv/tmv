@@ -49,8 +49,8 @@ class MainWnd(QWidget):
         # Ctrl-Zone:
         # self._setup_ctrl_zone()
 
-        from .viewer import Viewer
-        self.canvas = Viewer(self)
+        from .viewer import ScrollCanvas
+        self.canvas = ScrollCanvas(self)
         self.ly_show.addWidget(self.canvas)
 
         from utils.gmgr import g
@@ -67,6 +67,3 @@ class MainWnd(QWidget):
         from utils.qt5wx.wx_unit import UnitSlider
         slider = UnitSlider(self, "阈值", val_range=[0, 255], isCheckbox=True, isChecked=False)
         self.ly_ctrl.addWidget(slider)
-
-    def save_data(self):
-        self.status_bar.showMessage("已储存数据")

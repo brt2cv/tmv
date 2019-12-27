@@ -1,3 +1,5 @@
+# viewer模块中的类，是纯粹的Qt类，内部引用了Canvas对象而已
+
 from PyQt5.QtWidgets import QWidget, QScrollArea
 from PyQt5.QtCore import Qt
 
@@ -37,7 +39,7 @@ class QImageManager(QObject, ImageManager):
 
 
 from PyQt5.QtGui import QCursor
-class ViewerBase(QScrollArea):
+class ScrollViewer(QScrollArea):  # ViewerBase
     """ 基本Canvas集成单元，本质上是一个包装器：
         - 通过LabelImg::Canvas显示和勾勒图像
         - 利用ImageContainer存储和管理/输出图像

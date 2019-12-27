@@ -2,9 +2,9 @@ import os.path
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QCursor
 
-from core.canvas.viewer import ViewerBase
+from core.canvas.viewer import ScrollViewer
 
-class Viewer(ViewerBase):
+class ScrollCanvas(ScrollViewer):
     """ 增加拖拽和右键菜单 """
     def __init__(self, parent):
         super().__init__(parent)
