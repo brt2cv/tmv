@@ -24,8 +24,8 @@ class OpenImageFile(Filter):
             QMessageBox.warning(g.get("mwnd"), "错误", "请勿选择多张图片")
             return
         path_pic = file_path[0]
-        # g.get("canvas").load_image(path_pic)
-        self.set_image(imread(path_pic))
+        g.get("canvas").load_image(path_pic)
+        # self.set_image(imread(path_pic))
         g.call("prompt", f"载入图像：{path_pic}", 5)
 
 

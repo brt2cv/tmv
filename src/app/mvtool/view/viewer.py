@@ -186,6 +186,8 @@ class MultiTabCanvas(MultiTabViewer):
                             SuspendLayer.spacing + SuspendLayer.margin)
         widget.addPage(page)
         super().addTab(widget, label)
+        # 跳转到新标签页
+        self.setCurrentWidget(widget)
 
     def set_fit_origin(self):
         viewer = self.currentWidget()
