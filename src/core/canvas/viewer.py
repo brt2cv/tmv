@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QScrollArea
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt
 
 from utils.log import getLogger
 logger = getLogger(1)
@@ -11,6 +11,31 @@ def delta2units(delta):
     return units
 
 
+from ..img import ImageManager
+from PyQt5.QtCore import QObject, pyqtSignal
+class QImageManager(QObject, ImageManager):
+    """ 对于不以ImageManager作为直接的图像显示对象的Canvas容器而言，
+        需要通过Qt信号通知canvas更新视图显示
+    """
+    updateImage = pyqtSignal()  # 通知canvas等Pixmap元素更新UI
+
+    def set_image(self, im_arr):
+        super().set_image(im_arr)
+        self.updateImage.emit()
+
+    def reset(self):
+        super().reset()
+        self.updateImage.emit()
+
+    def undo(self):
+        super().undo()
+        self.updateImage.emit()
+
+    def redo(self):
+        super().redo()
+        self.updateImage.emit()
+
+
 from PyQt5.QtGui import QCursor
 class ViewerBase(QScrollArea):
     """ 基本Canvas集成单元，本质上是一个包装器：
@@ -20,7 +45,6 @@ class ViewerBase(QScrollArea):
     MIN_ZOOM_RATIO = 0.05
 
     def __init__(self, parent):
-        from ..img import QImageManager
         from utils.imgio import ndarray2pixmap
 
         super().__init__(parent)

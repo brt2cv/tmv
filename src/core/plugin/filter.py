@@ -56,7 +56,7 @@ class Filter(FilterBase):
 
 from functools import partial
 from .widgets import TplWidgetsManager
-class DialogFilter(QDialog, Filter):
+class DialogFilterBase(QDialog, Filter):
     title = "Filter"
     view = []  # 简单的垂直布局
     # { "type": "slider",
@@ -144,7 +144,8 @@ class DialogFilter(QDialog, Filter):
         self.show()
 
 
-class PreviewFilter(DialogFilter):
+class DialogFilter(DialogFilterBase):
+    """ 增加预览功能 """
     def setup_ui(self):
         from PyQt5.QtWidgets import QPushButton
         super().setup_ui()

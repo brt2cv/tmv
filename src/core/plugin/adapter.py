@@ -1,5 +1,5 @@
 # 用于转换ImagePy的插件为我所用
-from .filter import Plugin, PreviewFilter
+from .filter import Plugin, DialogFilter
 
 class IpyPlugin(Plugin):
     title = 'Gaussian'
@@ -19,7 +19,7 @@ class IpyPlugin(Plugin):
 
 
 from .. import g
-class PluginAdapter4Ipy(PreviewFilter):
+class PluginAdapter4Ipy(DialogFilter):
     def __init__(self, ipy_plug_cls):
         self.proxy = ipy_plug_cls  # IpyPlugin class
         self.title = ipy_plug_cls.title
