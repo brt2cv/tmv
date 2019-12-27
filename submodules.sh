@@ -8,7 +8,7 @@ branch=$3
     # 添加remote
     # git remote add "m-${dir_module}" $url_repo
 
-    if [ -d mvlib ]; then
+    if [ -d $dir_module ]; then
         git subtree pull --prefix=$dir_module $url_repo $branch --squash
     else
         read -p "是否载入子模块 [y/N]" continue
