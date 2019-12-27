@@ -1,7 +1,11 @@
-from PyQt5.QtWidgets import QDialog, QDialogButtonBox
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QDialogButtonBox, QPushButton
+from PyQt5.QtCore import Qt
 from .. import g
 from .features import IpsFeature, FeatureTypeError
 from . import Plugin
+
+from utils.log import getLogger
+logger = getLogger()
 
 class FilterBase(Plugin):
     """ 图像相关的插件基类 """
@@ -73,14 +77,27 @@ class DialogFilterBase(QDialog, Filter):
         self.para = {}  # para_name: value
         self.needSetupUi = True
 
-    # def _declare(self):
-    #     self.im_mgr
-    #     self.im_arr
-
     def setup_ui(self):
-        from utils.qt5 import loadUi
+        self.resize(400, 10)
+        dlg_layout = QVBoxLayout(self)
+        self.mlayout = QVBoxLayout()  # 主显示区
+        self.buttonBox = QDialogButtonBox(self)
+        self.buttonBox.setOrientation(Qt.Horizontal)
+        # self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+        # self.buttonBox.clicked.connect(self.on_btn_clicked)
+        btn_ok = QPushButton("OK", self)
+        btn_cancel = QPushButton("Cancel", self)
+        self.buttonBox.addButton(btn_ok, QDialogButtonBox.YesRole)
+        self.buttonBox.addButton(btn_cancel, QDialogButtonBox.NoRole)
+        btn_ok.clicked.connect(self.accepted)
+        btn_cancel.clicked.connect(self.rejected)
 
-        loadUi("template/base.ui", self)
+        dlg_layout.addLayout(self.mlayout)
+        dlg_layout.addWidget(self.buttonBox)
+
+        #####################################################################
         self.setWindowTitle(self.title)
 
         tpl_wx_mgr = TplWidgetsManager(self)
@@ -95,7 +112,15 @@ class DialogFilterBase(QDialog, Filter):
             wx.set_slot(partial(self.on_para_changed, para_name, wx))
             self.mlayout.addWidget(wx)
 
-        self.buttonBox.clicked.connect(self.on_btn_clicked)
+    # def on_btn_clicked(self, btn):
+    #     try:
+    #         role = self.buttonBox.standardButton(btn)
+    #         if role == QDialogButtonBox.Ok:
+    #             self.accepted()
+    #         elif role == QDialogButtonBox.Cancel:
+    #             self.rejected()
+    #     except FeatureTypeError:
+    #         return
 
     def on_para_changed(self, para_name, wx):
         self.para[para_name] = wx.get_value()
@@ -105,16 +130,6 @@ class DialogFilterBase(QDialog, Filter):
         im_mgr = g.get("canvas").get_container()
         im_mgr.commit(im_arr)
 
-    def on_btn_clicked(self, btn):
-        try:
-            role = self.buttonBox.standardButton(btn)
-            if role == QDialogButtonBox.Ok:
-                self.accepted()
-            elif role == QDialogButtonBox.Cancel:
-                self.rejected()
-        except FeatureTypeError:
-            return
-
     def reset(self):
         im_mgr = g.get("canvas").get_container()
         im_mgr.reset()
@@ -122,12 +137,16 @@ class DialogFilterBase(QDialog, Filter):
 
     def accepted(self):
         """ 将当前图像设置为image """
-        im_arr = self.get_image()
-        self.check_features(im_arr)
+        try:
+            im_arr = self.get_image()
+            self.check_features(im_arr)
 
-        im2 = self.processing(im_arr)
-        self.set_image(im2)  # 更新snap
-        self.update_canvas()
+            im2 = self.processing(im_arr)
+            self.set_image(im2)  # 更新snap
+            self.update_canvas()
+
+        except Exception as e:
+            logger.warning(e)
 
     def rejected(self):
         """ 取消图像变更 """
@@ -147,24 +166,27 @@ class DialogFilterBase(QDialog, Filter):
 class DialogFilter(DialogFilterBase):
     """ 增加预览功能 """
     def setup_ui(self):
-        from PyQt5.QtWidgets import QPushButton
         super().setup_ui()
         # 添加reset按钮
         btn_reset = QPushButton("Reset", self)
         btn_preview = QPushButton("Preview", self)
-        self.buttonBox.addButton(btn_reset, QDialogButtonBox.ResetRole)
         self.buttonBox.addButton(btn_preview, QDialogButtonBox.ResetRole)
+        self.buttonBox.addButton(btn_reset, QDialogButtonBox.ResetRole)
         btn_reset.clicked.connect(self.reset)
         btn_preview.clicked.connect(self.preview)
 
     def preview(self):
-        im_arr = self.get_image()
-        self.check_features(im_arr)
+        try:
+            im_arr = self.get_image()
+            self.check_features(im_arr)
 
-        im2 = self.processing(im_arr)
-        im_mgr = g.get("canvas").get_container()
-        im_mgr.set_image(im2)  # 不更新snap
-        self.update_canvas()
+            im2 = self.processing(im_arr)
+            im_mgr = g.get("canvas").get_container()
+            im_mgr.set_image(im2)  # 不更新snap
+            self.update_canvas()
+
+        except Exception as e:
+            logger.warning(e)
 
     # @override
     def on_para_changed(self, para_name, wx):
