@@ -1,6 +1,6 @@
-from core.plugin.filter import DialogFilter
+from core.plugin.filter import PreviewFilter
 
-class DemoDlg(DialogFilter):
+class DemoDlg(PreviewFilter):
     features = {
         "mode": "rgb",
         "dtype": "uint8"

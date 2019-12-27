@@ -55,7 +55,11 @@ class MainWnd(QWidget):
 
         from utils.gmgr import g
         g.register("canvas", self.canvas)
-        g.register("prompt", self.status_bar.showMessage, True)
+
+        def promp_in_second(message, timeout=0):
+            """ 使用'秒'为单位显示图像 """
+            self.status_bar.showMessage(message, timeout*1000)
+        g.register("prompt", promp_in_second, True)
 
         self._setup_ctrl()
 

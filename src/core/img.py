@@ -174,10 +174,14 @@ class QImageManager(QObject, ImageManager):
     """ 对于不以ImageManager作为直接的图像显示对象的Canvas容器而言，
         需要通过Qt信号通知canvas更新视图显示
     """
-    updateImage = pyqtSignal()
+    updateImage = pyqtSignal()  # 通知canvas等Pixmap元素更新UI
 
     def set_image(self, im_arr):
         super().set_image(im_arr)
+        self.updateImage.emit()
+
+    def reset(self):
+        super().reset()
         self.updateImage.emit()
 
     def undo(self):

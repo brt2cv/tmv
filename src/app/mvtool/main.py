@@ -27,7 +27,7 @@ class ModulePlugin:
             self.mwnd = callback_mwnd()
 
         self.mwnd.show()
-        self.mwnd.canvas.load_image("tmp/test.jpg")
+        self.mwnd.canvas.load_image("app/mvtool/res/example.jpg")
         app.exec_()
 
 

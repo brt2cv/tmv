@@ -4,16 +4,27 @@
         "members": [
             {
                 "name": "Open",
-                "description": "打开图像",
+                "description": "打开",
                 "icon": "app/mvtool/res/open.png",
                 "shortcut": "Ctrl+O",
                 "plugin": "OpenImageFile"
             },
             {
-                "name": "Save",
-                "description": "打开图像",
+                "name": "SaveAs",
+                "description": "另存为",
                 "icon": "app/mvtool/res/save.png",
-                "shortcut": "Ctrl+S"
+                "shortcut": "Ctrl+S",
+                "plugin": "SaveAsImageFile"
+            },
+            {
+                "name": "Resize",
+                "description": "缩放",
+                "plugin": "ResizeImageFile"
+            },
+            {
+                "name": "ImgInfo",
+                "description": "图像信息",
+                "plugin": "CurrImageInfo"
             }
         ]
     },

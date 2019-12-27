@@ -11,7 +11,7 @@ class Undo(Filter):
             im_mgr.undo()
             self.update_canvas()
         except UndoIndexError as e:
-            g.call("prompt", str(e), 5000)
+            g.call("prompt", str(e), 5)
 
 class Redo(Filter):
     def run(self):
@@ -20,7 +20,7 @@ class Redo(Filter):
             im_mgr.redo()
             self.update_canvas()
         except UndoIndexError as e:
-            g.call("prompt", str(e), 5000)
+            g.call("prompt", str(e), 5)
 
 class UndoDebugger(Filter):
     def run(self):

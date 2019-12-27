@@ -3,7 +3,8 @@ from .. import g
 from .features import IpsFeature, FeatureTypeError
 from . import Plugin
 
-class FilterBase(Plugin):  # Plugin4ImgProcessing
+class FilterBase(Plugin):
+    """ 图像相关的插件基类 """
     features = {}
 
     def processing(self, im_arr):
@@ -39,8 +40,8 @@ class Filter(FilterBase):
     """ 对于ImageContainer进行操作 """
     def get_image(self):
         im_mgr = g.get("canvas").get_container()
-        im_arr = im_mgr.get_snap()
-        return im_arr
+        ips = im_mgr.get_snap()
+        return ips
 
     def set_image(self, im_arr):
         """ 将处理完成的图像，更新到主界面 """
@@ -70,7 +71,7 @@ class DialogFilter(QDialog, Filter):
         """
         super().__init__(parent)
         self.para = {}  # para_name: value
-        self.setup_ui()
+        self.needSetupUi = True
 
     # def _declare(self):
     #     self.im_mgr
@@ -85,31 +86,24 @@ class DialogFilter(QDialog, Filter):
         tpl_wx_mgr = TplWidgetsManager(self)
         for dict_wx in self.view:
             para_name = dict_wx["para"]
-            para_val = dict_wx["val_init"]
+            para_val = dict_wx.get("val_init", 0)
 
             wx = tpl_wx_mgr.parse_elem(dict_wx)
             if "para" in dict_wx:
                 self.para[para_name] = para_val
 
-            def on_value_changed(para_name, wx):
-                self.para[para_name] = wx.get_value()
-                self.preview()  # 实时预览
-
-            wx.set_slot(partial(on_value_changed, para_name, wx))
+            wx.set_slot(partial(self.on_para_changed, para_name, wx))
             self.mlayout.addWidget(wx)
 
         self.buttonBox.clicked.connect(self.on_btn_clicked)
+
+    def on_para_changed(self, para_name, wx):
+        self.para[para_name] = wx.get_value()
 
     def set_image(self, im_arr):
         """ 将处理完成的图像，更新到主界面 """
         im_mgr = g.get("canvas").get_container()
         im_mgr.commit(im_arr)
-
-    # def make_dialog(self, parent):
-    #     # 延迟构造...
-    #     from utils.gmgr import g
-    #     dlg = DlgTplBase(g.get("mwnd"))
-    #     return dlg
 
     def on_btn_clicked(self, btn):
         try:
@@ -118,19 +112,8 @@ class DialogFilter(QDialog, Filter):
                 self.accepted()
             elif role == QDialogButtonBox.Cancel:
                 self.rejected()
-            else:  # Reset
-                self.reset()
         except FeatureTypeError:
             return
-
-    def preview(self):
-        im_arr = self.get_image()
-        self.check_features(im_arr)
-
-        im2 = self.processing(im_arr)
-        im_mgr = g.get("canvas").get_container()
-        im_mgr.set_image(im2)  # 不更新snap
-        self.update_canvas()
 
     def reset(self):
         im_mgr = g.get("canvas").get_container()
@@ -152,7 +135,41 @@ class DialogFilter(QDialog, Filter):
 
     def run(self):
         """ 调用的接口，显示主窗口 """
+        if self.needSetupUi:
+            self.setup_ui()  # 延迟构造窗口UI
+            self.needSetupUi = False
+
         ips = self.get_image()
         self.check_features(ips)
         self.show()
+
+
+class PreviewFilter(DialogFilter):
+    def setup_ui(self):
+        from PyQt5.QtWidgets import QPushButton
+        super().setup_ui()
+        # 添加reset按钮
+        btn_reset = QPushButton("Reset", self)
+        btn_preview = QPushButton("Preview", self)
+        self.buttonBox.addButton(btn_reset, QDialogButtonBox.ResetRole)
+        self.buttonBox.addButton(btn_preview, QDialogButtonBox.ResetRole)
+        btn_reset.clicked.connect(self.reset)
+        btn_preview.clicked.connect(self.preview)
+
+    def preview(self):
+        im_arr = self.get_image()
+        self.check_features(im_arr)
+
+        im2 = self.processing(im_arr)
+        im_mgr = g.get("canvas").get_container()
+        im_mgr.set_image(im2)  # 不更新snap
+        self.update_canvas()
+
+    # @override
+    def on_para_changed(self, para_name, wx):
+        super().on_para_changed(para_name, wx)
+        self.preview()  # 实时预览
+
+    def run(self):
+        super().run()
         self.preview()  # 显示窗口时即应用预览

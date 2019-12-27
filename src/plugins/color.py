@@ -1,5 +1,5 @@
 # from PyQt5.QtWidgets import QMessageBox
-from core.plugin.filter import Filter, DialogFilter
+from core.plugin.filter import Filter, PreviewFilter
 
 class Gray(Filter):
     title = 'Gray'
@@ -14,7 +14,7 @@ class Gray(Filter):
         return gray
 
 
-class Threshold(DialogFilter):
+class Threshold(PreviewFilter):
     title = "Threshold"
     features = {
         "mode": "gray"
