@@ -8,6 +8,11 @@ from mvlib import resize
 from core import g
 from core.plugin.filter import Filter, DialogFilter
 
+class NewViewerLabel(Filter):
+    def run(self):
+        """ override: 无需打开图像 """
+        g.get("canvas").addTab()
+
 
 class OpenImageFile(Filter):
     def run(self):

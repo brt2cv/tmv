@@ -95,17 +95,22 @@
         "name": "Default",
         "members": [
             {
+                "name": "New",
+                "description": "新建标签",
+                "icon": "app/mvtool/res/New.png",
+                "shortcut": "Ctrl+N",
+                "plugin": "NewViewerLabel"
+            },
+            {
                 "name": "Open",
                 "description": "打开图像",
                 "icon": "app/mvtool/res/open.png",
-                "shortcut": "Ctrl+O",
                 "plugin": "OpenImageFile"
             },
             {
                 "name": "Save",
-                "description": "打开图像",
-                "icon": "app/mvtool/res/save.png",
-                "shortcut": "Ctrl+S"
+                "description": "图像另存",
+                "icon": "app/mvtool/res/save.png"
             }
         ]
     }

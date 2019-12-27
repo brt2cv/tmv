@@ -38,6 +38,39 @@ class QImageManager(QObject, ImageManager):
         self.updateImage.emit()
 
 
+from PyQt5.QtWidgets import QTabWidget
+class MultiTabViewer(QTabWidget):
+    """ 基于QTabWidget的画布 """
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setTabsClosable(True)
+        self.setUsesScrollButtons(True)
+        self.setMovable(True)
+        # self.setTabPosition(QTabWidget.South)
+        # self.setTabShape(QTabWidget.Triangular)
+        self.tabCloseRequested.connect(self.removeTab)
+
+    # addTab(QWidget *page, const QIcon &icon, const QString &label)
+    # currentWidget() const
+    # widget(int index) const
+
+    def get_container(self):
+        viewer = self.currentWidget()
+        return viewer.get_container()
+
+    def get_image(self):
+        viewer = self.currentWidget()
+        return viewer.get_container()
+
+    def set_image(self, im_arr):
+        viewer = self.currentWidget()
+        return viewer.set_image(im_arr)
+
+    def load_image(self, path_file):
+        viewer = self.currentWidget()
+        return viewer.load_image(path_file)
+
+
 from PyQt5.QtGui import QCursor
 class ScrollViewer(QScrollArea):  # ViewerBase
     """ 基本Canvas集成单元，本质上是一个包装器：

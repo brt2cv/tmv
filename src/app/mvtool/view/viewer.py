@@ -2,7 +2,7 @@ import os.path
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QCursor
 
-from core.canvas.viewer import ScrollViewer
+from core.canvas.viewer import ScrollViewer, MultiTabViewer
 
 class ScrollCanvas(ScrollViewer):
     """ 增加拖拽和右键菜单 """
@@ -62,3 +62,25 @@ class ScrollCanvas(ScrollViewer):
             self.customContextMenuRequested.connect(self.on_right_menu)
         else:
             self.customContextMenuRequested.disconnect(self.on_right_menu)
+
+
+class MultiTabCanvas(MultiTabViewer):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.index = -1
+        self.addTab()
+
+    def default_name(self):
+        self.index += 1
+        return f"img_{self.index}"
+
+    def addTab(self, label=None):
+        if label is None:
+            label = self.default_name()
+        widget = ScrollCanvas(self)
+        super().addTab(widget, label)
+
+    def removeTab(self, index):
+        super().removeTab(index)
+        if self.count() == 0:
+            self.addTab()
