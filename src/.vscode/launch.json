@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "pythonPath": "D:/Home/workspace/pymv/runtime/win64/Scripts/python",
-            "name": "Python: MVTool",
+            "pythonPath": "D:/Home/workspace/tmv/runtime/win64/Scripts/python",
+            "name": "MVTool",
             "type": "python",
             "request": "launch",
             "module": "run",
             "console": "integratedTerminal",
             "args": ["tmv"]
-        },
+        }
     ]
 }
