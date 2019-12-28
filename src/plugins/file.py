@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtGui import QPixmap
 from utils.qt5 import dialog_file_select
 
 from utils.imgio import imread, imwrite
@@ -74,3 +75,13 @@ class ResizeImageFile(DialogFilter):
         self.view[0]["val_init"] = w
         self.view[1]["val_init"] = h
         super().run()
+
+class AboutMe(Filter):
+    def run(self):
+        msgbox = QMessageBox(QMessageBox.NoIcon,
+                             "关于",
+                             "感谢ImagePy的开源，回馈开源社区",
+                             parent = g.get("mwnd"))
+        msgbox.setDetailedText('版权：Bright Li\nTel: 18131218231\nE-mail: brt2@qq.com')
+        msgbox.setIconPixmap(QPixmap("app/mvtool/res/logo.png"))
+        msgbox.exec_()

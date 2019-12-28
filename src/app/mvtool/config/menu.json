@@ -91,7 +91,12 @@
     },
     {
         "name": "Help",
-        "members": []
+        "members": [
+            {
+                "name": "关于",
+                "plugin": "AboutMe"
+            }
+        ]
     }
 ],
 "toolbar": [
