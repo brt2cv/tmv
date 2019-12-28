@@ -7,6 +7,7 @@ class Gray(Filter):
         "mode": "rgb",
         "dtype": "uint8"
     }
+    scripts = "{output} = mvlib.rgb2gray({im})"
 
     def processing(self, im_arr):
         from mvlib.color import rgb2gray
@@ -35,6 +36,7 @@ class Threshold(DialogFilter):
         "para": "maxval"
     }]
     # para = {"thresh": 128, "maxval": 255}
+    scripts = "{output} = mvlib.threshold({im}, {thresh}, {maxval})"
 
     def processing(self, im_arr):
         from mvlib.filters import threshold

@@ -40,8 +40,30 @@ class FilterBase(Plugin):
         self.set_image(im2)
 
 
+import re
 class Filter(FilterBase):
     """ 对于ImageContainer进行操作 """
+    scripts = ""  # or list of str
+    para = {}
+    _pattern = re.compile(r'{.+?}')
+
+    def parse_script(self):
+        """ 输入脚本，可多次调用，不断压入self.scripts中
+            format:
+                {img_out}, <var_out0>, var_out1 = <object>.operator(&, <var_in0>, var_in1)
+                其中 img_in，即为当前curr_img；
+                     img_out、object 通过UI获取；
+                     var_out、var_in 可直接指定，也可能需要UI确定
+            另，由于脚本会输出变量，需要增加变量名检测。
+        """
+        ret = self.scripts
+        list_para = re.findall(self._pattern, self.scripts)
+        for para_with_brace in list_para:
+            para_name = para_with_brace[1:-1]
+            if para_name in self.para:
+                ret = ret.replace(para_with_brace, str(self.para[para_name]))
+        return ret
+
     def get_image(self):
         im_mgr = g.get("canvas").get_container()
         ips = im_mgr.get_snap()
@@ -49,8 +71,10 @@ class Filter(FilterBase):
 
     def set_image(self, im_arr):
         """ 将处理完成的图像，更新到主界面 """
+        g.get("canvas").set_image(im_arr)
         im_mgr = g.get("canvas").get_container()
-        im_mgr.commit(im_arr)
+        script = self.parse_script()
+        im_mgr.commit(script)
         self.update_canvas()
 
     def update_canvas(self):
@@ -124,11 +148,6 @@ class DialogFilterBase(QDialog, Filter):
 
     def on_para_changed(self, para_name, wx):
         self.para[para_name] = wx.get_value()
-
-    def set_image(self, im_arr):
-        """ 将处理完成的图像，更新到主界面 """
-        im_mgr = g.get("canvas").get_container()
-        im_mgr.commit(im_arr)
 
     def reset(self):
         im_mgr = g.get("canvas").get_container()

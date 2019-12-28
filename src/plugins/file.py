@@ -15,6 +15,8 @@ class NewViewerLabel(Filter):
 
 
 class OpenImageFile(Filter):
+    scripts = "{output} = mvlib.io.imread({path_img})"
+
     def run(self):
         """ override: 无需打开图像 """
         file_path = dialog_file_select(g.get("mwnd"), "Images (*.png *.jpg)")
@@ -24,8 +26,12 @@ class OpenImageFile(Filter):
             QMessageBox.warning(g.get("mwnd"), "错误", "请勿选择多张图片")
             return
         path_pic = file_path[0]
-        g.get("canvas").load_image(path_pic)
-        # self.set_image(imread(path_pic))
+        self.open(path_pic)
+
+    def open(self, path_pic):
+        self.para["path_img"] = f"\"{path_pic}\""  # commit scripts para
+
+        self.set_image(imread(path_pic))
         g.call("prompt", f"载入图像：{path_pic}", 5)
 
 
@@ -45,20 +51,22 @@ class ResizeImageFile(DialogFilter):
     title = "Resize Image"
     view = [{
         "type": "edit",
-        "name": "width",
+        "name": "width  ",
         "isCheckbox": False,
         "para": "width"
     },{
         "type": "edit",
-        "name": "height",
+        "name": "height ",
         "isCheckbox": False,
         "para": "height"
     }]
+    scripts = "{output} = mvlib.resize({im}, {size})"
 
     def processing(self, im_arr):
-        width = self.para["width"]
-        height = self.para["height"]
-        return resize(im_arr, [width, height])
+        width = int(self.para["width"])
+        height = int(self.para["height"])
+        self.para["size"] = [width, height]  # commit scripts para
+        return resize(im_arr, self.para["size"])
 
     def run(self):
         ips = self.get_image()
@@ -66,26 +74,3 @@ class ResizeImageFile(DialogFilter):
         self.view[0]["val_init"] = w
         self.view[1]["val_init"] = h
         super().run()
-
-class CurrImageInfo(Filter):
-    def _print_info(self, im):
-        print(im)
-
-        list_info = []
-        print("#"*60)
-        list_info.append(f"Shape: 【{im.shape}】")
-        list_info.append(f"Size:  【{im.size}】")
-        list_info.append(f"Type:  【{im.dtype}】")
-        str_info = "\n".join(list_info)
-        print(str_info)
-        print("#"*60)
-        return str_info
-
-    def run(self):
-        print(">> canvas显示图像(curr)")
-        im_mgr = g.get("canvas").get_container()
-        str_info = self._print_info(im_mgr.curr)
-        QMessageBox.information(g.get("mwnd"), "图像信息", str_info)
-
-        print(">> canvas存储图像(snap)")
-        self._print_info(im_mgr.snap)

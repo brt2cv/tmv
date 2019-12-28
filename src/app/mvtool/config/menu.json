@@ -20,11 +20,6 @@
                 "name": "Resize",
                 "description": "缩放",
                 "plugin": "ResizeImageFile"
-            },
-            {
-                "name": "ImgInfo",
-                "description": "图像信息",
-                "plugin": "CurrImageInfo"
             }
         ]
     },
@@ -44,9 +39,16 @@
                 "plugin": "Redo"
             },
             {
-                "name": "UndoDebugger",
-                "icon": "app/mvtool/res/reset.png",
+                "name": "Undo栈状态",
                 "plugin": "UndoDebugger"
+            },
+            {
+                "name": "图像信息",
+                "plugin": "CurrImageInfo"
+            },
+            {
+                "name": "导出脚本",
+                "plugin": "ImgStackScripts"
             }
         ]
     },
@@ -55,11 +57,13 @@
         "members": [
             {
                 "name": "Gray",
+                "shortcut": "Ctrl+G",
                 "icon": "app/mvtool/res/pencil.png",
                 "plugin": "Gray"
             },
             {
                 "name": "Threshold",
+                "shortcut": "Ctrl+H",
                 "plugin": "Threshold"
             }
         ]
@@ -95,22 +99,30 @@
         "name": "Default",
         "members": [
             {
-                "name": "New",
-                "description": "新建标签",
+                "name": "新建标签",
                 "icon": "app/mvtool/res/New.png",
                 "shortcut": "Ctrl+N",
                 "plugin": "NewViewerLabel"
             },
             {
-                "name": "Open",
-                "description": "打开图像",
+                "name": "打开图像",
                 "icon": "app/mvtool/res/open.png",
                 "plugin": "OpenImageFile"
             },
             {
-                "name": "Save",
-                "description": "图像另存",
-                "icon": "app/mvtool/res/save.png"
+                "name": "图像另存",
+                "icon": "app/mvtool/res/save.png",
+                 "plugin": "SaveAsImageFile"
+            },
+            {
+                "name": "撤销",
+                "icon": "app/mvtool/res/prev.png",
+                "plugin": "Undo"
+            },
+            {
+                "name": "恢复",
+                "icon": "app/mvtool/res/next.png",
+                "plugin": "Redo"
             }
         ]
     }

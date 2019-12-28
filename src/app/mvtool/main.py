@@ -27,7 +27,10 @@ class ModulePlugin:
             self.mwnd = callback_mwnd()
 
         self.mwnd.show()
-        self.mwnd.canvas.load_image("app/mvtool/res/example.jpg")
+        # self.mwnd.canvas.load_image()
+        from plugins.file import OpenImageFile
+        plugin = OpenImageFile()
+        plugin.open("app/mvtool/res/example.jpg")
         app.exec_()
 
 

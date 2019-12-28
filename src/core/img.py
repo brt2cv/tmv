@@ -125,9 +125,9 @@ class ImageManager(ImageContainer):
     def reset(self):
         self.curr = self.snap.copy()
 
-    def load_image(self, path_file):
-        im_arr = imread(path_file)
-        self.commit(im_arr)
+    # def load_image(self, path_file):
+    #     im_arr = imread(path_file)
+    #     self.commit(im_arr)
 
     def get_image(self):
         return self.curr
@@ -137,7 +137,7 @@ class ImageManager(ImageContainer):
 
     def set_image(self, im_arr):
         """ 注意：Manager中set_image() 只是临时显示图像
-            如确定存储图像，应使用commit()
+            如确定存储图像，应配合使用commit()
         """
         assert isinstance(im_arr, np.ndarray), f"未识别的图像格式：【{type(im_arr)}】"
         if isinstance(im_arr, ImagePlus):
@@ -145,11 +145,11 @@ class ImageManager(ImageContainer):
         else:
             self.curr = ImagePlus(im_arr)
 
-    def commit(self, im_arr):
-        """ 类似set_image()，但会增加take_snap()操作，并写入UndoStack """
-        self.set_image(im_arr)
+    def commit(self, scripts=None):
+        """ 确定当前图像take_snap()操作，并写入UndoStack """
         ips_prev = None if self.snap is None else self.snap.copy()
-        cmd = ImgSnapCommand(ips_prev, self.curr.copy())
+        # cmd = ImgSnapCommand(ips_prev, self.curr.copy())
+        cmd = ImgScriptCommand(ips_prev, scripts, self.curr.copy())
         self.stack.commit(cmd)
         self.take_snap()
 
@@ -167,6 +167,10 @@ class ImageManager(ImageContainer):
 
     def dumps(self):
         """ 导出commit的脚本形式 """
+        list_scripts = []
+        for uno_cmd in self.stack.stack_undo:
+            list_scripts.append(uno_cmd.scripts)
+        return list_scripts
 
 
 from .undo import UndoCommand
@@ -181,3 +185,9 @@ class ImgSnapCommand(UndoCommand):
 
     def rollback(self):
         return None if self.prev is None else self.prev.copy()
+
+class ImgScriptCommand(ImgSnapCommand):
+    """ 实现对操作函数的记录 """
+    def __init__(self, ips_prev, scripts, ips_new):
+        super().__init__(ips_prev, ips_new)
+        self.scripts = scripts
