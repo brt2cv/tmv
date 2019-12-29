@@ -39,7 +39,7 @@ class QImageManager(QObject, ImageManager):
 
 
 from PyQt5.QtWidgets import QTabWidget
-class MultiTabViewer(QTabWidget):
+class TabViewer(QTabWidget):
     """ 基于QTabWidget的画布 """
     def __init__(self, parent):
         super().__init__(parent)
@@ -70,6 +70,41 @@ class MultiTabViewer(QTabWidget):
     def load_image(self, path_file):
         viewer = self.currentWidget()
         return viewer.load_image(path_file)
+
+
+class GridViewer(QWidget):
+    def __init__(self, parent, nRow, nColumn):
+        from PyQt5.QtWidgets import QGridLayout
+
+        super().__init__(parent)
+        # self.imgr = QImageManager()
+        # self.imgr.updateImage.connect(update_canvas)
+
+        self.grid = QGridLayout(self)
+        self.setLayout(self.grid)
+
+        positions = [(i,j) for i in range(nRow) for j in range(nColumn)]
+        # for pos, name in zip(positions, names):
+        for pos in positions:
+            canvas = self.setup_cell()
+            self.grid.addWidget(canvas, *pos)
+
+    def setup_cell(self):
+        """ 创建cell中的canvas """
+        return ScrollViewer(self.parent())
+
+    # def get_container(self):
+    #     return self.imgr
+
+    def get_image(self, index):
+        return self.grid.itemAt(index).widget().get_image()
+
+    def set_image(self, list_im_arr):
+        count = self.grid.count()
+        assert count >= len(list_im_arr), f"param[1]的数组太长，没有足够的cells放置"
+        for index, im_arr in enumerate(list_im_arr):
+            canvas = self.grid.itemAt(index).widget()
+            canvas.set_image(im_arr)
 
 
 from PyQt5.QtGui import QCursor

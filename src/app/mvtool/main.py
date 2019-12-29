@@ -32,7 +32,7 @@ class ModulePlugin:
             from plugins.file import OpenImageFile
             plugin = OpenImageFile()
             plugin.open("app/mvtool/res/example.jpg")
-        # auto_open_testing()
+        auto_open_testing()
         app.exec_()
 
 

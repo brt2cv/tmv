@@ -37,8 +37,8 @@ class MainWnd(QWidget):
         # Ctrl-Zone:
         # self._setup_ctrl_zone()
 
-        from .viewer import MultiTabCanvas
-        self.canvas = MultiTabCanvas(self)
+        from .viewer import TabCanvas
+        self.canvas = TabCanvas(self)
         self.ly_show.addWidget(self.canvas)
 
         from utils.gmgr import g

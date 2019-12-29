@@ -65,6 +65,10 @@
                 "name": "Threshold",
                 "shortcut": "Ctrl+H",
                 "plugin": "Threshold"
+            },
+            {
+                "name": "拆分RGB通道",
+                "plugin": "SplitRGB"
             }
         ]
     },

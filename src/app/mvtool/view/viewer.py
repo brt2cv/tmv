@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QCursor
 from PyQt5.QtCore import Qt
 
-from core.canvas.viewer import ScrollViewer, MultiTabViewer
+from core.canvas.viewer import ScrollViewer, TabViewer, GridViewer
 
 class ScrollCanvas(ScrollViewer):
     """ 增加拖拽和右键菜单 """
@@ -64,50 +64,8 @@ class ScrollCanvas(ScrollViewer):
             self.customContextMenuRequested.disconnect(self.on_right_menu)
     """
 
-from PyQt5.QtWidgets import QWidget, QStackedLayout, QVBoxLayout
-class StackCanvas(QWidget):
-    """ 用于多个widget的堆叠放置，如悬浮按钮 """
-    def __init__(self, base_widget):
-        super().__init__(base_widget.parent())
-        self.base = base_widget
-        self.layout = QStackedLayout(self)
-        self.layout.setStackingMode(QStackedLayout.StackAll)
-        self.layout.addWidget(self.base)
 
-        self.base.setWindowFlags(Qt.WindowStaysOnBottomHint)  # 置底
-        self.setLayout(self.layout)
-
-    def get_base(self):
-        return self.base
-
-    # def addWidget(self, widget):
-    #     """ 向当前page页添加控件对象 """
-    #     count = self.layout.count()
-    #     assert count > 1, "请勿向base页面添加控件, Maybe you shold addPage()"
-    #     suspend_layer_wx = self.layout.widget(count - 1)
-    #     suspend_layer_wx.addWidget(widget)
-
-    def addPage(self, page):
-        """ 增加page页面 """
-        self.layout.addWidget(page)
-        page.raise_()
-        page.setWindowFlags(Qt.WindowStaysOnTopHint)  # 置顶
-
-    def get_container(self):
-        return self.base.get_container()
-
-    def get_image(self):
-        return self.base.get_container()
-
-    def set_image(self, im_arr):
-        return self.base.set_image(im_arr)
-
-    def load_image(self, path_file):
-        return self.base.load_image(path_file)
-
-
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton
 from PyQt5.QtGui import QMouseEvent, QIcon
 class SuspendLayer(QWidget):
     """ 用于传递事件 """
@@ -157,26 +115,27 @@ class SuspendLayer(QWidget):
             self.setAttribute(Qt.WA_TransparentForMouseEvents, False)
     """
 
-class MultiTabCanvas(MultiTabViewer):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.index = -1
-        self.addTab()
 
-    def default_name(self):
-        self.index += 1
-        return f"img_{self.index}"
+from PyQt5.QtWidgets import QStackedLayout
+class StackCanvas(QWidget):
+    """ 用于多个widget的堆叠放置，如悬浮按钮 """
+    def __init__(self, base_widget):
+        super().__init__(base_widget.parent())
+        self.base = base_widget
+        self.layout = QStackedLayout(self)
+        self.layout.setStackingMode(QStackedLayout.StackAll)
+        self.layout.addWidget(self.base)
 
-    def addTab(self, label=None):
-        if label is None:
-            label = self.default_name()
+        self.base.setWindowFlags(Qt.WindowStaysOnBottomHint)  # 置底
+        self.setLayout(self.layout)
+        self.setup_buttons()
 
-        widget = StackCanvas(ScrollCanvas(self))
+    def setup_buttons(self):
         page = SuspendLayer(self)
         list_btns = [
-            ("app/mvtool/res/zoom.png", "原始尺寸", self.set_fit_origin),
-            ("app/mvtool/res/fit-window.png", "适配窗口", self.set_fit_window),
-            ("app/mvtool/res/fit-width.png", "适配宽度", self.set_fit_width)
+            ("app/mvtool/res/zoom.png", "原始尺寸", self.base.set_fit_origin),
+            ("app/mvtool/res/fit-window.png", "适配窗口", self.base.set_fit_window),
+            ("app/mvtool/res/fit-width.png", "适配宽度", self.base.set_fit_width)
         ]
         for btn_args in list_btns:
             page.addButton(*btn_args)
@@ -184,24 +143,105 @@ class MultiTabCanvas(MultiTabViewer):
         nBtns = len(list_btns)
         page.setFixedHeight(SuspendLayer.btn_size * nBtns + (nBtns -1) *
                             SuspendLayer.spacing + SuspendLayer.margin)
-        widget.addPage(page)
-        super().addTab(widget, label)
-        # 跳转到新标签页
-        self.setCurrentWidget(widget)
+        self.addPage(page)
 
-    def set_fit_origin(self):
-        viewer = self.currentWidget()
-        viewer.base.set_fit_origin()
+    def get_base(self):
+        return self.base
 
-    def set_fit_window(self):
-        viewer = self.currentWidget()
-        viewer.base.set_fit_window()
+    # def addWidget(self, widget):
+    #     """ 向当前page页添加控件对象 """
+    #     count = self.layout.count()
+    #     assert count > 1, "请勿向base页面添加控件, Maybe you shold addPage()"
+    #     suspend_layer_wx = self.layout.widget(count - 1)
+    #     suspend_layer_wx.addWidget(widget)
 
-    def set_fit_width(self):
-        viewer = self.currentWidget()
-        viewer.base.set_fit_width()
+    def addPage(self, page):
+        """ 增加page页面 """
+        self.layout.addWidget(page)
+        page.raise_()
+        page.setWindowFlags(Qt.WindowStaysOnTopHint)  # 置顶
+
+    def get_container(self):
+        return self.base.get_container()
+
+    def get_image(self):
+        return self.base.get_container()
+
+    def set_image(self, im_arr):
+        return self.base.set_image(im_arr)
+
+    def load_image(self, path_file):
+        return self.base.load_image(path_file)
+
+
+import mvlib
+class GridCanvas(GridViewer):
+    # def __init__(self, parent):
+    #     super().__init__(parent)
+
+    def mouseDoubleClickEvent(self, event):
+        """ 双击时，恢复到单一窗格 """
+        print("双击 >>", event)
+
+    # def set_image(self, im_arr):
+    #     from utils.imgio import guess_mode
+    #     if guess_mode(im_arr) != "L":
+    #         im_arr = mvlib.rgb2gray(im_arr)
+
+    #     self.im_mgr.set_image(im_arr)
+    #     count = self.grid.count()
+    #     for index in range(count):
+    #         canvas = self.grid.itemAt(index).widget()
+    #         im2 = mvlib.threshold(im_arr, 255/(count+1) * (index+1))
+    #         canvas.set_image(im2)
+
+
+class TabCanvas(TabViewer):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.index = -1
+        self.add_tab_stack()
+
+    def default_name(self):
+        self.index += 1
+        return f"img_{self.index}"
+
+    # def set_fit_origin(self):
+    #     viewer = self.currentWidget().base
+    #     viewer.set_fit_origin()
+
+    # def set_fit_window(self):
+    #     viewer = self.currentWidget().base
+    #     viewer.set_fit_window()
+
+    # def set_fit_width(self):
+    #     viewer = self.currentWidget().base
+    #     viewer.set_fit_width()
 
     def removeTab(self, index):
         super().removeTab(index)
         if self.count() == 0:
             self.addTab()
+
+    def add_tab_stack(self, label=None):
+        if label is None:
+            label = self.default_name()
+
+        stack_canvas = StackCanvas(ScrollCanvas(self))
+        self.addTab(stack_canvas, label)
+        self.setCurrentWidget(stack_canvas)  # 跳转到新标签页
+
+    def add_tab_grib(self, nRow, nColumn, label=None):
+        if label is None:
+            label = self.default_name()
+
+        grib_canvas = GridCanvas(self, nRow, nColumn)
+        self.addTab(grib_canvas, label)
+        self.setCurrentWidget(grib_canvas)  # 跳转到新标签页
+
+    def stack2grib(self, nRow, nColumn):
+        # viewer = self.currentWidget().base
+        self.add_tab_grib(nRow, nColumn)
+
+    def grib2stack(self, index=-1):
+        """ index: 指示用九宫格中哪张图像作为stack.im_mgr """

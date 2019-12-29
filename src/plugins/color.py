@@ -1,5 +1,6 @@
 # from PyQt5.QtWidgets import QMessageBox
 from core.plugin.filter import Filter, DialogFilter
+from core import g
 
 class Gray(Filter):
     title = 'Gray'
@@ -49,3 +50,23 @@ class Threshold(DialogFilter):
         self.resize(400, 0)
         # self.move(0, 20)
         super().run()
+
+
+class SplitRGB(Filter):
+    title = 'Split RGB Channels'
+    features = {"mode": "rgb"}
+
+    def processing(self, im_arr):
+        from mvlib.color import split
+        return split(im_arr)
+
+    def run(self):
+        im_arr = self.get_image()
+        self.check_features(im_arr)
+
+        list_rgb = self.processing(im_arr)
+        # 将canvas::tabviewer的成员从Scroll转换为Grib
+        canvas = g.get("canvas")
+        canvas.stack2grib(2, 2)
+        grib = canvas.currentWidget()
+        grib.set_image(list_rgb)
