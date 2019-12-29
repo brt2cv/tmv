@@ -50,7 +50,7 @@ class MainWnd(QWidget):
         g.register("prompt", promp_in_second, True)
 
         self._setup_menu()
-        self._setup_ctrl()
+        # self._setup_ctrl()
 
     def _setup_menu(self, isReload=False):
         """ 菜单栏和工具栏的加载 """

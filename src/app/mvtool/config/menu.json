@@ -58,12 +58,13 @@
             {
                 "name": "新建标签",
                 "shortcut": "Ctrl+N",
-                "icon": "app/mvtool/res/New.png",
+                "icon": "app/mvtool/res/new.png",
                 "plugin": "NewViewerLabel"
             },
             {
                 "name": "关闭标签",
                 "shortcut": "Ctrl+W",
+                "icon": "app/mvtool/res/close.png",
                 "plugin": "CloseViewerLabel"
             }
         ]
