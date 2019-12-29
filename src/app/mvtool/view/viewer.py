@@ -219,9 +219,11 @@ class TabCanvas(TabViewer):
     #     viewer.set_fit_width()
 
     def removeTab(self, index):
+        label = self.tabText(index)
         super().removeTab(index)
         if self.count() == 0:
-            self.addTab()
+            self.add_tab_stack()
+        return label
 
     def add_tab_stack(self, label=None):
         if label is None:
@@ -230,6 +232,7 @@ class TabCanvas(TabViewer):
         stack_canvas = StackCanvas(ScrollCanvas(self))
         self.addTab(stack_canvas, label)
         self.setCurrentWidget(stack_canvas)  # 跳转到新标签页
+        return label
 
     def add_tab_grib(self, nRow, nColumn, label=None):
         if label is None:
@@ -238,6 +241,7 @@ class TabCanvas(TabViewer):
         grib_canvas = GridCanvas(self, nRow, nColumn)
         self.addTab(grib_canvas, label)
         self.setCurrentWidget(grib_canvas)  # 跳转到新标签页
+        return label
 
     def stack2grib(self, nRow, nColumn):
         # viewer = self.currentWidget().base

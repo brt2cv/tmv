@@ -1,5 +1,6 @@
 from .file import *
 from .edit import *
+from .view import *
 from .color import *
 from .morphology import *
 
@@ -21,17 +22,28 @@ def export_plugin(cls_name: str):
         return plug_cls()
 
 
+from importlib import reload, import_module
 class ReloadPlugins(Filter):
+    def reload_module(self, submodule: str):
+        module = import_module(submodule, __package__)
+        reload(module)
+
     def run(self):
-        from . import file
-        from . import edit
-        from . import color
-        from . import morphology
-        from importlib import reload
-
-        reload(file)
-        reload(edit)
-        reload(color)
-        reload(morphology)
-
+        self.reload_module(".file")
+        self.reload_module(".edit")
+        self.reload_module(".view")
+        self.reload_module(".color")
+        self.reload_module(".morphology")
         g.get("mwnd")._setup_menu(isReload=True)
+
+
+from PyQt5.QtWidgets import QMessageBox
+class AboutMe(Filter):
+    def run(self):
+        msgbox = QMessageBox(QMessageBox.NoIcon,
+                             "关于",
+                             "感谢ImagePy的开源，回馈开源社区",
+                             parent = g.get("mwnd"))
+        msgbox.setDetailedText('版权：Bright Li\nTel: 18131218231\nE-mail: brt2@qq.com')
+        msgbox.setIconPixmap(QPixmap("app/mvtool/res/logo.png"))
+        msgbox.exec_()

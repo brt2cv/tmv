@@ -53,6 +53,22 @@
         ]
     },
     {
+        "name": "View",
+        "members": [
+            {
+                "name": "新建标签",
+                "shortcut": "Ctrl+N",
+                "icon": "app/mvtool/res/New.png",
+                "plugin": "NewViewerLabel"
+            },
+            {
+                "name": "关闭标签",
+                "shortcut": "Ctrl+W",
+                "plugin": "CloseViewerLabel"
+            }
+        ]
+    },
+    {
         "name": "Color",
         "members": [
             {
@@ -110,7 +126,6 @@
             {
                 "name": "新建标签",
                 "icon": "app/mvtool/res/New.png",
-                "shortcut": "Ctrl+N",
                 "plugin": "NewViewerLabel"
             },
             {

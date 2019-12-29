@@ -9,11 +9,6 @@ from mvlib import resize
 from core import g
 from core.plugin.filter import Filter, DialogFilter
 
-class NewViewerLabel(Filter):
-    def run(self):
-        """ override: 无需打开图像 """
-        g.get("canvas").add_tab_stack()
-
 
 class OpenImageFile(Filter):
     scripts = "{output} = mvlib.io.imread({path_img})"
@@ -75,13 +70,3 @@ class ResizeImageFile(DialogFilter):
         self.view[0]["val_init"] = w
         self.view[1]["val_init"] = h
         super().run()
-
-class AboutMe(Filter):
-    def run(self):
-        msgbox = QMessageBox(QMessageBox.NoIcon,
-                             "关于",
-                             "感谢ImagePy的开源，回馈开源社区",
-                             parent = g.get("mwnd"))
-        msgbox.setDetailedText('版权：Bright Li\nTel: 18131218231\nE-mail: brt2@qq.com')
-        msgbox.setIconPixmap(QPixmap("app/mvtool/res/logo.png"))
-        msgbox.exec_()
