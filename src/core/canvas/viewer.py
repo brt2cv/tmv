@@ -46,6 +46,7 @@ class MultiTabViewer(QTabWidget):
         self.setTabsClosable(True)
         self.setUsesScrollButtons(True)
         self.setMovable(True)
+        self.setTabBarAutoHide(True)
         # self.setTabPosition(QTabWidget.South)
         # self.setTabShape(QTabWidget.Triangular)
         self.tabCloseRequested.connect(self.removeTab)

@@ -27,10 +27,12 @@ class ModulePlugin:
             self.mwnd = callback_mwnd()
 
         self.mwnd.show()
-        # self.mwnd.canvas.load_image()
-        from plugins.file import OpenImageFile
-        plugin = OpenImageFile()
-        plugin.open("app/mvtool/res/example.jpg")
+        def auto_open_testing():
+            """ 用于打开图像并写入UndoStack记录 """
+            from plugins.file import OpenImageFile
+            plugin = OpenImageFile()
+            plugin.open("app/mvtool/res/example.jpg")
+        # auto_open_testing()
         app.exec_()
 
 
