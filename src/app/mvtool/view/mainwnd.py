@@ -27,18 +27,6 @@ class MainWnd(QWidget):
     def _setup_ui(self):
         from PyQt5.QtWidgets import QStatusBar, QSizePolicy
 
-        from core.menu import MenubarCreator, ToolbarCreator
-        menu_conf = rpath2curr("../config/menu.json")
-
-        menu_creator = MenubarCreator(self)
-        menu_creator.load_conf(menu_conf)
-        self.ly_header.addWidget(menu_creator.menubar)
-
-        toolbar_creator = ToolbarCreator(self)
-        toolbar_creator.load_conf(menu_conf)
-        for toolbar in toolbar_creator.list_bars:
-            self.ly_header.addWidget(toolbar)
-
         self.status_bar = QStatusBar(self)
         self.status_bar.showMessage("欢迎访问 GUI-Demo")
         self.ly_footer.addWidget(self.status_bar)
@@ -61,7 +49,33 @@ class MainWnd(QWidget):
             self.status_bar.showMessage(message, timeout*1000)
         g.register("prompt", promp_in_second, True)
 
+        self._setup_menu()
         self._setup_ctrl()
+
+    def _setup_menu(self, isReload=False):
+        """ 菜单栏和工具栏的加载 """
+        from core import menu
+        if isReload:
+            from importlib import reload
+            reload(menu)
+
+            import plugins
+            reload(plugins)
+
+            # 清理ly_header
+            from utils.qt5 import clear_layout
+            clear_layout(self.ly_header)
+
+        menu_conf = rpath2curr("../config/menu.json")
+
+        menu_creator = menu.MenubarCreator(self)
+        menu_creator.load_conf(menu_conf)
+        self.ly_header.addWidget(menu_creator.menubar)
+
+        toolbar_creator = menu.ToolbarCreator(self)
+        toolbar_creator.load_conf(menu_conf)
+        for toolbar in toolbar_creator.list_bars:
+            self.ly_header.addWidget(toolbar)
 
     def _setup_ctrl(self):
         from utils.qt5wx.wx_unit import UnitSlider
