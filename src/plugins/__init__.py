@@ -1,3 +1,5 @@
+from PyQt5.QtWidgets import QMessageBox
+
 from .file import *
 from .edit import *
 from .view import *
@@ -43,14 +45,15 @@ class ReloadPlugins(Filter):
 
         # 重载UI
         g.get("mwnd")._setup_menu(isReload=True)
+        QMessageBox.information(g.get("mwnd"), "通知", "插件已重载...")
+        g.call("prompt", "插件已重载...")
 
 
-from PyQt5.QtWidgets import QMessageBox
 class AboutMe(Filter):
     def run(self):
         msgbox = QMessageBox(QMessageBox.NoIcon,
                              "关于",
-                             "感谢ImagePy的开源，回馈开源社区",
+                             "\n感谢ImagePy的开源，回馈开源社区",
                              parent = g.get("mwnd"))
         msgbox.setDetailedText('版权：Bright Li\nTel: 18131218231\nE-mail: brt2@qq.com')
         msgbox.setIconPixmap(QPixmap("app/mvtool/res/logo.png"))

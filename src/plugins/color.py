@@ -69,10 +69,8 @@ class ArithmeticThreshold(DialogFilterBase):
         return list_imgs
 
     def accepted(self):
-        try:
-            im_arr = self.get_image()
-            self.check_format(im_arr)
-
+        im_arr = self.get_image()
+        if self.check_format(im_arr):
             list_imgs = self.processing(im_arr)
             # 将canvas::tabviewer的成员从Scroll转换为Grib
             canvas = g.get("canvas")
@@ -80,8 +78,6 @@ class ArithmeticThreshold(DialogFilterBase):
             grib = canvas.currentWidget()
             grib.set_image(list_imgs)
             self.update_canvas()
-        except Exception:
-            pass
 
 
 class SplitRGB(Filter):
@@ -97,14 +93,13 @@ class SplitRGB(Filter):
 
     def run(self):
         im_arr = self.get_image()
-        self.check_format(im_arr)
-
-        list_rgb = self.processing(im_arr)
-        # 将canvas::tabviewer的成员从Scroll转换为Grib
-        canvas = g.get("canvas")
-        canvas.stack2grib(2, 2)
-        grib = canvas.currentWidget()
-        grib.set_image(list_rgb)
+        if self.check_format(im_arr):
+            list_rgb = self.processing(im_arr)
+            # 将canvas::tabviewer的成员从Scroll转换为Grib
+            canvas = g.get("canvas")
+            canvas.stack2grib(2, 2)
+            grib = canvas.currentWidget()
+            grib.set_image(list_rgb)
 
 
 # ============= RGB - HSV ============
