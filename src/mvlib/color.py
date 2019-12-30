@@ -17,11 +17,11 @@ def rgb2gray(im):
         return cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
     def run_numpy():
-        # weights = np.c_[0.2989, 0.5870, 0.1140]
-        # # 按照reps指定的次数在相应的维度上重复A矩阵来构建一个新的矩阵
-        # tile = np.tile(weights, reps=(im.shape[0], im.shape[1], 1))
-        # return np.sum(tile * im, axis=2, dtype=im.dtype)
-        return np.dot(im[..., :3], [0.299, 0.587, 0.144])
+        # return np.dot(im[..., :3], [0.299, 0.587, 0.144])
+        weights = np.c_[0.2989, 0.5870, 0.1140]
+        # 按照reps指定的次数在相应的维度上重复A矩阵来构建一个新的矩阵
+        tile = np.tile(weights, reps=(im.shape[0], im.shape[1], 1))
+        return np.sum(tile * im, axis=2, dtype=im.dtype)
 
     def run_pillow():
         return im.convert("L")

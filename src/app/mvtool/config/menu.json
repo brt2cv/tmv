@@ -84,6 +84,10 @@
                 "plugin": "Threshold"
             },
             {
+                "name": "阈值九宫格",
+                "plugin": "ArithmeticThreshold"
+            },
+            {
                 "name": "拆分RGB通道",
                 "plugin": "SplitRGB"
             }

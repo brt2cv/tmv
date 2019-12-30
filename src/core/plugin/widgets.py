@@ -30,7 +30,7 @@ class TplWidgetsManager:
     #     name = dict_elem.get("name", "")
     #     val_init = dict_elem.get("val_init", 0)
     #     val_range = dict_elem.get("val_range", [0, 100])
-    #     isCheckbox = dict_elem.get("isCheckbox", True)
+    #     isCheckbox = dict_elem.get("isCheckbox", False)
     #     isChecked = dict_elem.get("isChecked", False)
 
     def make_edit(self, dict_elem):
@@ -38,7 +38,7 @@ class TplWidgetsManager:
                 self.parent,
                 dict_elem.get("name", ""),
                 dict_elem.get("val_init", 0),
-                dict_elem.get("isCheckbox", True),
+                dict_elem.get("isCheckbox", False),
                 dict_elem.get("isChecked", False)
             )
         return wx
@@ -50,7 +50,7 @@ class TplWidgetsManager:
                 dict_elem.get("val_range", [0, 100]),
                 dict_elem.get("val_init", 0),
                 dict_elem.get("showValue", True),
-                dict_elem.get("isCheckbox", True),
+                dict_elem.get("isCheckbox", False),
                 dict_elem.get("isChecked", False)
             )
         return wx
@@ -61,7 +61,7 @@ class TplWidgetsManager:
                 dict_elem.get("name", ""),
                 dict_elem.get("val_range", [0, 100]),
                 dict_elem.get("val_init", 0),
-                dict_elem.get("isCheckbox", True),
+                dict_elem.get("isCheckbox", False),
                 dict_elem.get("isChecked", False)
             )
         return wx
@@ -73,7 +73,7 @@ class TplWidgetsManager:
                 dict_elem.get("name", ""),
                 dict_elem["val_range"],
                 dict_elem.get("val_init", 0),
-                # dict_elem.get("isCheckbox", True),
+                # dict_elem.get("isCheckbox", False),
                 # dict_elem.get("isChecked", False)
             )
         return wx

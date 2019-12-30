@@ -33,11 +33,14 @@ class FilterBase(Plugin):
         fts.check(im_arr)
 
     def run(self):
-        im_arr = self.get_image()
-        self.check_features(im_arr)
+        try:
+            im_arr = self.get_image()
+            self.check_features(im_arr)
 
-        im2 = self.processing(im_arr)
-        self.set_image(im2)
+            im2 = self.processing(im_arr)
+            self.set_image(im2)
+        except FeatureTypeError:
+            pass
 
 
 import re
@@ -163,9 +166,8 @@ class DialogFilterBase(QDialog, Filter):
             im2 = self.processing(im_arr)
             self.set_image(im2)  # 更新snap
             self.update_canvas()
-
-        except Exception as e:
-            logger.warning(e)
+        except FeatureTypeError:
+            pass
 
     def rejected(self):
         """ 取消图像变更 """
@@ -177,9 +179,12 @@ class DialogFilterBase(QDialog, Filter):
             self.setup_ui()  # 延迟构造窗口UI
             self.needSetupUi = False
 
-        ips = self.get_image()
-        self.check_features(ips)
-        self.show()
+        try:
+            ips = self.get_image()
+            self.check_features(ips)
+            self.show()
+        except FeatureTypeError:
+            pass
 
 
 class DialogFilter(DialogFilterBase):

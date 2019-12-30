@@ -106,6 +106,9 @@ class GridViewer(QWidget):
             canvas = self.grid.itemAt(index).widget()
             canvas.set_image(im_arr)
 
+    def get_container(self):
+        raise Exception("GridViewer不支持get_container()操作")
+
 
 from PyQt5.QtGui import QCursor
 class ScrollViewer(QScrollArea):  # ViewerBase

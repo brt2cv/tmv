@@ -1,10 +1,11 @@
 # 罗列了关于menu.json解析相关类
+from PyQt5.QtWidgets import QMessageBox
 from utils.log import getLogger
 logger = getLogger()
 
 from utils.base import singleton
 from .plugin import import_plugin
-from .plugin.features import FeatureTypeError
+from . import g
 
 
 @singleton
@@ -15,8 +16,8 @@ class PluginManager:
     def run(self, cls_name):
         try:
             self.dict_plugins[cls_name].run()
-        except FeatureTypeError:
-            pass
+        except Exception as e:
+            QMessageBox.warning(g.get("mwnd"), "警告", str(e))
 
     def load_plugin(self, plugin_info):
         """ plugin_info: str or dict{"path": xxx, "class": yyy}"""
