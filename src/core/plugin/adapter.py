@@ -23,16 +23,16 @@ class PluginAdapter4Ipy(DialogFilter):
     def __init__(self, ipy_plug_cls):
         self.proxy = ipy_plug_cls  # IpyPlugin class
         self.title = ipy_plug_cls.title
-        self.note2features()
+        self.note2formats()
         self.setup_tpl_widgets()
         super().__init__(g.get("mwnd"))
 
-    def note2features(self):
+    def note2formats(self):
         note = self.proxy.note  # list
-        features = {}
+        formats = {}
         def conflict_check(key, value):
-            if key in features:
-                raise Exception(f"属性冲突: 已存在【{features[key]}】，新添加【{value}】")
+            if key in formats:
+                raise Exception(f"属性冲突: 已存在【{formats[key]}】，新添加【{value}】")
 
         if "rgb" in note:
             conflict_check("mode", "rgb")
@@ -48,7 +48,7 @@ class PluginAdapter4Ipy(DialogFilter):
         if "float" in note:
             conflict_check("dtype", "float")
 
-        self.features = features
+        self.formats = formats
 
     def setup_tpl_widgets(self):
         self.view = []

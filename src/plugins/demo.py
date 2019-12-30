@@ -1,7 +1,7 @@
 from core.plugin.filter import DialogFilter
 
 class DemoDlg(DialogFilter):
-    features = {
+    format = {
         "mode": "rgb",
         "dtype": "uint8"
     }

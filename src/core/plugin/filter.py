@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QDialogButtonBox, QPushButton
 from PyQt5.QtCore import Qt
 from .. import g
-from .features import IpsFeature, FeatureTypeError
+from .format import IpsFormat, FormatTypeError
 from . import Plugin
 
 from utils.log import getLogger
@@ -9,7 +9,7 @@ logger = getLogger()
 
 class FilterBase(Plugin):
     """ 图像相关的插件基类 """
-    features = {}
+    formats = {}
 
     def processing(self, im_arr):
         """ 处理图像 """
@@ -27,19 +27,19 @@ class FilterBase(Plugin):
         """ 刷新UI """
         g.get("canvas").update()
 
-    def check_features(self, im_arr):
-        """ if check error, raise FeatureTypeError """
-        fts = IpsFeature(self.features)
+    def check_format(self, im_arr):
+        """ if check error, raise FormatTypeError """
+        fts = IpsFormat(self.formats)
         fts.check(im_arr)
 
     def run(self):
         try:
             im_arr = self.get_image()
-            self.check_features(im_arr)
+            self.check_format(im_arr)
 
             im2 = self.processing(im_arr)
             self.set_image(im2)
-        except FeatureTypeError:
+        except FormatTypeError:
             pass
 
 
@@ -146,7 +146,7 @@ class DialogFilterBase(QDialog, Filter):
     #             self.accepted()
     #         elif role == QDialogButtonBox.Cancel:
     #             self.rejected()
-    #     except FeatureTypeError:
+    #     except FormatTypeError:
     #         return
 
     def on_para_changed(self, para_name, wx):
@@ -161,12 +161,12 @@ class DialogFilterBase(QDialog, Filter):
         """ 将当前图像设置为image """
         try:
             im_arr = self.get_image()
-            self.check_features(im_arr)
+            self.check_format(im_arr)
 
             im2 = self.processing(im_arr)
             self.set_image(im2)  # 更新snap
             self.update_canvas()
-        except FeatureTypeError:
+        except FormatTypeError:
             pass
 
     def rejected(self):
@@ -181,9 +181,9 @@ class DialogFilterBase(QDialog, Filter):
 
         try:
             ips = self.get_image()
-            self.check_features(ips)
+            self.check_format(ips)
             self.show()
-        except FeatureTypeError:
+        except FormatTypeError:
             pass
 
 
@@ -202,7 +202,7 @@ class DialogFilter(DialogFilterBase):
     def preview(self):
         try:
             im_arr = self.get_image()
-            self.check_features(im_arr)
+            self.check_format(im_arr)
 
             im2 = self.processing(im_arr)
             im_mgr = g.get("canvas").get_container()

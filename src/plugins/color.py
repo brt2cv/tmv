@@ -4,7 +4,7 @@ from core import g
 
 class Gray(Filter):
     title = 'Gray'
-    features = {"mode": "rgb"}
+    formats = {"mode": "rgb"}
     scripts = "{output} = mvlib.rgb2gray({im})"
 
     def processing(self, im_arr):
@@ -15,7 +15,7 @@ class Gray(Filter):
 
 class Threshold(DialogFilter):
     title = "Threshold"
-    features = {"mode": "gray"}
+    formats = {"mode": "gray"}
     view = [{
         "type": "slider",
         "name": "阈值",
@@ -38,17 +38,11 @@ class Threshold(DialogFilter):
                          self.para["thresh"],
                          self.para["maxval"])
 
-    def run(self):
-        print("This is a plugin with dilog.")
-        self.resize(400, 0)
-        # self.move(0, 20)
-        super().run()
-
 
 class ArithmeticThreshold(DialogFilterBase):
     """ 比例阈值 """
     title = "比例阈值"
-    features = {"mode": "gray"}
+    formats = {"mode": "gray"}
     view = [{
         "type": "spinbox",
         "name": "num_row",
@@ -77,7 +71,7 @@ class ArithmeticThreshold(DialogFilterBase):
     def accepted(self):
         try:
             im_arr = self.get_image()
-            self.check_features(im_arr)
+            self.check_format(im_arr)
 
             list_imgs = self.processing(im_arr)
             # 将canvas::tabviewer的成员从Scroll转换为Grib
@@ -92,7 +86,7 @@ class ArithmeticThreshold(DialogFilterBase):
 
 class SplitRGB(Filter):
     title = "Split RGB Channels"
-    features = {"mode": "rgb"}
+    formats = {"mode": "rgb"}
 
     def processing(self, im_arr):
         from mvlib.color import split
@@ -100,7 +94,7 @@ class SplitRGB(Filter):
 
     def run(self):
         im_arr = self.get_image()
-        self.check_features(im_arr)
+        self.check_format(im_arr)
 
         list_rgb = self.processing(im_arr)
         # 将canvas::tabviewer的成员从Scroll转换为Grib
