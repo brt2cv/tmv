@@ -1,4 +1,9 @@
 # 罗列了关于menu.json解析相关类
+try:
+    import json5 as json
+except ImportError:
+    import json
+
 from PyQt5.QtWidgets import QMessageBox
 from utils.log import getLogger
 logger = getLogger()
@@ -64,7 +69,6 @@ class MenubarCreator:
         self.menubar = QMenuBar(parent)
 
     def load_conf(self, path_conf):
-        import json
         # self.dict_menu = {self.menubar: {}}
         with open(path_conf, "r", encoding='utf8') as fp:
             dict_conf = json.load(fp)
@@ -93,8 +97,6 @@ class ToolbarCreator:
         self.list_bars = []
 
     def load_conf(self, path_conf):
-        import json
-
         with open(path_conf, "r", encoding='utf8') as fp:
             dict_conf = json.load(fp)
         assert "toolbar" in dict_conf, '格式错误，未发现【"toolbar"】项，无法导入按钮'
