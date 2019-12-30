@@ -3,9 +3,9 @@ from .backend import run_backend, include
 if include("opencv"):
     import cv2
 if include("skimage"):
-    from skimage import filters
-if include("scipy"):
-    from scipy import ndimage
+    import skimage
+# if include("scipy"):
+#     from scipy import ndimage
 if include("numpy"):
     import numpy as np
 if include("pillow"):
@@ -35,7 +35,7 @@ def threshold(im, thresh="otsu", maxval=255):
             使用 `global thresh` 未能解决
         """
         if thresh == "otsu":
-            params["thresh"] = filters.threshold_otsu(im)
+            params["thresh"] = skimage.filters.threshold_otsu(im)
         elif thresh in ["isodata", "yen", "li", "local", "minimum"]:
             raise Exception("尚未支持的自动阈值方法，敬请期待")
         return run_numpy()
@@ -78,7 +78,7 @@ def gaussian(im, sigma=0):
         return cv2.GaussianBlur(im, ksize, sigma)
 
     def run_skimage():
-        return filters.gaussian(im, sigma)
+        return skimage.filters.gaussian(im, sigma)
 
     return run_backend(
             func_opencv=run_opencv,
@@ -90,7 +90,7 @@ def median(im, k):
         return cv2.medianBlur(im, ksize)
 
     def run_skimage():
-        return filters.median(im, k)
+        return skimage.filters.median(im, k)
 
     return run_backend(
             func_opencv=run_opencv,

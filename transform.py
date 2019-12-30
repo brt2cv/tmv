@@ -19,6 +19,14 @@ def resize(im, output_shape, antialias=True):
         return (im_float64 * 255).astype("uint8")
 
     def run_opencv():
+        """
+        interpolation:
+            INTER_NEAREST   - 最近邻插值法
+            INTER_LINEAR    - 双线性插值法（默认）
+            INTER_AREA      - 基于局部像素的重采样（resampling using pixel area relation）。对于图像抽取（image decimation）来说，这可能是一个更好的方法。但如果是放大图像时，它和最近邻法的效果类似;
+            INTER_CUBIC     - 基于4x4像素邻域的3次插值法
+            INTER_LANCZOS4  - 基于8x8像素邻域的Lanczos插值
+        """
         return cv2.resize(im, dsize=output_shape)
 
     def run_pillow():
@@ -57,9 +65,9 @@ def rotate(im, angle):
 
     def run_opencv():
         # cv2.flip(im, flipCode)  # 翻转
-
         cols, rows = im.shape[:2]
-        M = cv2.getRotationMatrix2D((cols/2, rows/2), angle, 1)
+        # cols-1 and rows-1 are the coordinate limits.
+        M = cv2.getRotationMatrix2D(((cols-1)/2, (rows-1)/2), angle, 1)
         return cv2.warpAffine(im, M, (cols, rows))
 
     def run_pillow():
