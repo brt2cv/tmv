@@ -84,12 +84,37 @@
                 "plugin": "Threshold"
             },
             {
+                "name": "拆分通道",
+                "shortcut": "Ctrl+P",
+                "plugin": "SplitRGB"
+            },
+            {
                 "name": "阈值九宫格",
                 "plugin": "ArithmeticThreshold"
             },
             {
-                "name": "拆分RGB通道",
-                "plugin": "SplitRGB"
+                "name": "RGB To HSV",
+                "plugin": "RGB2HSV"
+            },
+            {
+                "name": "HSV To RGB",
+                "plugin": "HSV2RGB"
+            },
+            {
+                "name": "RGB To CIERGB",
+                "plugin": "RGB2CIE"
+            },
+            {
+                "name": "CIERGB To RGB",
+                "plugin": "CIE2RGB"
+            },
+            {
+                "name": "RGB To LUV",
+                "plugin": "RGB2LUV"
+            },
+            {
+                "name": "LUV To RGB",
+                "plugin": "LUV2RGB"
             }
         ]
     },

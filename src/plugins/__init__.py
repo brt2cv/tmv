@@ -22,18 +22,26 @@ def export_plugin(cls_name: str):
         return plug_cls()
 
 
-from importlib import reload, import_module
 class ReloadPlugins(Filter):
-    def reload_module(self, submodule: str):
-        module = import_module(submodule, __package__)
-        reload(module)
-
     def run(self):
-        self.reload_module(".file")
-        self.reload_module(".edit")
-        self.reload_module(".view")
-        self.reload_module(".color")
-        self.reload_module(".morphology")
+        # 重载mvlib依赖
+        from mvlib import reload_mvlib
+        reload_mvlib()
+
+        # 重载插件
+        from importlib import reload, import_module
+
+        def reload_module(submodule: str):
+            module = import_module(submodule, __package__)
+            reload(module)
+
+        reload_module(".file")
+        reload_module(".edit")
+        reload_module(".view")
+        reload_module(".color")
+        reload_module(".morphology")
+
+        # 重载UI
         g.get("mwnd")._setup_menu(isReload=True)
 
 

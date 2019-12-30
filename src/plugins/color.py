@@ -2,14 +2,16 @@
 from core.plugin.filter import Filter, DialogFilter, DialogFilterBase
 from core import g
 
+import mvlib
+
+
 class Gray(Filter):
     title = 'Gray'
     formats = {"mode": "rgb"}
     scripts = "{output} = mvlib.rgb2gray({im})"
 
     def processing(self, im_arr):
-        from mvlib.color import rgb2gray
-        gray = rgb2gray(im_arr)
+        gray = mvlib.color.rgb2gray(im_arr)
         return gray
 
 
@@ -30,11 +32,10 @@ class Threshold(DialogFilter):
         "para": "maxval"
     }]
     # para = {"thresh": 128, "maxval": 255}
-    scripts = "{output} = mvlib.threshold({im}, {thresh}, {maxval})"
+    scripts = "{output} = mvlib.filters.threshold({im}, {thresh}, {maxval})"
 
     def processing(self, im_arr):
-        from mvlib.filters import threshold
-        return threshold(im_arr,
+        return mvlib.filters.threshold(im_arr,
                          self.para["thresh"],
                          self.para["maxval"])
 
@@ -58,13 +59,12 @@ class ArithmeticThreshold(DialogFilterBase):
     }]
 
     def processing(self, im_arr):
-        from mvlib.filters import threshold
         num_total = self.para["nRow"] * self.para["nColumn"]
         list_imgs = []
         int_unit = int(255 / (num_total + 1))
         for index in range(1, num_total + 1):
             thresh = int_unit * index
-            im_thresh = threshold(im_arr, thresh)
+            im_thresh = mvlib.filters.threshold(im_arr, thresh)
             list_imgs.append(im_thresh)
         return list_imgs
 
@@ -87,10 +87,10 @@ class ArithmeticThreshold(DialogFilterBase):
 class SplitRGB(Filter):
     title = "Split RGB Channels"
     formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.split({im})"
 
     def processing(self, im_arr):
-        from mvlib.color import split
-        return split(im_arr)
+        return mvlib.color.split(im_arr)
 
     def run(self):
         im_arr = self.get_image()
@@ -102,3 +102,93 @@ class SplitRGB(Filter):
         canvas.stack2grib(2, 2)
         grib = canvas.currentWidget()
         grib.set_image(list_rgb)
+
+
+# ============= RGB - HSV ============
+class RGB2HSV(Filter):
+    title = 'RGB To HSV'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.rgb2hsv({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.rgb2hsv(im_arr)
+
+
+class HSV2RGB(Filter):
+    title = 'HSV To RGB'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.hsv2rgb({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.hsv2rgb(im_arr)
+
+# ============= RGB - CIE ============
+class RGB2CIE(Filter):
+    title = 'RGB To CIERGB'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.rgb2rgbcie({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.rgb2rgbcie(im_arr)
+
+class CIE2RGB(Filter):
+    title = 'CIERGB To RGB'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.rgbcie2rgb({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.rgbcie2rgb(im_arr)
+
+# ============= RGB - LUV ============
+class RGB2LUV(Filter):
+    title = 'RGB To LUV'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.rgb2luv({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.rgb2luv(im_arr)
+
+class LUV2RGB(Filter):
+    title = 'LUV To RGB'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.luv2rgb({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.luv2rgb(im_arr)
+
+# ============= RGB - Lab ============
+class RGB2Lab(Filter):
+    title = 'RGB To Lab'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.rgb2lab({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.rgb2lab(im_arr)
+
+
+class Lab2RGB(Filter):
+    title = 'Lab To RGB'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.lab2rgb({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.lab2rgb(im_arr)
+
+
+# ============= RGB - XYZ ============
+class RGB2XYZ(Filter):
+    title = 'RGB To XYZ'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.rgb2xyz({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.rgb2xyz(im_arr)
+
+
+class XYZ2RGB(Filter):
+    title = 'XYZ To RGB'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.xyz2rgb({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.xyz2rgb(im_arr)
