@@ -3,8 +3,8 @@
 
 test -z $1 && action="pull" || action=$1
 
-# m_utils="git@gitee.com:brt2/utils.git"
-# m_mvlib="git@gitee.com:brt2/mvlib.git"
+m_utils="git@gitee.com:brt2/utils.git"
+m_mvlib="git@gitee.com:brt2/mvlib.git"
 # git remote add "m-${dir_module}" $m_utils
 
 function sub_module_pull () {
