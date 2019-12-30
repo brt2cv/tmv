@@ -5,12 +5,14 @@ except ImportError:
     import json
 
 from PyQt5.QtWidgets import QMessageBox
-from utils.log import getLogger
-logger = getLogger()
+from traceback import print_exc
 
 from utils.base import singleton
 from .plugin import import_plugin
 from . import g
+
+from utils.log import getLogger
+logger = getLogger()
 
 
 @singleton
@@ -23,6 +25,9 @@ class PluginManager:
             self.dict_plugins[cls_name].run()
         except Exception as e:
             QMessageBox.warning(g.get("mwnd"), "警告", str(e))
+            print("#"*80)
+            print_exc()
+            print("#"*80)
 
     def load_plugin(self, plugin_info):
         """ plugin_info: str or dict{"path": xxx, "class": yyy}"""

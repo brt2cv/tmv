@@ -28,13 +28,13 @@
         "members": [
             {
                 "name": "Undo",
-                "shortcut": "Ctrl+Z",
+                "shortcut": "Ctrl+Backspace",
                 "icon": "app/mvtool/res/prev.png",
                 "plugin": "Undo"
             },
             {
                 "name": "Redo",
-                "shortcut": "Ctrl+Y",
+                "shortcut": "Ctrl+J",
                 "icon": "app/mvtool/res/next.png",
                 "plugin": "Redo"
             },
@@ -84,13 +84,13 @@
                 "plugin": "Threshold"
             },
             {
+                "name": "阈值九宫格",
+                "plugin": "ArithmeticThreshold"
+            },
+            {
                 "name": "拆分通道",
                 "shortcut": "Ctrl+P",
                 "plugin": "SplitRGB"
-            },
-            {
-                "name": "阈值九宫格",
-                "plugin": "ArithmeticThreshold"
             },
             {
                 "name": "RGB To HSV",
@@ -101,20 +101,28 @@
                 "plugin": "HSV2RGB"
             },
             {
-                "name": "RGB To CIERGB",
-                "plugin": "RGB2CIE"
+                "name": "RGB To Lab",
+                "plugin": "RGB2Lab"
             },
             {
-                "name": "CIERGB To RGB",
-                "plugin": "CIE2RGB"
+                "name": "Lab To RGB",
+                "plugin": "Lab2RGB"
             },
             {
-                "name": "RGB To LUV",
-                "plugin": "RGB2LUV"
+                "name": "RGB To YUV",
+                "plugin": "RGB2YUV"
             },
             {
-                "name": "LUV To RGB",
-                "plugin": "LUV2RGB"
+                "name": "YUV To RGB",
+                "plugin": "YUV2RGB"
+            },
+            {
+                "name": "RGB To XYZ",
+                "plugin": "RGB2XYZ"
+            },
+            {
+                "name": "XYZ To RGB",
+                "plugin": "XYZ2RGB"
             }
         ]
     },

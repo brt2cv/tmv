@@ -2,8 +2,9 @@ from .backend import run_backend, include
 
 if include("opencv"):
     import cv2
-# if include("skimage"):
-#     from skimage import *
+if include("skimage"):
+    import skimage
+    from .io import float2ubyte
 if include("scipy"):
     from scipy import ndimage
 if include("numpy"):
@@ -112,25 +113,25 @@ def merge(bands):
 #####################################################################
 def _BGR2HSV(_img):
 # https://github.com/gzr2017/ImageProcessing100Wen/blob/master/Question_01_10/answers_py/answer_5.py
-    img = _img.copy() / 255.
-    hsv = np.zeros_like(img, dtype=np.float32)
+    im = _img.copy() / 255.
+    hsv = np.zeros_like(im, dtype=np.float32)
 
     # get max and min
-    max_v = np.max(img, axis=2).copy()
-    min_v = np.min(img, axis=2).copy()
-    min_arg = np.argmin(img, axis=2)
+    max_v = np.max(im, axis=2).copy()
+    min_v = np.min(im, axis=2).copy()
+    min_arg = np.argmin(im, axis=2)
 
     # H
     hsv[..., 0][np.where(max_v == min_v)] = 0
     ## if min == B
     ind = np.where(min_arg == 0)
-    hsv[..., 0][ind] = 60 * (img[..., 1][ind] - img[..., 2][ind]) / (max_v[ind] - min_v[ind]) + 60
+    hsv[..., 0][ind] = 60 * (im[..., 1][ind] - im[..., 2][ind]) / (max_v[ind] - min_v[ind]) + 60
     ## if min == R
     ind = np.where(min_arg == 2)
-    hsv[..., 0][ind] = 60 * (img[..., 0][ind] - img[..., 1][ind]) / (max_v[ind] - min_v[ind]) + 180
+    hsv[..., 0][ind] = 60 * (im[..., 0][ind] - im[..., 1][ind]) / (max_v[ind] - min_v[ind]) + 180
     ## if min == G
     ind = np.where(min_arg == 1)
-    hsv[..., 0][ind] = 60 * (img[..., 2][ind] - img[..., 0][ind]) / (max_v[ind] - min_v[ind]) + 300
+    hsv[..., 0][ind] = 60 * (im[..., 2][ind] - im[..., 0][ind]) / (max_v[ind] - min_v[ind]) + 300
 
     # S
     hsv[..., 1] = max_v.copy() - min_v.copy()
@@ -141,11 +142,11 @@ def _BGR2HSV(_img):
 
 def _HSV2BGR(_img, hsv):
 # https://github.com/gzr2017/ImageProcessing100Wen/blob/master/Question_01_10/answers_py/answer_5.py
-    img = _img.copy() / 255.
+    im = _img.copy() / 255.
 
     # get max and min
-    max_v = np.max(img, axis=2).copy()
-    min_v = np.min(img, axis=2).copy()
+    max_v = np.max(im, axis=2).copy()
+    min_v = np.min(im, axis=2).copy()
 
     H = hsv[..., 0]
     S = hsv[..., 1]
@@ -157,7 +158,7 @@ def _HSV2BGR(_img, hsv):
     Z = np.zeros_like(H)
 
     vals = [[Z,X,C], [Z,C,X], [X,C,Z], [C,X,Z], [C,Z,X], [X,Z,C]]
-    out = np.zeros_like(img)
+    out = np.zeros_like(im)
     for i in range(6):
         ind = np.where((i <= H_) & (H_ < (i+1)))
         out[..., 0][ind] = (V - C)[ind] + vals[i][0][ind]
@@ -169,38 +170,37 @@ def _HSV2BGR(_img, hsv):
     out = (out * 255).astype(np.uint8)
     return out
 
-def rgb2hsv(img):
+# ============= RGB - HSV ============
+def rgb2hsv(im):
     def run_opencv():
-        return cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        return cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
-    def run_numpy():
-        im_hsv = _BGR2HSV(img)
-        im_hsv[..., 0] = (im_hsv[..., 0] + 180) % 360
-        return im_hsv
+    # def run_numpy():
+    #     im_hsv = _BGR2HSV(im)
+    #     im_hsv[..., 0] = (im_hsv[..., 0] + 180) % 360
+    #     return im_hsv
+
+    def run_skimage():
+        im_float = skimage.color.rgb2hsv(im)
+        return float2ubyte(im_float)
 
     return run_backend(
             # func_pillow=run_pillow,
-            func_numpy=run_numpy,
+            func_skimage=run_skimage,
             func_opencv=run_opencv
         )()
 
-def rgb2lab(img):
+def hsv2rgb(im):
     def run_opencv():
-        return cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+        return cv2.cvtColor(im, cv2.COLOR_HSV2BGR)
+
+    def run_skimage():
+        im_float = skimage.color.hsv2rgb(im)
+        return float2ubyte(im_float)
 
     return run_backend(
             # func_pillow=run_pillow,
-            # func_numpy=run_numpy,
-            func_opencv=run_opencv
-        )()
-
-def rgb2yuv(img):
-    def run_opencv():
-        return cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
-
-    return run_backend(
-            # func_pillow=run_pillow,
-            # func_numpy=run_numpy,
+            func_skimage=run_skimage,
             func_opencv=run_opencv
         )()
 
@@ -225,4 +225,91 @@ def hsv_range(img_hsv, list_low, list_high):
             # func_pillow=run_pillow,
             # func_numpy=run_numpy,
             func_opencv=run_opencv
+        )()
+
+# ============= RGB - Lab ============
+def rgb2lab(im):
+    def run_opencv():
+        return cv2.cvtColor(im, cv2.COLOR_BGR2LAB)
+
+    def run_skimage():
+        rst = skimage.color.rgb2lab(im)
+        print('============', rst.min(), rst.max())
+        return ((rst + 100) * (255 / 200)).astype(np.uint8)
+
+    return run_backend(
+            # func_pillow=run_pillow,
+            # func_numpy=run_numpy,
+            func_skimage=run_skimage,
+            func_opencv=run_opencv
+        )()
+
+def lab2rgb(im):
+    def run_opencv():
+        return cv2.cvtColor(im, cv2.COLOR_Lab2BGR)
+
+    def run_skimage():
+        rst = im * (200 / 255) - 100
+        rst = skimage.color.lab2rgb(rst)
+        return (rst * 255).astype(np.uint8)
+
+    return run_backend(
+            # func_pillow=run_pillow,
+            # func_numpy=run_numpy,
+            func_skimage=run_skimage,
+            func_opencv=run_opencv
+        )()
+
+# ============= RGB - YUV ============
+def rgb2yuv(im):
+    def run_opencv():
+        return cv2.cvtColor(im, cv2.COLOR_BGR2YUV)
+
+    def run_skimage():
+        rst = skimage.color.rgb2yuv(im)
+        print('============', rst.min(), rst.max())
+        return float2ubyte(rst)
+
+    return run_backend(
+            # func_pillow=run_pillow,
+            # func_numpy=run_numpy,
+            func_skimage=run_skimage,
+            func_opencv=run_opencv
+        )()
+
+def yuv2rgb(im):
+    def run_opencv():
+        return cv2.cvtColor(im, cv2.COLOR_YUV2BGR)
+
+    def run_skimage():
+        rst = skimage.color.yuv2rgb(im)
+        print('============', rst.min(), rst.max())
+        return float2ubyte(rst)
+
+    return run_backend(
+            # func_pillow=run_pillow,
+            # func_numpy=run_numpy,
+            func_skimage=run_skimage,
+            func_opencv=run_opencv
+        )()
+
+# ============= RGB - XYZ ============
+def rgb2xyz(im):
+    def run_skimage():
+        rst = skimage.color.rgb2xyz(im)
+        # print('============', rst.min(), rst.max())
+        return (rst*(200)).astype(np.uint8)
+
+    return run_backend(
+            func_skimage=run_skimage
+        )()
+
+def xyz2rgb(im):
+    def run_skimage():
+        rst = skimage.color.xyz2rgb(im / 200)
+        # print('============', rst.min(), rst.max())
+        return float2ubyte(rst)
+
+    return run_backend(
+            func_skimage=run_skimage
         )()

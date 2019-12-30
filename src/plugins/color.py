@@ -90,7 +90,10 @@ class SplitRGB(Filter):
     scripts = "{output} = mvlib.color.split({im})"
 
     def processing(self, im_arr):
-        return mvlib.color.split(im_arr)
+        # return mvlib.color.split(im_arr)
+        list_splits = mvlib.color.split(im_arr)
+        list_splits.append(im_arr)
+        return list_splits
 
     def run(self):
         im_arr = self.get_image()
@@ -121,6 +124,24 @@ class HSV2RGB(Filter):
 
     def processing(self, im_arr):
         return mvlib.color.hsv2rgb(im_arr)
+
+# ============= RGB - YUV ============
+class RGB2YUV(Filter):
+    title = 'RGB To YUV'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.rgb2yuv({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.rgb2yuv(im_arr)
+
+
+class YUV2RGB(Filter):
+    title = 'YUV To RGB'
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.yuv2rgb({im})"
+
+    def processing(self, im_arr):
+        return mvlib.color.yuv2rgb(im_arr)
 
 # ============= RGB - CIE ============
 class RGB2CIE(Filter):
@@ -165,7 +186,6 @@ class RGB2Lab(Filter):
     def processing(self, im_arr):
         return mvlib.color.rgb2lab(im_arr)
 
-
 class Lab2RGB(Filter):
     title = 'Lab To RGB'
     formats = {"mode": "rgb"}
@@ -173,7 +193,6 @@ class Lab2RGB(Filter):
 
     def processing(self, im_arr):
         return mvlib.color.lab2rgb(im_arr)
-
 
 # ============= RGB - XYZ ============
 class RGB2XYZ(Filter):
@@ -183,7 +202,6 @@ class RGB2XYZ(Filter):
 
     def processing(self, im_arr):
         return mvlib.color.rgb2xyz(im_arr)
-
 
 class XYZ2RGB(Filter):
     title = 'XYZ To RGB'
