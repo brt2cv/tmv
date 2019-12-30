@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 
 from utils.base import rpath2curr
@@ -12,7 +13,7 @@ class MainWnd(QWidget):
         from utils.gmgr import g
 
         super().__init__(attach if attach is not None else parent)
-        loadUi("ui/wx_viewer.ui", self)
+        loadUi("ui/wx_mwnd.ui", self)
         g.register("mwnd", self)
 
         self.setProperty("class", "bkg")  # for qss
@@ -65,6 +66,7 @@ class MainWnd(QWidget):
             # 清理ly_header
             from utils.qt5 import clear_layout
             clear_layout(self.ly_header)
+            clear_layout(self.ly_sidebar)
 
         menu_conf = rpath2curr("../config/menu.json")
 
@@ -75,7 +77,8 @@ class MainWnd(QWidget):
         toolbar_creator = menu.ToolbarCreator(self)
         toolbar_creator.load_conf(menu_conf)
         for toolbar in toolbar_creator.list_bars:
-            self.ly_header.addWidget(toolbar)
+            toolbar.setOrientation(Qt.Vertical)
+            self.ly_sidebar.addWidget(toolbar)
 
     def _setup_ctrl(self):
         from utils.qt5wx.wx_unit import UnitSlider
