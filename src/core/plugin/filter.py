@@ -11,6 +11,9 @@ class FilterBase(Plugin):
     """ 图像相关的插件基类 """
     formats = {}
 
+    def __init__(self):
+        self._fmt_checker = IpsFormat(self.formats)
+
     def processing(self, im_arr):
         """ 处理图像 """
 
@@ -27,20 +30,23 @@ class FilterBase(Plugin):
         """ 刷新UI """
         g.get("canvas").update()
 
-    def check_format(self, im_arr):
-        """ if check error, raise FormatTypeError """
-        fts = IpsFormat(self.formats)
-        fts.check(im_arr)
+    def check_format(self, im_arr=None):
+        """ if check error, raise False """
+        if im_arr is None:
+            im_arr = self.get_image()
+        try:
+            self._fmt_checker.check(im_arr)
+        except FormatTypeError:
+            return False
+        else:
+            return True
 
     def run(self):
-        try:
-            im_arr = self.get_image()
-            self.check_format(im_arr)
-
+        """ 集成流程 """
+        im_arr = self.get_image()
+        if self.check_format(im_arr):
             im2 = self.processing(im_arr)
             self.set_image(im2)
-        except FormatTypeError:
-            pass
 
 
 import re
@@ -159,15 +165,11 @@ class DialogFilterBase(QDialog, Filter):
 
     def accepted(self):
         """ 将当前图像设置为image """
-        try:
-            im_arr = self.get_image()
-            self.check_format(im_arr)
-
+        im_arr = self.get_image()
+        if self.check_format(im_arr):
             im2 = self.processing(im_arr)
             self.set_image(im2)  # 更新snap
             self.update_canvas()
-        except FormatTypeError:
-            pass
 
     def rejected(self):
         """ 取消图像变更 """
@@ -175,16 +177,11 @@ class DialogFilterBase(QDialog, Filter):
 
     def run(self):
         """ 调用的接口，显示主窗口 """
-        if self.needSetupUi:
-            self.setup_ui()  # 延迟构造窗口UI
-            self.needSetupUi = False
-
-        try:
-            ips = self.get_image()
-            self.check_format(ips)
+        if self.check_format():
+            if self.needSetupUi:
+                self.setup_ui()  # 延迟构造窗口UI
+                self.needSetupUi = False
             self.show()
-        except FormatTypeError:
-            pass
 
 
 class DialogFilter(DialogFilterBase):
@@ -200,17 +197,12 @@ class DialogFilter(DialogFilterBase):
         btn_preview.clicked.connect(self.preview)
 
     def preview(self):
-        try:
-            im_arr = self.get_image()
-            self.check_format(im_arr)
-
+        im_arr = self.get_image()
+        if self.check_format(im_arr):
             im2 = self.processing(im_arr)
             im_mgr = g.get("canvas").get_container()
             im_mgr.set_image(im2)  # 不更新snap
             self.update_canvas()
-
-        except Exception as e:
-            logger.warning(e)
 
     # @override
     def on_para_changed(self, para_name, wx):
@@ -218,5 +210,9 @@ class DialogFilter(DialogFilterBase):
         self.preview()  # 实时预览
 
     def run(self):
-        super().run()
-        self.preview()  # 显示窗口时即应用预览
+        if self.check_format():
+            if self.needSetupUi:
+                self.setup_ui()  # 延迟构造窗口UI
+                self.needSetupUi = False
+            self.show()
+            self.preview()  # 显示窗口时即应用预览
