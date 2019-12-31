@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPixmap
 from utils.qt5 import dialog_file_select
 
 from utils.imgio import imread, imwrite
-from mvlib import resize
+import mvlib
 
 from core import g
 from core.plugin.filter import Filter, DialogFilter
@@ -56,13 +56,13 @@ class ResizeImageFile(DialogFilter):
         "isCheckbox": False,
         "para": "height"
     }]
-    scripts = "{output} = mvlib.resize({im}, {size})"
+    scripts = "{output} = mvlib.transform.resize({im}, {size})"
 
     def processing(self, im_arr):
         width = int(self.para["width"])
         height = int(self.para["height"])
         self.para["size"] = [width, height]  # commit scripts para
-        return resize(im_arr, self.para["size"])
+        return mvlib.transform.resize(im_arr, self.para["size"])
 
     def run(self):
         ips = self.get_image()
