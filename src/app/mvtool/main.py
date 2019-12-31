@@ -15,12 +15,8 @@ class ModulePlugin:
 
         app = QApplication([])
         if callback_mwnd is None:
-            try:
-                from .view.mainwnd import MainWnd
-            except ImportError:
-                # 适配app/xxx/run.py作为顶级目录启动
-                logger.warning("当前并非在项目顶层目录运行...")
-                from view.mainwnd import MainWnd
+            logger.warning("当前并非在项目顶层目录运行...")
+            from view.mainwnd import MainWnd
 
             self.mwnd = MainWnd(None)
         else:
@@ -30,8 +26,9 @@ class ModulePlugin:
         def auto_open_testing():
             """ 用于打开图像并写入UndoStack记录 """
             from plugins.file import OpenImageFile
+            from utils.base import rpath2curr
             plugin = OpenImageFile()
-            plugin.open("app/mvtool/res/example.jpg")
+            plugin.open(rpath2curr("res/example.jpg"))
         auto_open_testing()
         app.exec_()
 

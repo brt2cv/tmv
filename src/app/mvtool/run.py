@@ -6,8 +6,8 @@ import os
 root = os.path.abspath("../..")  # os.path.curdir
 if root not in sys.path:
     print(f"expy: 动态加载Lib目录【{root}】")
-    sys.path.append(root)
-os.chdir(root)
+    sys.path.insert(0, root)
+os.chdir(root)  # 项目的设计目标之一：与工作目录无关
 
 from utils.base import import_plugin
 from multiprocessing import freeze_support

@@ -1,4 +1,5 @@
 from core import g
+from core.plugin import Plugin
 from core.plugin.filter import Filter, DialogFilter
 
 
@@ -33,3 +34,10 @@ class HistogramTool(DialogFilter):
 
         self.view[0]["plot"] = plot
         super().run()
+
+
+class FlowChartTool(Plugin):
+    def run(self):
+        import subprocess
+        subprocess.Popen("pyhon3")
+

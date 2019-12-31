@@ -35,7 +35,7 @@ def getopt():
 
 if __name__ == '__main__':
     import logging
-    from utils.expy import site_expand
+    from utils.expy import site_expand, path_expand
     from utils.base import import_plugin
 
     args = getopt()
@@ -72,5 +72,6 @@ if __name__ == '__main__':
     else:
         path_main = args.main
 
+    path_expand(os.path.dirname(path_main))  # 用于在app中以顶层路径的方式载入子模块
     main = import_plugin(path_main)
     main.run()

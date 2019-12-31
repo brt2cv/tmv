@@ -68,6 +68,11 @@
                 "plugin": "CloseViewerLabel"
             },
             {
+                "name": "图像流程图",
+                "shortcut": "Ctrl+R",
+                "plugin": "FlowChartTool"
+            },
+            {
                 "name": "直方图工具",
                 "shortcut": "Ctrl+D",
                 "plugin": "HistogramTool"
