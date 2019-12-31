@@ -9,7 +9,7 @@ from .morphology import *
 
 from utils.gmgr import g
 from core.plugin import Plugin
-from core.plugin.filter import Filter, DialogFilterBase
+from core.plugin.filter import Filter
 from core.plugin.adapter import IpyPlugin, PluginAdapter4Ipy
 def export_plugin(cls_name: str):
     plug_cls = eval(cls_name)
@@ -18,7 +18,7 @@ def export_plugin(cls_name: str):
     # factory
     if issubclass(plug_cls, IpyPlugin):
         return PluginAdapter4Ipy(plug_cls)
-    elif issubclass(plug_cls, DialogFilterBase):
+    elif issubclass(plug_cls, DialogFilter):
         return plug_cls(g.get("mwnd"))
     else:
         return plug_cls()

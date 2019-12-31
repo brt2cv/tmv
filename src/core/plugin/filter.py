@@ -93,7 +93,7 @@ class Filter(FilterBase):
 
 from functools import partial
 from .widgets import TplWidgetsManager
-class DialogFilterBase(QDialog, Filter):
+class DialogFilter(QDialog, Filter):
     title = "Filter"
     view = []  # 简单的垂直布局
     # { "type": "slider",
@@ -101,6 +101,7 @@ class DialogFilterBase(QDialog, Filter):
     #   ...
     #   "para": "thresh"
     # }
+    buttons = ["Preview", "Reset", "OK", "Cancel"]  # 其他可选: "Close"
 
     def __init__(self, parent):
         """ parent为Qt的UI父类
@@ -120,12 +121,26 @@ class DialogFilterBase(QDialog, Filter):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
         # self.buttonBox.clicked.connect(self.on_btn_clicked)
-        btn_ok = QPushButton("OK", self)
-        btn_cancel = QPushButton("Cancel", self)
-        self.buttonBox.addButton(btn_ok, QDialogButtonBox.YesRole)
-        self.buttonBox.addButton(btn_cancel, QDialogButtonBox.NoRole)
-        btn_ok.clicked.connect(self.accepted)
-        btn_cancel.clicked.connect(self.rejected)
+
+        if self.supprot_ok():
+            btn_ok = QPushButton("OK", self)
+            btn_cancel = QPushButton("Cancel", self)
+            self.buttonBox.addButton(btn_ok, QDialogButtonBox.AcceptRole)
+            self.buttonBox.addButton(btn_cancel, QDialogButtonBox.RejectRole)
+            btn_ok.clicked.connect(self.accepted)
+            btn_cancel.clicked.connect(self.rejected)
+        else:
+            btn_close = QPushButton("Close", self)
+            self.buttonBox.addButton(btn_close, QDialogButtonBox.NoRole)
+            btn_close.clicked.connect(self.closed)
+
+        if self.support_preview():
+            btn_reset = QPushButton("Reset", self)
+            btn_preview = QPushButton("Preview", self)
+            self.buttonBox.addButton(btn_preview, QDialogButtonBox.ResetRole)
+            self.buttonBox.addButton(btn_reset, QDialogButtonBox.ResetRole)
+            btn_reset.clicked.connect(self.reset)
+            btn_preview.clicked.connect(self.preview)
 
         dlg_layout.addLayout(self.mlayout)
         dlg_layout.addWidget(self.buttonBox)
@@ -155,8 +170,25 @@ class DialogFilterBase(QDialog, Filter):
     #     except FormatTypeError:
     #         return
 
+    def support_preview(self):
+        return "Preview" in self.buttons
+
+    def supprot_ok(self):
+        """ 支持对图像进行运算 """
+        return "OK" in self.buttons
+
     def on_para_changed(self, para_name, wx):
         self.para[para_name] = wx.get_value()
+        if self.support_preview():
+            self.preview()  # 显示窗口时即应用预览
+
+    def preview(self):
+        im_arr = self.get_image()
+        if self.check_format(im_arr):
+            im2 = self.processing(im_arr)
+            im_mgr = g.get("canvas").get_container()
+            im_mgr.set_image(im2)  # 不更新snap
+            self.update_canvas()
 
     def reset(self):
         im_mgr = g.get("canvas").get_container()
@@ -175,6 +207,9 @@ class DialogFilterBase(QDialog, Filter):
         """ 取消图像变更 """
         self.reset()
 
+    def closed(self):
+        """ 仅关闭对话框 """
+
     def run(self):
         """ 调用的接口，显示主窗口 """
         if self.check_format():
@@ -182,37 +217,5 @@ class DialogFilterBase(QDialog, Filter):
                 self.setup_ui()  # 延迟构造窗口UI
                 self.needSetupUi = False
             self.show()
-
-
-class DialogFilter(DialogFilterBase):
-    """ 增加预览功能 """
-    def setup_ui(self):
-        super().setup_ui()
-        # 添加reset按钮
-        btn_reset = QPushButton("Reset", self)
-        btn_preview = QPushButton("Preview", self)
-        self.buttonBox.addButton(btn_preview, QDialogButtonBox.ResetRole)
-        self.buttonBox.addButton(btn_reset, QDialogButtonBox.ResetRole)
-        btn_reset.clicked.connect(self.reset)
-        btn_preview.clicked.connect(self.preview)
-
-    def preview(self):
-        im_arr = self.get_image()
-        if self.check_format(im_arr):
-            im2 = self.processing(im_arr)
-            im_mgr = g.get("canvas").get_container()
-            im_mgr.set_image(im2)  # 不更新snap
-            self.update_canvas()
-
-    # @override
-    def on_para_changed(self, para_name, wx):
-        super().on_para_changed(para_name, wx)
-        self.preview()  # 实时预览
-
-    def run(self):
-        if self.check_format():
-            if self.needSetupUi:
-                self.setup_ui()  # 延迟构造窗口UI
-                self.needSetupUi = False
-            self.show()
-            self.preview()  # 显示窗口时即应用预览
+            if self.support_preview():
+                self.preview()  # 显示窗口时即应用预览

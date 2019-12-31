@@ -1,5 +1,5 @@
 from core.plugin import Plugin
-from core.plugin.filter import Filter, DialogFilterBase, DialogFilter
+from core.plugin.filter import Filter, DialogFilter
 
 class AboutMe(Plugin):
     def run(self):
@@ -32,9 +32,10 @@ class DemoDlg(DialogFilter):
 
 
 import numpy as np
-class MatplotDemo(DialogFilterBase):
+class MatplotDemo(DialogFilter):
     """ 使用Matplotlib绘制图表 """
     title = "MatplotDemo"
+    buttons = ["Close"]
     view = [{
         "type": "pyplot",
         "name": "MatplotDemo"

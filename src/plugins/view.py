@@ -1,5 +1,5 @@
 from core import g
-from core.plugin.filter import Filter, DialogFilterBase
+from core.plugin.filter import Filter, DialogFilter
 
 
 class NewViewerLabel(Filter):
@@ -16,8 +16,9 @@ class CloseViewerLabel(Filter):
         g.call("prompt", f"删除标签【{label}】", 5)
 
 
-class HistogramTool(DialogFilterBase):
+class HistogramTool(DialogFilter):
     title = "直方图工具"
+    buttons = ["Close"]
     view = [{
         "type": "pyplot",
         "name": "Histogram"

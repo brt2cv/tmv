@@ -1,5 +1,5 @@
 # from PyQt5.QtWidgets import QMessageBox
-from core.plugin.filter import Filter, DialogFilter, DialogFilterBase
+from core.plugin.filter import Filter, DialogFilter
 from core import g
 
 import mvlib
@@ -40,9 +40,10 @@ class Threshold(DialogFilter):
                          self.para["maxval"])
 
 
-class ArithmeticThreshold(DialogFilterBase):
+class ArithmeticThreshold(DialogFilter):
     """ 比例阈值 """
     title = "比例阈值"
+    buttons = ["OK", "Cancel"]
     formats = {"mode": "gray"}
     view = [{
         "type": "spinbox",
