@@ -3,8 +3,8 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QPixmap
 from utils.qt5 import dialog_file_select
 
-from utils.imgio import imread, imwrite
-import mvlib
+import mvlib.io
+import mvlib.transform
 
 from core import g
 from core.plugin.filter import Filter, DialogFilter
@@ -27,11 +27,13 @@ class OpenImageFile(Filter):
     def open(self, path_pic):
         self.para["path_img"] = f"\"{path_pic}\""  # commit scripts para
 
-        self.set_image(imread(path_pic))
+        self.set_image(mvlib.io.imread(path_pic))
         g.call("prompt", f"载入图像：{path_pic}", 5)
 
 
 class SaveAsImageFile(Filter):
+    scripts = "{output} = mvlib.io.imwrite({path_img}, {im})"
+
     def run(self):
         file_name, str_filter = QFileDialog.getSaveFileName(
                                 g.get("mwnd"),
@@ -39,7 +41,7 @@ class SaveAsImageFile(Filter):
                                 filter="Images (*.jpg *.png)")
         if file_name:
             ips = self.get_image()
-            imwrite(file_name, ips)
+            mvlib.io.imwrite(file_name, ips)
             g.call("prompt", f"图像已存储至：{file_name}", 5)
 
 

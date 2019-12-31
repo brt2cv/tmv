@@ -2,7 +2,8 @@
 from core.plugin.filter import Filter, DialogFilter
 from core import g
 
-import mvlib
+import mvlib.color
+import mvlib.filters
 
 
 class Gray(Filter):
@@ -139,6 +140,7 @@ class YUV2RGB(Filter):
     def processing(self, im_arr):
         return mvlib.color.yuv2rgb(im_arr)
 
+"""
 # ============= RGB - CIE ============
 class RGB2CIE(Filter):
     title = 'RGB To CIERGB'
@@ -172,6 +174,7 @@ class LUV2RGB(Filter):
 
     def processing(self, im_arr):
         return mvlib.color.luv2rgb(im_arr)
+"""
 
 # ============= RGB - Lab ============
 class RGB2Lab(Filter):
