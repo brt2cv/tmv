@@ -135,14 +135,14 @@ class DialogFilterBase(QDialog, Filter):
 
         tpl_wx_mgr = TplWidgetsManager(self)
         for dict_wx in self.view:
-            para_name = dict_wx["para"]
-            para_val = dict_wx.get("val_init", 0)
-
             wx = tpl_wx_mgr.parse_elem(dict_wx)
-            if "para" in dict_wx:
-                self.para[para_name] = para_val
+            para_name = dict_wx.get("para")
+            if para_name:
+                para_val = dict_wx.get("val_init", 0)
+                if "para" in dict_wx:
+                    self.para[para_name] = para_val
+                wx.set_slot(partial(self.on_para_changed, para_name, wx))
 
-            wx.set_slot(partial(self.on_para_changed, para_name, wx))
             self.mlayout.addWidget(wx)
 
     # def on_btn_clicked(self, btn):

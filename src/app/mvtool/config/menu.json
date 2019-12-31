@@ -66,6 +66,11 @@
                 "shortcut": "Ctrl+W",
                 "icon": "app/mvtool/res/close.png",
                 "plugin": "CloseViewerLabel"
+            },
+            {
+                "name": "直方图工具",
+                "shortcut": "Ctrl+D",
+                "plugin": "HistogramTool"
             }
         ]
     },

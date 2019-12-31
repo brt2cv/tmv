@@ -1,5 +1,5 @@
 from core import g
-from core.plugin.filter import Filter
+from core.plugin.filter import Filter, DialogFilterBase
 
 
 class NewViewerLabel(Filter):
@@ -14,3 +14,21 @@ class CloseViewerLabel(Filter):
         curr = tab_canvas.currentIndex()
         label = tab_canvas.removeTab(curr)
         g.call("prompt", f"删除标签【{label}】", 5)
+
+
+class HistogramTool(DialogFilterBase):
+    title = "直方图工具"
+    view = [{
+        "type": "pyplot",
+        "name": "Histogram"
+    }]
+
+    def run(self):
+        def plot(figure):
+            # import mvlib
+            # hist, bins = mvlib.exposure.histogram()
+            axes = figure.add_subplot(111)
+            axes.hist(self.get_image().ravel(), 256)
+
+        self.view[0]["plot"] = plot
+        super().run()

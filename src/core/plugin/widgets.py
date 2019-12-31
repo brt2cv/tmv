@@ -1,7 +1,7 @@
 from utils.qt5wx.wx_unit import *
+from utils.qt5wx.wx_plot import UnitPlot
 
 class TplWidgetsManager:
-
     def __init__(self, parent):
         self.parent = parent
 
@@ -18,6 +18,7 @@ class TplWidgetsManager:
             "slider":   self.make_slider,
             "spinbox":  self.make_spinbox,
             "radio":    self.make_radio,
+            "pyplot":   self.makg_pyplot
         }
 
         wx_type = dict_elem["type"]
@@ -75,5 +76,13 @@ class TplWidgetsManager:
                 dict_elem.get("val_init", 0),
                 # dict_elem.get("isCheckbox", False),
                 # dict_elem.get("isChecked", False)
+            )
+        return wx
+
+    def makg_pyplot(self, dict_elem):
+        wx = UnitPlot(
+                self.parent,
+                dict_elem["plot"],
+                dict_elem.get("name", "")
             )
         return wx

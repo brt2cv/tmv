@@ -18,7 +18,7 @@
 				{
 					"cmd":
 					[
-						"$folder/runtime/win64/Scripts/python",
+						"$folder/../runtime/win64/Scripts/python",
 						"run.py",
 						"triage"
 					],
@@ -27,7 +27,7 @@
 				{
 					"cmd":
 					[
-						"$folder/runtime/win64/Scripts/python",
+						"$folder/../runtime/win64/Scripts/python",
 						"run.py",
 						"ocrkit"
 					],
@@ -36,7 +36,7 @@
 				{
 					"cmd":
 					[
-						"$folder/runtime/win64/Scripts/python",
+						"$folder/../runtime/win64/Scripts/python",
 						"run.py",
 						"tmv"
 					],
@@ -71,6 +71,9 @@
 		},
 		{
 			"path": "D:\\Home\\workspace\\src\\imagepy\\imagepy"
+		},
+		{
+			"path": "D:\\Home\\workspace\\blueprint"
 		}
 	],
 	"settings":

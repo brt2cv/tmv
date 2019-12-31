@@ -5,8 +5,8 @@ if include("opencv"):
 if include("skimage"):
     import skimage
     from .io import float2ubyte
-if include("scipy"):
-    from scipy import ndimage
+# if include("scipy"):
+#     from scipy import ndimage
 if include("numpy"):
     import numpy as np
 if include("pillow"):

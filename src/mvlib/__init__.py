@@ -10,6 +10,7 @@ try:
     from .pixel import *
     from .feature import *
     from .filters import *
+    from .exposure import *
     from .morphology import *
 
 except ModuleNotFoundError:
@@ -29,4 +30,5 @@ def reload_mvlib():
     reload_module(".pixel")
     reload_module(".feature")
     reload_module(".filters")
+    reload_module(".exposure")
     reload_module(".morphology")

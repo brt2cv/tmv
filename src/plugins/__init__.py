@@ -8,12 +8,12 @@ from .morphology import *
 
 
 from utils.gmgr import g
+from core.plugin import Plugin
 from core.plugin.filter import Filter, DialogFilterBase
 from core.plugin.adapter import IpyPlugin, PluginAdapter4Ipy
 def export_plugin(cls_name: str):
     plug_cls = eval(cls_name)
-    assert issubclass(plug_cls, Filter) or issubclass(plug_cls, IpyPlugin),\
-           f"未知的插件类型，非【Filter】的子类：【{cls_name}】"
+    assert issubclass(plug_cls, Plugin), f"非插件子类：【{cls_name}】"
 
     # factory
     if issubclass(plug_cls, IpyPlugin):
@@ -49,7 +49,7 @@ class ReloadPlugins(Filter):
         g.call("prompt", "插件已重载...")
 
 
-class AboutMe(Filter):
+class AboutMe(Plugin):
     def run(self):
         msgbox = QMessageBox(QMessageBox.NoIcon,
                              "关于",
