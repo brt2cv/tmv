@@ -15,7 +15,6 @@ class ModulePlugin:
 
         app = QApplication([])
         if callback_mwnd is None:
-            logger.warning("当前并非在项目顶层目录运行...")
             from view.mainwnd import MainWnd
 
             self.mwnd = MainWnd(None)

@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
-import sys
-import os
-# 当使用Python-embed-runtime时，需要手动加载cwd至sys.path
-root = os.path.abspath("../..")  # os.path.curdir
-if root not in sys.path:
-    print(f"expy: 动态加载Lib目录【{root}】")
-    sys.path.insert(0, root)
-os.chdir(root)  # 项目的设计目标之一：与工作目录无关
+# from utils import expy
+def chdir_topdir(dir_dst):
+    import os, sys
+    dir_dst_abs = os.path.abspath(dir_dst)
+    os.chdir(dir_dst_abs)
+    sys.path.insert(0, dir_dst_abs)
+
+chdir_topdir("../..")  # src
+from utils import expy
+expy.venv_expand("../runtime/win64")
 
 from utils.base import import_plugin
 from multiprocessing import freeze_support
