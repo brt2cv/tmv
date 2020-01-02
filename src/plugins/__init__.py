@@ -27,7 +27,7 @@ def export_plugin(cls_name: str):
 class ReloadPlugins(Filter):
     def run(self):
         # 重载mvlib依赖
-        from mvlib import reload_mvlib
+        from mvlib import reload as reload_mvlib
         reload_mvlib()
 
         # 重载插件

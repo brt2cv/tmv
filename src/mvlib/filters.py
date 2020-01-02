@@ -51,9 +51,9 @@ def threshold(im, thresh="otsu", maxval=255):
         type_ = cv2.THRESH_BINARY  # 0
         if thresh == "otsu":
             type_ += cv2.THRESH_OTSU  # 8
-            thresh = 0
+            params["thresh"] = 0
 
-        _ret, im2 = cv2.threshold(im, thresh, maxval, type_)
+        _ret, im2 = cv2.threshold(im, params["thresh"], maxval, type_)
         return im2
 
     def run_pillow():
