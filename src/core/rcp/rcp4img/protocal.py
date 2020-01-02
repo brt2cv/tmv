@@ -49,7 +49,7 @@ class RemoteImageQtTrans(TransBase, QObject):
         try:
             bytes_shape, im_data = data.split(b'|', 1)
             shape = eval(bytes_shape)
-            mode = shape2mode[len(shape)]
+            mode = shape2mode(shape)
 
             im_array = bytes2ndarray(im_data, mode, shape2size(shape))
             # im_array = im_array.reshape(shape)

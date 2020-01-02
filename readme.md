@@ -15,6 +15,11 @@
 * g.get("canvas"): 用于获取图像和设值图像
 * DialogPlugin，由于已经设计图像的preview和cancel()操作，故需要canvas支持撤销操作。框架通过ImageManager实现。
 
+创建的模块级的全局对象：
+
+* core.menu.plug_mgr = PluginManager()
+* core.imgio.instance() = ImgIOManager()
+
 ### FilterBase
 针对ndarray/ImagePlus进行操作，包括了以下功能：
 

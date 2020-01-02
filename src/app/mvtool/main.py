@@ -22,14 +22,25 @@ class ModulePlugin:
             self.mwnd = callback_mwnd()
 
         self.mwnd.show()
-        def auto_open_testing():
+        # 初始化时载入图像
+        def auto_open_testing(saveUndoStack=False):
             """ 用于打开图像并写入UndoStack记录 """
-            from plugins.file import OpenImageFile
             from utils.base import rpath2curr
-            plugin = OpenImageFile()
-            plugin.open(rpath2curr("res/example.jpg"))
-        auto_open_testing()
+            path_example = rpath2curr("res/example.jpg")
+
+            if saveUndoStack:
+                from plugins.file import OpenImageFile
+                OpenImageFile().open(path_example)
+            else:
+                from core.imgio import instance
+                instance().open_file(path_example)
+
+        auto_open_testing(True)
+        # 启动rcp服务
+        from core.imgio import instance
+        instance().rcp_open()
         app.exec_()
+        instance().rcp_close()
 
 
 """ 全局变量声明
