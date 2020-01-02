@@ -1,12 +1,22 @@
-# encoding: utf-8
+###############################################################################
+# Name:         protocal
+# Usage:
+# Author:       Bright Li
+# Modified by:
+# Created:      2020-01-02
+# Version:      [0.0.2]
+# RCS-ID:       $$
+# Copyright:    (c) Bright Li
+# Licence:
+###############################################################################
 
 import numpy as np
-from utils.sock.trans import TransBase, json2dict
+from utils.sock.trans import TransBase
 
-from utils.imgio import bytes2ndarray, shape2size, shape2mode
-from utils.gmgr import g
+from utils.imgio import bytes2ndarray, shape2mode
 from utils.log import getLogger
 logger = getLogger()
+
 
 from PyQt5.QtCore import QObject, pyqtSignal
 class RemoteImageQtTrans(TransBase, QObject):
@@ -51,7 +61,7 @@ class RemoteImageQtTrans(TransBase, QObject):
             shape = eval(bytes_shape)
             mode = shape2mode(shape)
 
-            im_array = bytes2ndarray(im_data, mode, shape2size(shape))
+            im_array = bytes2ndarray(im_data, mode, shape=shape)
             # im_array = im_array.reshape(shape)
 
             # g.get("unit_curr_img").set_image(im_array, "remote_img_temp")

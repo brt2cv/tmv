@@ -23,7 +23,7 @@ class ImgIOManager():
         """ 接收远程传输的图像 """
         from .rcp import make_server
 
-        self.tid_rcp = make_server()
+        self.tid_rcp = make_server(byTcp=False)
         self.tid_rcp_pause = True
         self.on_rcp_pause()
 
