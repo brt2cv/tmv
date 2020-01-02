@@ -1,32 +1,25 @@
 #!/bin/env python
 
+import importlib
 from .backend import get_backend, set_backend
 
-# 模块
-try:
-    from .io import *
-    from .transform import *
-    from .color import *
-    from .pixel import *
-    from .feature import *
-    from .filters import *
-    from .morphology import *
-
-except ModuleNotFoundError:
-    print(f"当前后端使用{get_backend()}，但未找到依赖的库文件；请尝试更换后端")
+from os.path import dirname, basename, isfile, join
+import glob
+modules = glob.glob(join(dirname(__file__), "*.py"))
+__all__ = [ basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('__init__.py')]
 
 
-def reload_mvlib():
-    from importlib import reload, import_module
+def _import_submodules(isReload=False):
+    def dynamic_import(submodule: str):
+        module = importlib.import_module(submodule, __package__)
+        if isReload:
+            importlib.reload(module)
 
-    def reload_module(submodule: str):
-        module = import_module(submodule, __package__)
-        reload(module)
+    for str_module in __all__:
+        dynamic_import("." + str_module)
 
-    reload_module(".io")
-    reload_module(".transform")
-    reload_module(".color")
-    reload_module(".pixel")
-    reload_module(".feature")
-    reload_module(".filters")
-    reload_module(".morphology")
+def reload():
+    _import_submodules(True)
+
+
+set_backend(None)  # 初始化backend
