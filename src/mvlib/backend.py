@@ -27,11 +27,20 @@ else:
 def get_backend():
     return dict_conf["backend"]
 
+
+dict_backend = {
+    "pillow":   ["PIL"],
+    "numpy":    ["numpy"],
+    "scipy":    ["scipy"],
+    "skimage":  ["skimage"],
+    "opencv":   ["cv2"]
+}
+
 def set_backend(name=None):
     """ name = None 仅用于初始化 """
-    if name is not None:
-        choice = ["pillow", "numpy", "scipy", "skimage", "opencv"]
-        assert name in choice, f"未知的后端类型：【{name}】"
+    notInitial = name is not None
+    if notInitial:
+        assert name in dict_backend, f"未知的后端类型：【{name}】"
         dict_conf["backend"] = name
 
         with open(path_conf, "w") as fp:
@@ -40,7 +49,12 @@ def set_backend(name=None):
     g.register("Backend", dict_conf["backend"], forced=True)
     print(f"Using 【{dict_conf['backend']}】 Backend")
 
-    # 重新reload()各个子模块
+    # 由于include()，需要reload()各个子模块
+    from . import _import_submodules
+    try:
+        _import_submodules(notInitial)
+    except ModuleNotFoundError:
+        print(f"当前后端使用【{get_backend()}】，但未找到依赖库；请更换后端")
 
 #####################################################################
 # 类型提升
@@ -101,5 +115,3 @@ def run_backend(
 
     Backend = get_backend()
     return try_run(Backend)
-
-set_backend(None)
