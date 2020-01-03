@@ -33,9 +33,9 @@ class ModulePlugin:
         imgio_mgr.open_file(path_example)
 
         # 启动rcp服务
-        imgio_mgr.rcp_open()
+        imgio_mgr.rcp_start()
         app.exec_()
-        imgio_mgr.rcp_close()
+        imgio_mgr.rcp_stop()
 
 
 """ 全局变量声明

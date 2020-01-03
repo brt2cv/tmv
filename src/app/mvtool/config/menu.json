@@ -20,6 +20,10 @@
                 "name": "Resize",
                 "description": "缩放",
                 "plugin": "ResizeImageFile"
+            },
+            {
+                "name": "暂停远程图像接收",
+                "plugin": "RcpImagePause"
             }
         ]
     },
@@ -57,7 +61,7 @@
         "members": [
             {
                 "name": "新建标签",
-                "shortcut": "Ctrl+N",
+                "shortcut": "Ctrl+T",
                 "icon": "app/mvtool/res/new.png",
                 "plugin": "NewViewerLabel"
             },

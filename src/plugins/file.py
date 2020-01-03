@@ -1,7 +1,7 @@
 import mvlib
 from core import g
 from core.plugin.filter import Filter, DialogFilter
-from core.imgio import OpenImageFile
+from core.imgio import OpenImageFile, ImgIOManager
 
 
 from PyQt5.QtWidgets import QFileDialog
@@ -46,3 +46,22 @@ class ResizeImageFile(DialogFilter):
         self.view[0]["val_init"] = w
         self.view[1]["val_init"] = h
         super().run()
+
+
+class RcpImageSwitch(Filter):
+    def __init__(self):
+        super().__init__()
+        self.imgio_mgr = ImgIOManager()
+        self.status = True  # 默认是开启状态
+
+    def run(self):
+        self.status = not self.status
+        if self.status:
+            self.imgio_mgr.rcp_start()
+        else:
+            self.imgio_mgr.rcp_stop()
+
+
+class RcpImagePause(Filter):
+    def run(self):
+        ImgIOManager().rcp_pause()
