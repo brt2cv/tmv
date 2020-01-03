@@ -1,4 +1,12 @@
-from utils.gmgr import g
+import os.path as osp
+from PyQt5.QtWidgets import QMessageBox
 
-from .img import ImagePlus
-from . import utils
+from utils.gmgr import g
+root_dir = osp.abspath(osp.join(osp.dirname(__file__), ".."))
+
+
+def alert(msg):
+    QMessageBox.warning(g.get("mwnd"), "错误", msg)
+
+def info(msg):
+    QMessageBox.information(g.get("mwnd"), "通知", msg)

@@ -1,8 +1,8 @@
 import os.path
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtGui import QCursor
+# from PyQt5.QtGui import QCursor
 from PyQt5.QtCore import Qt
 
+from core import alert
 from core.canvas.viewer import ScrollViewer, TabViewer, GridViewer
 
 class ScrollCanvas(ScrollViewer):
@@ -11,6 +11,9 @@ class ScrollCanvas(ScrollViewer):
         super().__init__(parent)
         # self.setup_context_menu()
         self.setAcceptDrops(True)  # 支持拖拽文件
+
+        from core.imgio import ImgIOManager
+        self.imgio_mgr = ImgIOManager()
 
     def dragEnterEvent(self, event):
         """ 只在进入Window的瞬间触发 """
@@ -21,9 +24,10 @@ class ScrollCanvas(ScrollViewer):
 
         _, ext = os.path.splitext(path_file)
         if ext.lower() not in [".png", ".jpg", ".bmp"]:
-            QMessageBox.warning(self, "警告", "只支持 png/jpg/bmp 图片文件")
+            alert("只支持 png/jpg/bmp 图片文件")
             return
-        self.load_image(path_file)
+        # self.load_image(path_file)
+        self.imgio_mgr.open_file(path_file)
 
     """
     def setup_context_menu(self):

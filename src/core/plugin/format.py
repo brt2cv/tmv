@@ -1,5 +1,5 @@
 from utils.imgio import guess_mode
-from .. import utils
+from .. import alert
 
 class FormatTypeError(Exception):
     """ IpsFormat设定的属性与当前处理图像不符 """
@@ -50,7 +50,7 @@ class IpsFormat:
         """ return True if OK """
         if im_arr is None:
             warning = 'No image selected!'
-            utils.alert(warning)
+            alert(warning)
             raise FormatTypeError(warning)
             # return
 
@@ -59,14 +59,14 @@ class IpsFormat:
             curr_mode = self.mode2str[guess_mode(im_arr)]
             if mode != curr_mode:
                 warning = f'Mode error: 【{mode}】 image is required, current image is 【{curr_mode}】'
-                utils.alert(warning)
+                alert(warning)
                 raise FormatTypeError(warning)
                 # return
 
         dtype = self.property.get("dtype")
         if dtype and dtype != im_arr.dtype:
             warning = f'Dtype error: 【{dtype}】 image is required, current image is 【{im_arr.dtype}】'
-            utils.alert(warning)
+            alert(warning)
             raise FormatTypeError(warning)
             # return
 

@@ -7,7 +7,7 @@ from .color import *
 from .morphology import *
 
 
-from utils.gmgr import g
+import core
 from core.plugin import Plugin
 from core.plugin.filter import Filter
 from core.plugin.adapter import IpyPlugin, PluginAdapter4Ipy
@@ -19,7 +19,7 @@ def export_plugin(cls_name: str):
     if issubclass(plug_cls, IpyPlugin):
         return PluginAdapter4Ipy(plug_cls)
     elif issubclass(plug_cls, DialogFilter):
-        return plug_cls(g.get("mwnd"))
+        return plug_cls(core.g.get("mwnd"))
     else:
         return plug_cls()
 
@@ -44,9 +44,9 @@ class ReloadPlugins(Filter):
         reload_module(".morphology")
 
         # 重载UI
-        g.get("mwnd")._setup_menu(isReload=True)
-        QMessageBox.information(g.get("mwnd"), "通知", "插件已重载...")
-        g.call("prompt", "插件已重载...")
+        core.g.get("mwnd")._setup_menu(isReload=True)
+        core.info("插件已重载...")
+        core.g.call("prompt", "插件已重载...")
 
 
 class AboutMe(Plugin):
@@ -54,7 +54,7 @@ class AboutMe(Plugin):
         msgbox = QMessageBox(QMessageBox.NoIcon,
                              "关于",
                              "\n感谢ImagePy的开源，回馈开源社区",
-                             parent = g.get("mwnd"))
+                             parent = core.g.get("mwnd"))
         msgbox.setDetailedText('版权：Bright Li\nTel: 18131218231\nE-mail: brt2@qq.com')
         msgbox.setIconPixmap(QPixmap("app/mvtool/res/logo.png"))
         msgbox.exec_()

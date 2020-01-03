@@ -7,6 +7,7 @@ except ImportError:
 from PyQt5.QtWidgets import QMessageBox
 from traceback import print_exc
 
+from core import alert
 from utils.base import singleton
 from .plugin import import_plugin
 from . import g
@@ -24,7 +25,7 @@ class PluginManager:
         try:
             self.dict_plugins[cls_name].run()
         except Exception as e:
-            QMessageBox.warning(g.get("mwnd"), "警告", str(e))
+            alert(str(e))
             print("#"*80)
             print_exc()
             print("#"*80)

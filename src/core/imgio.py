@@ -3,18 +3,23 @@ import mvlib.io
 from . import g
 
 from utils.log import getLogger
-logger = getLogger(1)
+logger = getLogger()
 
-def instance():
-    return ImgIOManager()
+# def instance():
+#     return ImgIOManager()
 
 @singleton
 class ImgIOManager():
-    # def __init__(self):
+    def __init__(self):
+        from plugins.file import OpenImageFile
+        self.plugin_open_file = OpenImageFile()
 
     def open_file(self, path_file):
-        im_arr = mvlib.io.imread(path_file)
-        g.get("canvas").set_image(im_arr)
+        # im_arr = mvlib.io.imread(path_file)
+        # g.get("canvas").set_image(im_arr)
+
+        # 使用插件方式，支持UndoStock（但core模块依赖了plugins，合理吗？）
+        self.plugin_open_file.open(path_file)
 
     def save_file(self, path_file, im_arr):
         mvlib.io.imwrite(path_file, im_arr)
