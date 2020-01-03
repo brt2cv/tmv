@@ -49,6 +49,7 @@ class ReloadPlugins(Filter):
         core.g.call("prompt", "插件已重载...")
 
 
+from PyQt5.QtGui import QPixmap
 class AboutMe(Plugin):
     def run(self):
         msgbox = QMessageBox(QMessageBox.NoIcon,

@@ -18,6 +18,8 @@ class MedianBlur(Filter):
     para = {'size':2}
     view = [(int, 'size', (0,30), 0,  'size', 'pix')]
 
+    scripts = "{output} = mvlib.filters.median({im}, {size})"
+
     #process
     def run(self, ips, snap, img, para = None):
         nimg.median_filter(snap, para['size'], output=img)

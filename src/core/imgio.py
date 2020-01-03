@@ -9,10 +9,12 @@ logger = getLogger()
 @singleton
 class ImgIOManager():
     def __init__(self):
+        self.tid_rcp = None
         self.plugin = Filter()  # 支持Undo功能
 
     def open_file(self, path_file):
         im_arr = mvlib.io.imread(path_file)
+        self.plugin.scripts = f"{{output}} = mvlib.io.imread(\"{path_file}\")"
         self.plugin.set_image(im_arr)
 
     def save_file(self, path_file, im_arr):
@@ -42,5 +44,6 @@ class ImgIOManager():
         self.tid_rcp_pause = not self.tid_rcp_pause
 
     def rcp_stop(self):
-        self.tid_rcp.stop()
-        logger.debug("已关闭RCP服务")
+        if self.tid_rcp:
+            self.tid_rcp.stop()
+            logger.info("已关闭RCP服务")

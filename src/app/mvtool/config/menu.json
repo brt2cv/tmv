@@ -22,8 +22,8 @@
                 "plugin": "ResizeImageFile"
             },
             {
-                "name": "暂停远程图像接收",
-                "plugin": "RcpImagePause"
+                "name": "开启/关闭 - 远程图像接收",
+                "plugin": "RcpImageSwitch"
             }
         ]
     },

@@ -19,7 +19,7 @@ class OpenImageFile(Filter):
         self.open(path_pic)
 
     def open(self, path_pic):
-        self.para["path_img"] = f"\"{path_pic}\""  # commit scripts para
+        self.paras["path_img"] = f"\"{path_pic}\""  # commit scripts para
 
         self.set_image(mvlib.io.imread(path_pic))
         g.call("prompt", f"载入图像：{path_pic}", 5)
@@ -56,10 +56,10 @@ class ResizeImageFile(DialogFilter):
     scripts = "{output} = mvlib.transform.resize({im}, {size})"
 
     def processing(self, im_arr):
-        width = int(self.para["width"])
-        height = int(self.para["height"])
-        self.para["size"] = [width, height]  # commit scripts para
-        return mvlib.transform.resize(im_arr, self.para["size"])
+        width = int(self.paras["width"])
+        height = int(self.paras["height"])
+        self.paras["size"] = [width, height]  # commit scripts para
+        return mvlib.transform.resize(im_arr, self.paras["size"])
 
     def run(self):
         ips = self.get_image()
@@ -69,19 +69,21 @@ class ResizeImageFile(DialogFilter):
         super().run()
 
 
+from core.imgio import ImgIOManager
 class RcpImageSwitch(Filter):
     def __init__(self):
         super().__init__()
         self.imgio_mgr = ImgIOManager()
-        self.status = True  # 默认是开启状态
+        self.status = False  # 默认关闭状态
 
     def run(self):
-        self.status = not self.status
-        if self.status:
+        # self.status = not self.status
+        if not self.status:
             self.imgio_mgr.rcp_start()
+            self.status = True
         else:
-            self.imgio_mgr.rcp_stop()
-
+            # self.imgio_mgr.rcp_stop()
+            self.imgio_mgr.rcp_pause()
 
 class RcpImagePause(Filter):
     def run(self):

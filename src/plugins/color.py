@@ -37,8 +37,8 @@ class Threshold(DialogFilter):
 
     def processing(self, im_arr):
         return mvlib.filters.threshold(im_arr,
-                         self.para["thresh"],
-                         self.para["maxval"])
+                                       self.paras["thresh"],
+                                       self.paras["maxval"])
 
 
 class ArithmeticThreshold(DialogFilter):
@@ -61,7 +61,7 @@ class ArithmeticThreshold(DialogFilter):
     }]
 
     def processing(self, im_arr):
-        num_total = self.para["nRow"] * self.para["nColumn"]
+        num_total = self.paras["nRow"] * self.paras["nColumn"]
         list_imgs = []
         int_unit = int(255 / (num_total + 1))
         for index in range(1, num_total + 1):
@@ -76,7 +76,7 @@ class ArithmeticThreshold(DialogFilter):
             list_imgs = self.processing(im_arr)
             # 将canvas::tabviewer的成员从Scroll转换为Grib
             canvas = g.get("canvas")
-            canvas.stack2grib(self.para["nRow"], self.para["nColumn"])
+            canvas.stack2grib(self.paras["nRow"], self.paras["nColumn"])
             grib = canvas.currentWidget()
             grib.set_image(list_imgs)
             self.update_canvas()

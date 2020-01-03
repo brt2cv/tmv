@@ -53,7 +53,7 @@ import re
 class Filter(FilterBase):
     """ 对于ImageContainer进行操作 """
     scripts = ""  # or list of str
-    para = {}
+    paras = {}
     _pattern = re.compile(r'{.+?}')
 
     def parse_script(self):
@@ -69,8 +69,8 @@ class Filter(FilterBase):
         list_para = re.findall(self._pattern, self.scripts)
         for para_with_brace in list_para:
             para_name = para_with_brace[1:-1]
-            if para_name in self.para:
-                ret = ret.replace(para_with_brace, str(self.para[para_name]))
+            if para_name in self.paras:
+                ret = ret.replace(para_with_brace, str(self.paras[para_name]))
         return ret
 
     def get_image(self):
@@ -108,7 +108,7 @@ class DialogFilter(QDialog, Filter):
             与父类的通讯，应由pyqtSignal负责，而非调用父类实例
         """
         super().__init__(parent)
-        self.para = {}  # para_name: value
+        self.paras = {}  # para_name: value
         self.needSetupUi = True
 
     def setup_ui(self):
@@ -155,7 +155,7 @@ class DialogFilter(QDialog, Filter):
             if para_name:
                 para_val = dict_wx.get("val_init", 0)
                 if "para" in dict_wx:
-                    self.para[para_name] = para_val
+                    self.paras[para_name] = para_val
                 wx.set_slot(partial(self.on_para_changed, para_name, wx))
 
             self.mlayout.addWidget(wx)
@@ -178,7 +178,7 @@ class DialogFilter(QDialog, Filter):
         return "OK" in self.buttons
 
     def on_para_changed(self, para_name, wx):
-        self.para[para_name] = wx.get_value()
+        self.paras[para_name] = wx.get_value()
         if self.support_preview():
             self.preview()  # 显示窗口时即应用预览
 

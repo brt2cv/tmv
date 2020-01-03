@@ -84,5 +84,5 @@ class PluginAdapter4Ipy(DialogFilter):
                        ips=None,
                        snap=im_arr,  # src
                        img=output,   # dst
-                       para=self.para)
+                       para=self.paras)
         return output
