@@ -1,52 +1,46 @@
 from utils.base import singleton
 import mvlib.io
-from . import g
+from .plugin.filter import Filter
 
 from utils.log import getLogger
 logger = getLogger()
 
-# def instance():
-#     return ImgIOManager()
 
 @singleton
 class ImgIOManager():
     def __init__(self):
-        from plugins.file import OpenImageFile
-        self.plugin_open_file = OpenImageFile()
+        self.plugin = Filter()  # 支持Undo功能
 
     def open_file(self, path_file):
-        # im_arr = mvlib.io.imread(path_file)
-        # g.get("canvas").set_image(im_arr)
-
-        # 使用插件方式，支持UndoStock（但core模块依赖了plugins，合理吗？）
-        self.plugin_open_file.open(path_file)
+        im_arr = mvlib.io.imread(path_file)
+        self.plugin.set_image(im_arr)
 
     def save_file(self, path_file, im_arr):
         mvlib.io.imwrite(path_file, im_arr)
 
-    def rcp_open(self):
+    def rcp_start(self):
         """ 接收远程传输的图像 """
         from .rcp import make_server
 
         self.tid_rcp = make_server(byTcp=False)
         self.tid_rcp_pause = True
-        self.on_rcp_pause()
+        self.rcp_pause()
 
     def rcp_recv(self, im_arr):
         logger.debug(f"接收到RCP图像, shape={im_arr.shape}")
-        g.get("canvas").set_image(im_arr)
+        self.plugin.set_image(im_arr)
 
-    def rcp_send(self, im_arr):
-        g.get("canvas").get_image(im_arr)
+    def rcp_send(self):
+        im_arr = self.plugin.get_image()
         self.tid_rcp.protocal.send_image(im_arr)
 
-    def on_rcp_pause(self):
+    def rcp_pause(self):
         if self.tid_rcp_pause:
             self.tid_rcp.protocal.dataUpdated.connect(self.rcp_recv)
         else:
             self.tid_rcp.protocal.dataUpdated.disconnect()
         self.tid_rcp_pause = not self.tid_rcp_pause
 
-    def rcp_close(self):
+    def rcp_stop(self):
         self.tid_rcp.stop()
         logger.debug("已关闭RCP服务")
