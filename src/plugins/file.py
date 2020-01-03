@@ -1,7 +1,28 @@
 import mvlib
-from core import g
+from core import g, alert
 from core.plugin.filter import Filter, DialogFilter
-from core.imgio import OpenImageFile, ImgIOManager
+
+
+from utils.qt5 import dialog_file_select
+class OpenImageFile(Filter):
+    scripts = "{output} = mvlib.io.imread({path_img})"
+
+    def run(self):
+        """ override: 无需打开图像 """
+        file_path = dialog_file_select(g.get("mwnd"), "Images (*.png *.jpg)")
+        if not file_path:
+            return
+        elif len(file_path) > 1:
+            alert(g.get("mwnd"), "错误", "请勿选择多张图片")
+            return
+        path_pic = file_path[0]
+        self.open(path_pic)
+
+    def open(self, path_pic):
+        self.para["path_img"] = f"\"{path_pic}\""  # commit scripts para
+
+        self.set_image(mvlib.io.imread(path_pic))
+        g.call("prompt", f"载入图像：{path_pic}", 5)
 
 
 from PyQt5.QtWidgets import QFileDialog
