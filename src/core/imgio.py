@@ -1,17 +1,14 @@
 from utils.base import singleton
 import mvlib.io
-from . import g
+from . import g, alert
 
 from utils.log import getLogger
 logger = getLogger()
 
-# def instance():
-#     return ImgIOManager()
 
 @singleton
 class ImgIOManager():
     def __init__(self):
-        from plugins.file import OpenImageFile
         self.plugin_open_file = OpenImageFile()
 
     def open_file(self, path_file):
@@ -50,3 +47,26 @@ class ImgIOManager():
     def rcp_close(self):
         self.tid_rcp.stop()
         logger.debug("已关闭RCP服务")
+
+
+from utils.qt5 import dialog_file_select
+from .plugin.filter import Filter
+class OpenImageFile(Filter):
+    scripts = "{output} = mvlib.io.imread({path_img})"
+
+    def run(self):
+        """ override: 无需打开图像 """
+        file_path = dialog_file_select(g.get("mwnd"), "Images (*.png *.jpg)")
+        if not file_path:
+            return
+        elif len(file_path) > 1:
+            alert(g.get("mwnd"), "错误", "请勿选择多张图片")
+            return
+        path_pic = file_path[0]
+        self.open(path_pic)
+
+    def open(self, path_pic):
+        self.para["path_img"] = f"\"{path_pic}\""  # commit scripts para
+
+        self.set_image(mvlib.io.imread(path_pic))
+        g.call("prompt", f"载入图像：{path_pic}", 5)
