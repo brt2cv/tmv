@@ -4,12 +4,12 @@ if include("opencv"):
     import cv2
 if include("skimage"):
     from skimage import feature
-if include("scipy"):
-    from scipy import ndimage
-if include("numpy"):
-    import numpy as np
-if include("pillow"):
-    from PIL import Image
+# if include("numpy"):
+#     import numpy as np
+# if include("scipy"):
+#     from scipy import ndimage
+# if include("pillow"):
+#     from PIL import Image
 
 
 def canny(im, sigma=1.):
@@ -25,3 +25,5 @@ def canny(im, sigma=1.):
             # func_pillow=run_pillow,
             # func_numpy=run_numpy,
         )()
+
+find_edge = canny

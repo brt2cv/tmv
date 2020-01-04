@@ -8,6 +8,10 @@ import glob
 modules = glob.glob(join(dirname(__file__), "*.py"))
 __all__ = [ basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('__init__.py')]
 
+def _all_modules():
+    from pprint import pprint
+    print("All mvlib.modules:")
+    pprint(__all__)
 
 def _import_submodules(isReload=False):
     def dynamic_import(submodule: str):
