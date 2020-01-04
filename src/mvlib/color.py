@@ -204,10 +204,28 @@ def hsv2rgb(im):
             func_opencv=run_opencv
         )()
 
-def hsv_range(img_hsv, list_low, list_high):
+hsv_color = {  # ["hmin", "hmax", "smin", "smax", "vmin", "vmax"]
+    "black": [0, 180, 0, 255, 0, 46],
+    "gray": [0, 180, 0, 43, 46, 220],
+    "white": [0, 180, 0, 30, 221, 255],
+    "red": [156, 10, 43, 255, 46, 255],
+    "orange": [11, 25, 43, 255, 46, 255],
+    "yellow": [26, 34, 43, 255, 46, 255],
+    "green": [35, 77, 43, 255, 46, 255],
+    "cyan": [78, 99, 43, 255, 46, 255],
+    "blue": [100, 124, 43, 255, 46, 255],
+    "purple": [125, 155, 43, 255, 46, 255],
+}
+
+def hsv_range(img_hsv, color_range):
+    """ color_range: [156, 10, 43, 255, 46, 255], 也支持使用预定义色值: "red", "black"
+    """
+    if isinstance(color_range, str):
+        color_range = hsv_color[color_range]
+
     def run_opencv():
-        array_low = list_low if isinstance(list_low, np.ndarray) else np.array(list_low)
-        array_high = list_high if isinstance(list_high, np.ndarray) else np.array(list_high)
+        array_low = np.array([v for i, v in enumerate(color_range) if i % 2 == 0])
+        array_high = np.array([v for i, v in enumerate(color_range) if i % 2])
 
         if array_low[0] <= array_high[0]:
             mask = cv2.inRange(img_hsv, array_low, array_high)

@@ -34,8 +34,8 @@ def kernal(size, shape="rect"):
             "cross": 1,
             "ellipse": 2
         }
-        shape = KERNEL_SHAPE_OPENCV[shape]
-        return cv2.getStructuringElement(shape, size)
+        nShape = KERNEL_SHAPE_OPENCV[shape]
+        return cv2.getStructuringElement(nShape, size)
 
     return run_backend(
             func_skimage=run_skimage,
@@ -44,6 +44,9 @@ def kernal(size, shape="rect"):
 
 def dilation(im, k):
     """ 扩充边缘或填充小的孔洞 """
+    if isinstance(k, tuple) and len(k) == 2:
+        k = kernal(k)
+
     def run_opencv():
         return cv2.dilate(im, k)
 
@@ -57,6 +60,9 @@ def dilation(im, k):
 
 def erosion(im, k):
     """ 常用于提取骨干信息，去掉毛刺，去掉孤立的像素 """
+    if isinstance(k, tuple) and len(k) == 2:
+        k = kernal(k)
+
     def run_opencv():
         return cv2.erode(im, k)
 
@@ -70,6 +76,9 @@ def erosion(im, k):
 
 def opening(im, k):
     """ 先腐蚀再膨胀，消除小物体或小斑块 """
+    if isinstance(k, tuple) and len(k) == 2:
+        k = kernal(k)
+
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_OPEN, k)
 
@@ -83,6 +92,9 @@ def opening(im, k):
 
 def closing(im, k):
     """ 先膨胀再腐蚀，填充孔洞 """
+    if isinstance(k, tuple) and len(k) == 2:
+        k = kernal(k)
+
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_CLOSE, k)
 
@@ -97,6 +109,9 @@ def closing(im, k):
 
 def gradient(im, k):
     """ 梯度：图像的膨胀和腐蚀之间的差异，结果看起来像目标的轮廓 """
+    if isinstance(k, tuple) and len(k) == 2:
+        k = kernal(k)
+
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_GRADIENT, k)
 
@@ -107,6 +122,9 @@ def gradient(im, k):
 
 def tophat(im, k):
     """ 顶帽：原图像减去它的开运算值，突出原图像中比周围亮的区域 """
+    if isinstance(k, tuple) and len(k) == 2:
+        k = kernal(k)
+
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_TOPHAT, k)
 
@@ -121,6 +139,9 @@ def tophat(im, k):
 
 def blackhat(im, k):
     """ 黑帽：原图像减去它的闭运算值，突出原图像中比周围暗的区域 """
+    if isinstance(k, tuple) and len(k) == 2:
+        k = kernal(k)
+
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_BLACKHAT, k)
 

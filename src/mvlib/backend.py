@@ -61,7 +61,8 @@ def set_backend(name=None):
 type_degrade = {
     "opencv"    : "numpy",
     "skimage"   : "scipy",
-    "scipy"     : "numpy"
+    "scipy"     : "numpy",
+    "numpy"     : "pillow"
 }
 
 def include(backend_type, _curr_type=None) -> bool:
