@@ -107,6 +107,9 @@
                 "plugin": "SplitRGB"
             },
             {
+                "name": "HSV颜色空间",
+                "plugin": "HSV_Filter"
+            },{
                 "name": "RGB To HSV",
                 "plugin": "RGB2HSV"
             },

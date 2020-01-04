@@ -9,7 +9,7 @@ import mvlib.filters
 class Gray(Filter):
     title = 'Gray'
     formats = {"mode": "rgb"}
-    scripts = "{output} = mvlib.rgb2gray({im})"
+    scripts = "{output} = mvlib.color.rgb2gray({im})"
 
     def processing(self, im_arr):
         gray = mvlib.color.rgb2gray(im_arr)
@@ -39,6 +39,62 @@ class Threshold(DialogFilter):
         return mvlib.filters.threshold(im_arr,
                                        self.paras["thresh"],
                                        self.paras["maxval"])
+
+
+class HSV_Filter(DialogFilter):
+    """ HSV色值过滤 """
+    title = "HSV色值过滤器"
+    buttons = ["Preview", "OK"]
+    formats = {"mode": "rgb"}
+    scripts = "{output} = mvlib.color.hsv_range({im}, {color_range})"
+    view = [{
+        "type": "slider",
+        "name": "H-low ",
+        "val_init": 0,
+        "val_range": [0, 180],
+        "para": "h_0"
+    },{
+        "type": "slider",
+        "name": "H-high",
+        "val_init": 180,
+        "val_range": [0, 180],
+        "para": "h_1"
+    },{
+        "type": "slider",
+        "name": "S-low ",
+        "val_init": 0,
+        "val_range": [0, 255],
+        "para": "s_0"
+    },{
+        "type": "slider",
+        "name": "S-high",
+        "val_init": 255,
+        "val_range": [0, 255],
+        "para": "s_1"
+    },{
+        "type": "slider",
+        "name": "V-low ",
+        "val_init": 0,
+        "val_range": [0, 255],
+        "para": "v_0"
+    },{
+        "type": "slider",
+        "name": "V-high",
+        "val_init": 255,
+        "val_range": [0, 255],
+        "para": "v_1"
+    }]
+
+    def processing(self, im_arr):
+        self.paras["color_range"] = [
+            self.paras["h_0"],
+            self.paras["h_1"],
+            self.paras["s_0"],
+            self.paras["s_1"],
+            self.paras["v_0"],
+            self.paras["v_1"]
+        ]
+        return mvlib.color.hsv_range(im_arr, self.paras["color_range"])
 
 
 class ArithmeticThreshold(DialogFilter):
