@@ -178,7 +178,7 @@ class StackCanvas(QWidget):
         return self.base.load_image(path_file)
 
 
-import mvlib
+# import mvlib
 class GridCanvas(GridViewer):
     # def __init__(self, parent):
     #     super().__init__(parent)

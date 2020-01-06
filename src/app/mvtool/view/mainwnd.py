@@ -22,7 +22,11 @@ class MainWnd(QWidget):
         self.setWindowTitle("GUI Demo")
         dir_res = rpath2curr("../res")
         self.setWindowIcon(QIcon(f"{dir_res}/logo.ico"))
-        self.resize(1000, 700)
+
+        settings = g.get("settings")
+        win_size = settings.get("app", "win_size", "800,600")
+        x, y = win_size.split(",")
+        self.resize(int(x), int(y))
         # self.move(0, 0)
 
     def _setup_ui(self):
