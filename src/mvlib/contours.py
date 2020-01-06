@@ -98,8 +98,8 @@ def approx_bounding(cnt):
 def approx_rect(cnt):
     """ 最小外接矩形 """
     def run_opencv():
-        rect = cv2.minAreaRect(cnt)  # return: [[中心坐标]、[宽度, 高度]、[旋转角度]]，其中，角度是度数形式，不是弧度数
-        box = cv2.boxPoints(rect)  # 获得角点坐标
+        _ret = cv2.minAreaRect(cnt)  # return: [[中心坐标]、[宽度, 高度]、[旋转角度]]，其中，角度是度数形式，不是弧度数
+        box = cv2.boxPoints(_ret)  # 获得角点坐标
         box = np.int0(box)  # np.uint8(box)... 额，uint8错误！
         return box  # [[0,0], [0,1], [1,1], [1,0]]
 
@@ -320,6 +320,63 @@ class ContoursCollection:
 
         collection = ContoursCollection(results)
         return collection
+
+def _cnts_traverse(list_cnts, callback):
+    """ 回调格式: callback(cnt) --> any
+        return: list of any
+    """
+    list_created = []
+    for cnt in list_cnts:
+        created = callback(cnt)
+        if created is None:
+            continue
+        list_created.append(created)
+    return list_created
+
+def cnts_range(list_cnts, callback):
+    """ 回调格式: callback(cnt) --> int
+        return: tuple(min, max)
+    """
+    list_values = _cnts_traverse(list_cnts, callback)
+    min_ = min(list_values)
+    max_ = max(list_values)
+    return (min_, max_)
+
+def cnts_sort(list_cnts, callback):
+    """ return: [(cnt0, val0), (cnt1, val1), ...]
+        注意：排序是反序的，即从大到小排列。
+    """
+    list_values = _cnts_traverse(list_cnts, callback)
+    cnt2val = list(zip(list_cnts, list_values))
+    sort_cnt2val = sorted(cnt2val, key=lambda i: i[1], reverse=True)
+    return [cnt for cnt, val in sort_cnt2val]
+
+def filter_cnts(list_cnts, callback, range_pair):
+    """ return a ContoursCollection of filters
+        回调格式: callback(cnt) --> int
+        range(a, b): 如果a或b
+    """
+    min_, max_ = range_pair
+    min_ = -1 if min_ is None else min_
+    max_ = -1 if max_ is None else max_
+
+    assert max_ > min_ or max_ < 0, f"非法的range范围: 【{range_pair}】"
+    assert not (max_ < 0 and min_ < 0), f"range_pair不能同时为None"
+
+    results = []
+    for cnt in list_cnts:
+        value = callback(cnt)
+        # if min_ <= value <= max_:
+        #     results.append(cnt)
+        if min_ >= 0 and value < min_:
+            continue
+        if max_ >= 0 and value > max_:
+            continue
+        results.append(cnt)
+
+    return results
+
+
 
 
 if __name__ == "__main__":

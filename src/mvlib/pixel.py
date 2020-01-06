@@ -2,14 +2,14 @@ from .backend import run_backend, include
 
 if include("opencv"):
     import cv2
-if include("skimage"):
-    from skimage import transform
-if include("scipy"):
-    from scipy import ndimage
+# if include("skimage"):
+#     import skimage
+# if include("scipy"):
+#     from scipy import ndimage
 if include("numpy"):
     import numpy as np
-if include("pillow"):
-    from PIL import Image
+# if include("pillow"):
+#     from PIL import Image
 
 
 # def blit_copy(img1, img2):
@@ -56,14 +56,51 @@ def absdiff(img1, img2):
 
 # def addWeighted():
 
-def bitwise_add(img1, img2):
+def bitwise_and(im_arr, mask):
     """ 取交集 """
+    def run_opencv():
+        return cv2.bitwise_and(im_arr, im_arr, mask)
 
-def bitwise_or(img1, img2):
+    return run_backend(
+            # func_pillow=run_pillow,
+            # func_numpy=run_numpy,
+            func_opencv=run_opencv
+        )()
+
+def bitwise_diff(im_arr, mask):
+    mask_not = bitwise_not(mask)
+    return bitwise_and(im_arr, mask_not)
+
+def bitwise_or(im_arr, mask):
     """ 取并集 """
+    def run_opencv():
+        return cv2.bitwise_or(im_arr, mask)
 
-def bitwise_xor(img1, img2):
+    return run_backend(
+            # func_pillow=run_pillow,
+            # func_numpy=run_numpy,
+            func_opencv=run_opencv
+        )()
+
+def bitwise_xor(im_arr, mask):
     """ 取不重叠的区域 """
+    def run_opencv():
+        return cv2.bitwise_xor(im_arr, mask)
 
-def bitwise_not(img1, img2):
+    return run_backend(
+            # func_pillow=run_pillow,
+            # func_numpy=run_numpy,
+            func_opencv=run_opencv
+        )()
+
+def bitwise_not(im_arr):
     """ 取反 """
+    def run_opencv():
+        return cv2.bitwise_not(im_arr)
+
+    return run_backend(
+            # func_pillow=run_pillow,
+            # func_numpy=run_numpy,
+            func_opencv=run_opencv
+        )()
+
