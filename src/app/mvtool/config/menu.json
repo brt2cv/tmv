@@ -107,39 +107,45 @@
                 "plugin": "SplitRGB"
             },
             {
-                "name": "HSV颜色空间",
+                "name": "HSV色块选择器",
                 "plugin": "HSV_Filter"
-            },{
-                "name": "RGB To HSV",
-                "plugin": "RGB2HSV"
             },
             {
-                "name": "HSV To RGB",
-                "plugin": "HSV2RGB"
-            },
-            {
-                "name": "RGB To Lab",
-                "plugin": "RGB2Lab"
-            },
-            {
-                "name": "Lab To RGB",
-                "plugin": "Lab2RGB"
-            },
-            {
-                "name": "RGB To YUV",
-                "plugin": "RGB2YUV"
-            },
-            {
-                "name": "YUV To RGB",
-                "plugin": "YUV2RGB"
-            },
-            {
-                "name": "RGB To XYZ",
-                "plugin": "RGB2XYZ"
-            },
-            {
-                "name": "XYZ To RGB",
-                "plugin": "XYZ2RGB"
+                "name": "色彩空间",
+                "members": [
+                    {
+                        "name": "RGB To HSV",
+                        "plugin": "RGB2HSV"
+                    },
+                    {
+                        "name": "HSV To RGB",
+                        "plugin": "HSV2RGB"
+                    },
+                    {
+                        "name": "RGB To Lab",
+                        "plugin": "RGB2Lab"
+                    },
+                    {
+                        "name": "Lab To RGB",
+                        "plugin": "Lab2RGB"
+                    },
+                    {
+                        "name": "RGB To YUV",
+                        "plugin": "RGB2YUV"
+                    },
+                    {
+                        "name": "YUV To RGB",
+                        "plugin": "YUV2RGB"
+                    },
+                    {
+                        "name": "RGB To XYZ",
+                        "plugin": "RGB2XYZ"
+                    },
+                    {
+                        "name": "XYZ To RGB",
+                        "plugin": "XYZ2RGB"
+                    }
+                ]
             }
         ]
     },
