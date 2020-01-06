@@ -1,55 +1,156 @@
 import numpy as np
 import scipy.ndimage as nimg
+import mvlib
+
+from core.plugin.filter import DialogFilter
 from core.plugin.adapter import IpyPlugin as Filter
 
-# from core.plugin.filter import DialogFilter
-# class GaussianBlur_A(DialogFilter):
-#     """ 使用标准格式定义插件 """
-#     title = 'Gaussian Smoothing'
 
-#     def processing(self, im_arr):
-#         return nimg.filters.gaussian_filter(im_arr, 1)
-
-class MedianBlur(Filter):
+class MedianBlur(DialogFilter):
     title = 'Median Smoothing'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    view = [{
+        "type": "spinbox",
+        "name": "Kernel-width  ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_w"
+    },{
+        "type": "spinbox",
+        "name": "Kernel-height ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.filters.median({im}, ({k_w}, {k_h}))"
 
-    #parameter
-    para = {'size':2}
-    view = [(int, 'size', (0,30), 0,  'size', 'pix')]
+    def processing(self, snap):
+        kernel = (self.paras["k_w"], self.paras["k_h"])
+        return nimg.median_filter(snap, kernel)
 
-    scripts = "{output} = mvlib.filters.median({im}, {size})"
-
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.median_filter(snap, para['size'], output=img)
-
-
-class GaussianBlur(Filter):
+class GaussianBlur(DialogFilter):
     """ 使用适配器定义插件
         只需要修改: class_name、IpyFilter与title
     """
     title = 'Gaussian Smoothing'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
-    para = {'sigma':2}
-    view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]
+    view = [{
+        "type": "spinbox",
+        "name": "sigma ",
+        "val_init": 2,
+        "val_range": [0, 30],
+        "para": "sigma"
+    }]
+    scripts = "{output} = mvlib.filters.gaussian({im}, {sigma})"
 
-    def run(self, ips, snap, img, para = None):
-        nimg.gaussian_filter(snap, para['sigma'], output=img)
+    def processing(self, snap):
+        return nimg.gaussian_filter(snap, self.paras['sigma'])
 
 
-class MeanBlur(Filter):
-    title = 'Median Smoothing'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+class MeanBlur(DialogFilter):
+    title = 'Mean Smoothing'
+    view = [{
+        "type": "spinbox",
+        "name": "Kernel-width  ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_w"
+    },{
+        "type": "spinbox",
+        "name": "Kernel-height ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.filters.mean({im}, ({k_w}, {k_h}))"
 
-    #parameter
-    para = {'size':2}
-    view = [(float, 'size', (0,30), 1,  'size', 'pix')]
+    def processing(self, snap):
+        kernel = (self.paras["k_w"], self.paras["k_h"])
+        return nimg.uniform_filter(snap, kernel)
 
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.uniform_filter(snap, para['size'], output=img)
+class Erosion(DialogFilter):
+    title = "Erosion"
+    view = [{
+        "type": "spinbox",
+        "name": "Kernel-width  ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_w"
+    },{
+        "type": "spinbox",
+        "name": "Kernel-height ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.morphology.erosion({im}, ({k_w}, {k_h}))"
 
+    def processing(self, im_arr):
+        kernel = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.morphology.erosion(im_arr, kernel)
+
+class Dilation(DialogFilter):
+    title = "Dilation"
+    view = [{
+        "type": "spinbox",
+        "name": "Kernel-width  ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_w"
+    },{
+        "type": "spinbox",
+        "name": "Kernel-height ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.morphology.dilation({im}, ({k_w}, {k_h}))"
+
+    def processing(self, im_arr):
+        kernel = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.morphology.dilation(im_arr, kernel)
+
+class Opening(DialogFilter):
+    title = "Opening"
+    view = [{
+        "type": "spinbox",
+        "name": "Kernel-width  ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_w"
+    },{
+        "type": "spinbox",
+        "name": "Kernel-height ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.morphology.opening({im}, ({k_w}, {k_h}))"
+
+    def processing(self, im_arr):
+        kernel = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.morphology.opening(im_arr, kernel)
+
+class Closing(DialogFilter):
+    title = "Closing"
+    view = [{
+        "type": "spinbox",
+        "name": "Kernel-width  ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_w"
+    },{
+        "type": "spinbox",
+        "name": "Kernel-height ",
+        "val_init": 3,
+        "val_range": [0, 30],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.morphology.closing({im}, ({k_w}, {k_h}))"
+
+    def processing(self, im_arr):
+        kernel = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.morphology.closing(im_arr, kernel)
+
+#####################################################################
 
 class GaussianLaplaceBlur(Filter):
     title = 'Gaussian Laplace'

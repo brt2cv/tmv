@@ -52,3 +52,17 @@ class MatplotDemo(DialogFilter):
         self.view[0]["plot"] = plot
         super().run()
 
+
+from core.plugin.adapter import IpyPlugin
+class GaussianBlur(IpyPlugin):
+    """ 使用适配器定义插件
+        只需要修改: class_name、IpyFilter与title
+    """
+    title = 'Gaussian Smoothing'
+    note = ['all', 'auto_msk', 'auto_snap','preview']
+    para = {'sigma':2}
+    view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix')]
+
+    def run(self, ips, snap, img, para = None):
+        import scipy.ndimage as nimg
+        nimg.gaussian_filter(snap, para['sigma'], output=img)

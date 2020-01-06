@@ -159,6 +159,22 @@
                 "plugin": "MeanBlur"
             },
             {
+                "name": "腐蚀",
+                "plugin": "Erosion"
+            },
+            {
+                "name": "膨胀",
+                "plugin": "Dilation"
+            },
+            {
+                "name": "闭运算",
+                "plugin": "Closing"
+            },
+            {
+                "name": "开运算",
+                "plugin": "Opening"
+            },
+            {
                 "name": "USM锐化",
                 "plugin": "USM"
             }
