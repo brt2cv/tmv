@@ -61,6 +61,10 @@ class MainWnd(QWidget):
         """ 菜单栏和工具栏的加载 """
         from core import menu
         if isReload:
+            from core.plugin.mgr import PluginManager
+            plug_mgr = PluginManager()
+            plug_mgr.clear()  # 清除原有的plugin实例
+
             from importlib import reload
             reload(menu)
 

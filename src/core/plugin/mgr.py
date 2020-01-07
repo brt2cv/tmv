@@ -66,3 +66,7 @@ class PluginManager:
         else:
             self._cls2ins[cls_name] = plug_obj
         return cls_name
+
+    def clear(self):
+        self._cls2ins = {}  # {cls_name: instance}
+        self._path2cls = {}  # {path: dict of name2cls}

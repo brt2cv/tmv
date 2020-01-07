@@ -4,30 +4,17 @@ modules = glob.glob(join(dirname(__file__), "*.py"))
 __submodule__ = [ basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('__init__.py')]
 __all__ = __submodule__ + ["ReloadPlugins", "AboutMe"]
 
-def _all_modules():
-    from pprint import pprint
-    print("All sub-modules:")
-    pprint(__all__)
-
-
-import importlib
-def _import_submodules(isReload=False):
-    def dynamic_import(submodule: str):
-        module = importlib.import_module(submodule, __package__)
-        if isReload:
-            importlib.reload(module)
-
-    for str_module in __submodule__:
-        dynamic_import("." + str_module)
-
 
 import core
 from mvlib import reload as reload_mvlib
 from core.plugin.filter import Filter
+from utils.base import reload_package
 class ReloadPlugins(Filter):
     def run(self):
         reload_mvlib()  # 重载mvlib依赖
-        _import_submodules(True)  # 重载插件
+        # _import_submodules(True)  # 重载插件
+        reload_package("plugins")
+        reload_package("app/triage/plugins")
 
         # 重载UI
         core.g.get("mwnd")._setup_menu(isReload=True)
