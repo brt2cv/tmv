@@ -10,6 +10,8 @@ from utils.sock.routine import TcpClient
 from .regm.protocal import RegCodeTrans
 from .regm.encrypt import RsaCrypto
 
+from utils.log import getLogger
+logger = getLogger()
 
 class ClientCrypto(RsaCrypto):
     def __init__(self):
@@ -29,7 +31,7 @@ class LicenseChecker:
         self.crypto = ClientCrypto()
         self.dict_license = None
 
-    def setup_server(self, ipaddr, port, path_cert):
+    def conn_server(self, ipaddr, port, path_cert):
         self.ipaddr = ipaddr
         self.port = port
         self.path_cert = path_cert
@@ -49,10 +51,13 @@ class LicenseChecker:
     def check(self, license_code):
         if not os.path.exists(self.path_cert):
             self._download_license(license_code)
-            assert os.path.exists(self.path_cert), "无法获取到授权证书"
+            # except TimeoutError:
+            #     description = f"无法连接到授权服务器【{self.ipaddr}】，无法获取授权"
+            #     logger.error(description)
+            #     return 2, description
 
         status = self._check_certificate(self.path_cert)
-        self.state, self.description = status
+        # self.state, self.description = status
         return status
 
     def _check_certificate(self, path_cert):
@@ -111,19 +116,21 @@ class LicenseChecker:
             return deadline
 
 
-from .setting import PluginSettings
-settings = PluginSettings()
+# 读取配置文件
+from utils.settings import IniConfigSettings, rpath2curr
+settings = IniConfigSettings()
+settings.load(rpath2curr("config/settings.ini"))
 IPADDR = settings.get("server", "ipaddr")
 PORT = int(settings.get("server", "port"))
 PATH_CERT = settings.get("path", "certificate")
 
 checker = LicenseChecker()
-checker.setup_server(IPADDR, PORT, PATH_CERT)
+checker.conn_server(IPADDR, PORT, PATH_CERT)
 
 
 if __name__ == "__main__":
     mngr = LicenseChecker()
-    mngr.setup_server("122.51.162.231", 31618, "./certificate.txt")
+    mngr.conn_server("127.0.0.1", 31618, "./certificate.txt")
     state, reason = mngr.check("experienced")
 
     print(f"验证授权状态: {state}, {reason}")

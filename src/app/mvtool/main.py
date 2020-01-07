@@ -19,10 +19,62 @@ class ModulePlugin:
         settings.load(rpath2curr("config/settings.ini"))
         g.register("settings", settings)
 
+    def check_license(self):
+        from ctypes import windll
+        from core.register import checker
+        from core import progress
+
+        self.timer = None
+
+        # windll.user32.MessageBoxW(0, "正在检查授权状态...", "授权检查", 0)
+        # PostMessage(ptr, WM_CLOSE, IntPtr.Zero, IntPtr.Zero)
+        progress("授权检查", "正在检查授权状态...", 150)
+
+        try:
+            state, reason = checker.check('experienced')
+            if state == 0:
+                logger.debug("软件已授权")
+                return
+            elif state == 1:
+                logger.warning(reason)
+                return
+            else:  # state == 2:
+                logger.error(reason)
+
+            from threading import Timer
+            trytime = checker.get_trytime()
+            # 定时器计时
+            def quit_app():
+                from ctypes import windll
+                self.mwnd.close()
+                windll.user32.MessageBoxW(0, reason, "授权警告", 0)
+
+            self.timer = Timer(2 + 60 * trytime, quit_app)  # 至少等待0.5s，使self.mwnd启动
+            self.timer.start()
+
+        except (ConnectionError, TimeoutError):
+            # import sys
+            # msg = "无法连接到授权服务器，请手动导入授权证书"
+            # windll.user32.MessageBoxW(0, msg, "授权警告", 0)
+            # sys.exit()
+            from threading import Timer
+            def quit_app():
+                self.mwnd.close()
+                windll.user32.MessageBoxW(0, "试用已到期，请尝试连接服务器获取授权证书",
+                                          "授权警告", 0)
+
+            msg = "无法连接到授权服务器，非授权状态下提供10min的试用时长"
+            windll.user32.MessageBoxW(0, msg, "授权警告", 0)
+            self.timer = Timer(6, quit_app)
+            self.timer.start()
+
     def run_pyqt5(self, callback_mwnd=None):
         from PyQt5.QtWidgets import QApplication
+        from utils.base import rpath2curr
 
         app = QApplication([])
+        # self.check_license()
+
         if callback_mwnd is None:
             from view.mainwnd import MainWnd
 
