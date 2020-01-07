@@ -191,6 +191,7 @@
         "members": [
             {
                 "name": "关于",
+                "icon": "app/mvtool/res/help.png",
                 "plugin": "AboutMe"
             }
         ]
@@ -229,6 +230,14 @@
                 "name": "重载插件",
                 "icon": "app/mvtool/res/resetall.png",
                 "plugin": "ReloadPlugins"
+            },
+            {
+                "name": "功能测试",
+                "icon": "app/mvtool/res/done.png",
+                "plugin": {
+                    "path": "app/mvtool/plugins",
+                    "class": "PluginForApp"
+                }
             }
         ]
     }
