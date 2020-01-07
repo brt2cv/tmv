@@ -7,23 +7,23 @@
                 "description": "打开",
                 "icon": "app/mvtool/res/open.png",
                 "shortcut": "Ctrl+O",
-                "plugin": "OpenImageFile"
+                "plugin": "file.OpenImageFile"
             },
             {
                 "name": "SaveAs",
                 "description": "另存为",
                 "icon": "app/mvtool/res/save.png",
                 "shortcut": "Ctrl+S",
-                "plugin": "SaveAsImageFile"
+                "plugin": "file.SaveAsImageFile"
             },
             {
                 "name": "Resize",
                 "description": "缩放",
-                "plugin": "ResizeImageFile"
+                "plugin": "file.ResizeImageFile"
             },
             {
                 "name": "开启/关闭 - 远程图像接收",
-                "plugin": "RcpImageSwitch"
+                "plugin": "file.RcpImageSwitch"
             }
         ]
     },
@@ -34,25 +34,25 @@
                 "name": "Undo",
                 "shortcut": "Ctrl+Backspace",
                 "icon": "app/mvtool/res/prev.png",
-                "plugin": "Undo"
+                "plugin": "edit.Undo"
             },
             {
                 "name": "Redo",
                 "shortcut": "Ctrl+J",
                 "icon": "app/mvtool/res/next.png",
-                "plugin": "Redo"
+                "plugin": "edit.Redo"
             },
             {
                 "name": "Undo栈状态",
-                "plugin": "UndoDebugger"
+                "plugin": "edit.UndoDebugger"
             },
             {
                 "name": "图像信息",
-                "plugin": "CurrImageInfo"
+                "plugin": "edit.CurrImageInfo"
             },
             {
                 "name": "导出脚本",
-                "plugin": "ImgStackScripts"
+                "plugin": "edit.ImgStackScripts"
             }
         ]
     },
@@ -63,23 +63,23 @@
                 "name": "新建标签",
                 "shortcut": "Ctrl+T",
                 "icon": "app/mvtool/res/new.png",
-                "plugin": "NewViewerLabel"
+                "plugin": "view.NewViewerLabel"
             },
             {
                 "name": "关闭标签",
                 "shortcut": "Ctrl+W",
                 "icon": "app/mvtool/res/close.png",
-                "plugin": "CloseViewerLabel"
+                "plugin": "view.CloseViewerLabel"
             },
             {
                 "name": "图像流程图",
                 "shortcut": "Ctrl+R",
-                "plugin": "FlowChartTool"
+                "plugin": "view.FlowChartTool"
             },
             {
                 "name": "直方图工具",
                 "shortcut": "Ctrl+D",
-                "plugin": "HistogramTool"
+                "plugin": "view.HistogramTool"
             }
         ]
     },
@@ -90,60 +90,60 @@
                 "name": "Gray",
                 "shortcut": "Ctrl+G",
                 "icon": "app/mvtool/res/pencil.png",
-                "plugin": "Gray"
+                "plugin": "color.Gray"
             },
             {
                 "name": "Threshold",
                 "shortcut": "Ctrl+H",
-                "plugin": "Threshold"
+                "plugin": "color.Threshold"
             },
             {
                 "name": "阈值九宫格",
-                "plugin": "ArithmeticThreshold"
+                "plugin": "color.ArithmeticThreshold"
             },
             {
                 "name": "拆分通道",
                 "shortcut": "Ctrl+P",
-                "plugin": "SplitRGB"
+                "plugin": "color.SplitRGB"
             },
             {
                 "name": "HSV色块选择器",
-                "plugin": "HSV_Filter"
+                "plugin": "color.HSV_Filter"
             },
             {
                 "name": "色彩空间",
                 "members": [
                     {
                         "name": "RGB To HSV",
-                        "plugin": "RGB2HSV"
+                        "plugin": "color.RGB2HSV"
                     },
                     {
                         "name": "HSV To RGB",
-                        "plugin": "HSV2RGB"
+                        "plugin": "color.HSV2RGB"
                     },
                     {
                         "name": "RGB To Lab",
-                        "plugin": "RGB2Lab"
+                        "plugin": "color.RGB2Lab"
                     },
                     {
                         "name": "Lab To RGB",
-                        "plugin": "Lab2RGB"
+                        "plugin": "color.Lab2RGB"
                     },
                     {
                         "name": "RGB To YUV",
-                        "plugin": "RGB2YUV"
+                        "plugin": "color.RGB2YUV"
                     },
                     {
                         "name": "YUV To RGB",
-                        "plugin": "YUV2RGB"
+                        "plugin": "color.YUV2RGB"
                     },
                     {
                         "name": "RGB To XYZ",
-                        "plugin": "RGB2XYZ"
+                        "plugin": "color.RGB2XYZ"
                     },
                     {
                         "name": "XYZ To RGB",
-                        "plugin": "XYZ2RGB"
+                        "plugin": "color.XYZ2RGB"
                     }
                 ]
             }
@@ -154,35 +154,35 @@
         "members": [
             {
                 "name": "中值滤波",
-                "plugin": "MedianBlur"
+                "plugin": "morphology.MedianBlur"
             },
             {
                 "name": "高斯滤波",
-                "plugin": "GaussianBlur"
+                "plugin": "morphology.GaussianBlur"
             },
             {
                 "name": "均值滤波",
-                "plugin": "MeanBlur"
+                "plugin": "morphology.MeanBlur"
             },
             {
                 "name": "腐蚀",
-                "plugin": "Erosion"
+                "plugin": "morphology.Erosion"
             },
             {
                 "name": "膨胀",
-                "plugin": "Dilation"
+                "plugin": "morphology.Dilation"
             },
             {
                 "name": "闭运算",
-                "plugin": "Closing"
+                "plugin": "morphology.Closing"
             },
             {
                 "name": "开运算",
-                "plugin": "Opening"
+                "plugin": "morphology.Opening"
             },
             {
                 "name": "USM锐化",
-                "plugin": "USM"
+                "plugin": "morphology.USM"
             }
         ]
     },
@@ -204,27 +204,27 @@
             {
                 "name": "新建标签",
                 "icon": "app/mvtool/res/New.png",
-                "plugin": "NewViewerLabel"
+                "plugin": "view.NewViewerLabel"
             },
             {
                 "name": "打开图像",
                 "icon": "app/mvtool/res/open.png",
-                "plugin": "OpenImageFile"
+                "plugin": "file.OpenImageFile"
             },
             {
                 "name": "图像另存",
                 "icon": "app/mvtool/res/save.png",
-                 "plugin": "SaveAsImageFile"
+                 "plugin": "file.SaveAsImageFile"
             },
             {
                 "name": "撤销",
                 "icon": "app/mvtool/res/prev.png",
-                "plugin": "Undo"
+                "plugin": "edit.Undo"
             },
             {
                 "name": "恢复",
                 "icon": "app/mvtool/res/next.png",
-                "plugin": "Redo"
+                "plugin": "edit.Redo"
             },
             {
                 "name": "重载插件",
@@ -235,7 +235,7 @@
                 "name": "功能测试",
                 "icon": "app/mvtool/res/done.png",
                 "plugin": {
-                    "path": "app/mvtool/plugins",
+                    "path": "app/mvtool/plugins/demo.py",
                     "class": "PluginForApp"
                 }
             }

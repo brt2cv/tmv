@@ -4,54 +4,13 @@ try:
 except ImportError:
     import json
 
-from PyQt5.QtWidgets import QMessageBox
-from traceback import print_exc
-
-from core import alert
-from utils.base import singleton
-from .plugin import import_plugin
-from . import g
+from utils.qt5 import make_action, make_submenu
+from core.plugin.mgr import PluginManager
 
 from utils.log import getLogger
 logger = getLogger()
-
-
-@singleton
-class PluginManager:
-    def __init__(self):
-        self.dict_plugins = {}  # cls_name: instance
-
-    def run(self, cls_name):
-        try:
-            self.dict_plugins[cls_name].run()
-        except Exception as e:
-            alert(str(e))
-            print("#"*80)
-            print_exc()
-            print("#"*80)
-
-    def load_plugin(self, plugin_info):
-        """ plugin_info: str or dict{"path": xxx, "class": yyy}"""
-        # parse
-        if isinstance(plugin_info, str):
-            path = "plugins"
-            cls_name = plugin_info
-        else:  # dict
-            path = plugin_info.get("path", "plugins")
-            cls_name = plugin_info.get("class")
-
-        plug_obj = import_plugin(path, cls_name)
-        if cls_name in self.dict_plugins:
-            logger.warning(f"插件【{cls_name}】已存在，请勿重复导入")
-        else:
-            self.dict_plugins[cls_name] = plug_obj
-        return cls_name
-
 plug_mgr = PluginManager()
 
-#####################################################################
-
-from utils.qt5 import make_action, make_submenu
 
 def add_action(parent_menu, dict_member):
     plug_info = dict_member.get("plugin")
@@ -68,6 +27,7 @@ def add_action(parent_menu, dict_member):
                 dict_member.get("icon"),
                 dict_member.get("shortcut"),
                 dict_member.get("description"))
+
 
 class MenubarCreator:
     def __init__(self, parent):
@@ -93,10 +53,7 @@ class MenubarCreator:
             add_action(parent_menu, dict_info)
 
 
-#####################################################################
-from PyQt5.QtWidgets import QToolBar, QAction
-from PyQt5.QtGui import QIcon
-
+from PyQt5.QtWidgets import QToolBar
 class ToolbarCreator:
     def __init__(self, parent):
         self.parent = parent

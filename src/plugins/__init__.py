@@ -1,47 +1,33 @@
-from PyQt5.QtWidgets import QMessageBox
+from os.path import dirname, basename, isfile, join
+import glob
+modules = glob.glob(join(dirname(__file__), "*.py"))
+__submodule__ = [ basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('__init__.py')]
+__all__ = __submodule__ + ["ReloadPlugins", "AboutMe"]
 
-from .file import *
-from .edit import *
-from .view import *
-from .color import *
-from .morphology import *
+def _all_modules():
+    from pprint import pprint
+    print("All sub-modules:")
+    pprint(__all__)
+
+
+import importlib
+def _import_submodules(isReload=False):
+    def dynamic_import(submodule: str):
+        module = importlib.import_module(submodule, __package__)
+        if isReload:
+            importlib.reload(module)
+
+    for str_module in __submodule__:
+        dynamic_import("." + str_module)
 
 
 import core
-from core.plugin import Plugin
+from mvlib import reload as reload_mvlib
 from core.plugin.filter import Filter
-from core.plugin.adapter import IpyPlugin, PluginAdapter4Ipy
-def export_plugin(cls_name: str):
-    plug_cls = eval(cls_name)
-    assert issubclass(plug_cls, Plugin), f"非插件子类：【{cls_name}】"
-
-    # factory
-    if issubclass(plug_cls, IpyPlugin):
-        return PluginAdapter4Ipy(plug_cls)
-    elif issubclass(plug_cls, DialogFilter):
-        return plug_cls(core.g.get("mwnd"))
-    else:
-        return plug_cls()
-
-
 class ReloadPlugins(Filter):
     def run(self):
-        # 重载mvlib依赖
-        from mvlib import reload as reload_mvlib
-        reload_mvlib()
-
-        # 重载插件
-        from importlib import reload, import_module
-
-        def reload_module(submodule: str):
-            module = import_module(submodule, __package__)
-            reload(module)
-
-        reload_module(".file")
-        reload_module(".edit")
-        reload_module(".view")
-        reload_module(".color")
-        reload_module(".morphology")
+        reload_mvlib()  # 重载mvlib依赖
+        _import_submodules(True)  # 重载插件
 
         # 重载UI
         core.g.get("mwnd")._setup_menu(isReload=True)
@@ -49,6 +35,8 @@ class ReloadPlugins(Filter):
         core.g.call("prompt", "插件已重载...")
 
 
+from core.plugin import Plugin
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QPixmap
 class AboutMe(Plugin):
     def run(self):
