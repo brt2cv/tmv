@@ -7,6 +7,15 @@ def export_plugin():
     return core_obj
 
 class ModulePlugin:
+    def __init__(self):
+        self.license_timer = None
+
+    def __del__(self):
+        print("exit...")
+        if self.license_timer and self.license_timer.is_alive():
+            self.license_timer.cancel()
+            # self.license_timer.join()
+
     def run(self):
         self.load_settings()
         self.run_pyqt5()
@@ -23,8 +32,6 @@ class ModulePlugin:
         from ctypes import windll
         from core.register import checker
         from core import progress
-
-        self.timer = None
 
         # windll.user32.MessageBoxW(0, "正在检查授权状态...", "授权检查", 0)
         # PostMessage(ptr, WM_CLOSE, IntPtr.Zero, IntPtr.Zero)
@@ -49,8 +56,8 @@ class ModulePlugin:
                 self.mwnd.close()
                 windll.user32.MessageBoxW(0, reason, "授权警告", 0)
 
-            self.timer = Timer(2 + 60 * trytime, quit_app)  # 至少等待0.5s，使self.mwnd启动
-            self.timer.start()
+            self.license_timer = Timer(2 + 60 * trytime, quit_app)  # 至少等待0.5s，使self.mwnd启动
+            self.license_timer.start()
 
         except (ConnectionError, TimeoutError):
             # import sys
@@ -65,12 +72,11 @@ class ModulePlugin:
 
             msg = "无法连接到授权服务器，非授权状态下提供10min的试用时长"
             windll.user32.MessageBoxW(0, msg, "授权警告", 0)
-            self.timer = Timer(6, quit_app)
-            self.timer.start()
+            self.license_timer = Timer(6, quit_app)
+            self.license_timer.start()
 
     def run_pyqt5(self, callback_mwnd=None):
         from PyQt5.QtWidgets import QApplication
-        from utils.base import rpath2curr
 
         app = QApplication([])
         # self.check_license()
@@ -86,13 +92,12 @@ class ModulePlugin:
 
         #####################################################################
         from core.imgio import ImgIOManager
-        imgio_mgr = ImgIOManager()
+        from utils.base import rpath2curr
 
-        # 自动打开图像并写入UndoStack记录
+        imgio_mgr = ImgIOManager()
         path_example = rpath2curr("res/example.jpg")
         imgio_mgr.open_file(path_example)
 
-        # 启动rcp服务
         app.exec_()
         imgio_mgr.rcp_stop()
 
