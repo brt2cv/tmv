@@ -54,7 +54,7 @@ def set_backend(name=None):
     try:
         _import_submodules(notInitial)
     except ModuleNotFoundError:
-        print(f"当前后端使用【{get_backend()}】，但未找到依赖库；请更换后端")
+        print(f"Error: 当前后端使用【{get_backend()}】，但未找到依赖库；请更换后端")
 
 #####################################################################
 # 类型提升

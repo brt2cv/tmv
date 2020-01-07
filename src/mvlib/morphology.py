@@ -13,6 +13,10 @@ if include("pillow"):
 
 
 def kernal(size, shape="rect"):
+    """ return a np.ndarray as kernal """
+    if isinstance(size, np.ndarray):
+        return size
+
     def run_skimage():
         KERNEL_SHAPE_SKIMAGE = {
             "square": morphology.square,  # width
@@ -26,7 +30,10 @@ def kernal(size, shape="rect"):
             "star": morphology.star  # 星形: a
         }
         func_shape = KERNEL_SHAPE_SKIMAGE[shape]
-        return func_shape(*size)
+        if isinstance(size, int):
+            return func_shape(size)
+        else:  # tuple or list
+            return func_shape(*size)
 
     def run_opencv():
         KERNEL_SHAPE_OPENCV = {
@@ -42,10 +49,15 @@ def kernal(size, shape="rect"):
             func_opencv=run_opencv
         )()
 
+"""
+形态学操作的函数接口中，k参数可以传入两种形式：
+* 使用tuple做参数，kernal的形态使用默认的‘rect’形式
+* 使用kernal()生成的ndarray，可控制kernal.shape的形态
+"""
+
 def dilation(im, k):
     """ 扩充边缘或填充小的孔洞 """
-    if isinstance(k, tuple) and len(k) == 2:
-        k = kernal(k)
+    k = kernal(k)
 
     def run_opencv():
         return cv2.dilate(im, k)
@@ -60,8 +72,7 @@ def dilation(im, k):
 
 def erosion(im, k):
     """ 常用于提取骨干信息，去掉毛刺，去掉孤立的像素 """
-    if isinstance(k, tuple) and len(k) == 2:
-        k = kernal(k)
+    k = kernal(k)
 
     def run_opencv():
         return cv2.erode(im, k)
@@ -76,8 +87,7 @@ def erosion(im, k):
 
 def opening(im, k):
     """ 先腐蚀再膨胀，消除小物体或小斑块 """
-    if isinstance(k, tuple) and len(k) == 2:
-        k = kernal(k)
+    k = kernal(k)
 
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_OPEN, k)
@@ -92,8 +102,7 @@ def opening(im, k):
 
 def closing(im, k):
     """ 先膨胀再腐蚀，填充孔洞 """
-    if isinstance(k, tuple) and len(k) == 2:
-        k = kernal(k)
+    k = kernal(k)
 
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_CLOSE, k)
@@ -109,8 +118,7 @@ def closing(im, k):
 
 def gradient(im, k):
     """ 梯度：图像的膨胀和腐蚀之间的差异，结果看起来像目标的轮廓 """
-    if isinstance(k, tuple) and len(k) == 2:
-        k = kernal(k)
+    k = kernal(k)
 
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_GRADIENT, k)
@@ -122,8 +130,7 @@ def gradient(im, k):
 
 def tophat(im, k):
     """ 顶帽：原图像减去它的开运算值，突出原图像中比周围亮的区域 """
-    if isinstance(k, tuple) and len(k) == 2:
-        k = kernal(k)
+    k = kernal(k)
 
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_TOPHAT, k)
@@ -139,8 +146,7 @@ def tophat(im, k):
 
 def blackhat(im, k):
     """ 黑帽：原图像减去它的闭运算值，突出原图像中比周围暗的区域 """
-    if isinstance(k, tuple) and len(k) == 2:
-        k = kernal(k)
+    k = kernal(k)
 
     def run_opencv():
         return cv2.morphologyEx(im, cv2.MORPH_BLACKHAT, k)

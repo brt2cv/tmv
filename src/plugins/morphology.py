@@ -6,149 +6,151 @@ from core.plugin.filter import DialogFilter
 from core.plugin.adapter import IpyPlugin as Filter
 
 
-class MedianBlur(DialogFilter):
-    title = 'Median Smoothing'
-    view = [{
-        "type": "spinbox",
-        "name": "Kernel-width  ",
-        "val_init": 3,
-        "val_range": [0, 30],
-        "para": "k_w"
-    },{
-        "type": "spinbox",
-        "name": "Kernel-height ",
-        "val_init": 3,
-        "val_range": [0, 30],
-        "para": "k_h"
-    }]
-    scripts = "{output} = mvlib.filters.median({im}, ({k_w}, {k_h}))"
-
-    def processing(self, snap):
-        kernel = (self.paras["k_w"], self.paras["k_h"])
-        return nimg.median_filter(snap, kernel)
-
 class GaussianBlur(DialogFilter):
     """ 使用适配器定义插件
         只需要修改: class_name、IpyFilter与title
     """
     title = 'Gaussian Smoothing'
     view = [{
-        "type": "spinbox",
-        "name": "sigma ",
+        "type": "slider",
+        "name": "sigma_x ",
         "val_init": 2,
-        "val_range": [0, 30],
-        "para": "sigma"
+        "val_range": [1, 29],
+        "para": "sigma_x"
+    },{
+        "type": "slider",
+        "name": "sigma_y ",
+        "val_init": 2,
+        "val_range": [1, 29],
+        "isCheckbox": True,
+        "para": "sigma_y"
     }]
     scripts = "{output} = mvlib.filters.gaussian({im}, {sigma})"
 
-    def processing(self, snap):
-        return nimg.gaussian_filter(snap, self.paras['sigma'])
+    def processing(self, im_arr):
+        self.paras["sigma"] = (self.paras["sigma_x"],
+                               self.paras["sigma_y"])
+        return mvlib.filters.gaussian(im_arr, self.paras['sigma'])
 
+class MedianBlur(DialogFilter):
+    title = 'Median Smoothing'
+    view = [{
+        "type": "slider",
+        "name": "ksize ",
+        "val_init": 3,
+        "val_range": [1, 29],
+        "para": "ksize"
+    }]
+    scripts = "{output} = mvlib.filters.median({im}, {ksize})"
+
+    def processing(self, im_arr):
+        # kernal = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.filters.median(im_arr, self.paras["ksize"])
 
 class MeanBlur(DialogFilter):
     title = 'Mean Smoothing'
     view = [{
-        "type": "spinbox",
-        "name": "Kernel-width  ",
+        "type": "slider",
+        "name": "kernal-width  ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_w"
     },{
-        "type": "spinbox",
-        "name": "Kernel-height ",
+        "type": "slider",
+        "name": "kernal-height ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_h"
     }]
     scripts = "{output} = mvlib.filters.mean({im}, ({k_w}, {k_h}))"
 
-    def processing(self, snap):
-        kernel = (self.paras["k_w"], self.paras["k_h"])
-        return nimg.uniform_filter(snap, kernel)
+    def processing(self, im_arr):
+        kernal = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.filters.mean(im_arr, kernal)
 
 class Erosion(DialogFilter):
     title = "Erosion"
     view = [{
         "type": "spinbox",
-        "name": "Kernel-width  ",
+        "name": "kernal-width  ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_w"
     },{
         "type": "spinbox",
-        "name": "Kernel-height ",
+        "name": "kernal-height ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_h"
     }]
     scripts = "{output} = mvlib.morphology.erosion({im}, ({k_w}, {k_h}))"
 
     def processing(self, im_arr):
-        kernel = (self.paras["k_w"], self.paras["k_h"])
-        return mvlib.morphology.erosion(im_arr, kernel)
+        kernal = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.morphology.erosion(im_arr, kernal)
 
 class Dilation(DialogFilter):
     title = "Dilation"
     view = [{
         "type": "spinbox",
-        "name": "Kernel-width  ",
+        "name": "kernal-width  ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_w"
     },{
         "type": "spinbox",
-        "name": "Kernel-height ",
+        "name": "kernal-height ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_h"
     }]
     scripts = "{output} = mvlib.morphology.dilation({im}, ({k_w}, {k_h}))"
 
     def processing(self, im_arr):
-        kernel = (self.paras["k_w"], self.paras["k_h"])
-        return mvlib.morphology.dilation(im_arr, kernel)
+        kernal = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.morphology.dilation(im_arr, kernal)
 
 class Opening(DialogFilter):
     title = "Opening"
     view = [{
         "type": "spinbox",
-        "name": "Kernel-width  ",
+        "name": "kernal-width  ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_w"
     },{
         "type": "spinbox",
-        "name": "Kernel-height ",
+        "name": "kernal-height ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_h"
     }]
     scripts = "{output} = mvlib.morphology.opening({im}, ({k_w}, {k_h}))"
 
     def processing(self, im_arr):
-        kernel = (self.paras["k_w"], self.paras["k_h"])
-        return mvlib.morphology.opening(im_arr, kernel)
+        kernal = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.morphology.opening(im_arr, kernal)
 
 class Closing(DialogFilter):
     title = "Closing"
     view = [{
         "type": "spinbox",
-        "name": "Kernel-width  ",
+        "name": "kernal-width  ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_w"
     },{
         "type": "spinbox",
-        "name": "Kernel-height ",
+        "name": "kernal-height ",
         "val_init": 3,
-        "val_range": [0, 30],
+        "val_range": [1, 29],
         "para": "k_h"
     }]
     scripts = "{output} = mvlib.morphology.closing({im}, ({k_w}, {k_h}))"
 
     def processing(self, im_arr):
-        kernel = (self.paras["k_w"], self.paras["k_h"])
-        return mvlib.morphology.closing(im_arr, kernel)
+        kernal = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.morphology.closing(im_arr, kernal)
 
 #####################################################################
 
