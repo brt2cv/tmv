@@ -1,17 +1,5 @@
 #!/usr/bin/env python
 
-# from utils.expy import chdir_topdir
-def chdir_topdir(dir_dst):
-    import os, sys
-    dir_dst_abs = os.path.abspath(dir_dst)
-    os.chdir(dir_dst_abs)
-    sys.path.insert(0, dir_dst_abs)
-
-chdir_topdir("../..")  # src
-from utils import expy
-expy.venv_expand("../runtime/win64")
-expy.site_expand("../runtime/win64/Lib/rsa")
-
 from utils.base import import_plugin
 from multiprocessing import freeze_support
 
@@ -29,6 +17,7 @@ from multiprocessing import freeze_support
 if __name__ == "__main__":
     freeze_support()  # pyinstaller "--onefile" mode 并不适用...
     import app.demo.main  # 显示导入模块，用于pyinstaller导入模块
+    # import app.demo.view
 
-    app_demo = import_plugin("main.py", package=__file__)
+    app_demo = import_plugin("app.demo.main")  # 必须改！
     app_demo.run()
