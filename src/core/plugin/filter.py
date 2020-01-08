@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QDialogButtonBox, QPushButton
 from PyQt5.QtCore import Qt
-from .. import g
+from .. import g, alert
 from .format import IpsFormat, FormatTypeError
 from . import Plugin
 
@@ -91,6 +91,7 @@ class Filter(FilterBase):
         g.get("canvas").repaint()
 
 
+from traceback import print_exc
 from functools import partial
 from .widgets import TplWidgetsManager
 class DialogFilter(QDialog, Filter):
@@ -183,12 +184,18 @@ class DialogFilter(QDialog, Filter):
             self.preview()  # 显示窗口时即应用预览
 
     def preview(self):
-        im_arr = self.get_image()
-        if self.check_format(im_arr):
-            im2 = self.processing(im_arr)
-            im_mgr = g.get("canvas").get_container()
-            im_mgr.set_image(im2)  # 不更新snap
-            self.update_canvas()
+        try:
+            im_arr = self.get_image()
+            if self.check_format(im_arr):
+                im2 = self.processing(im_arr)
+                im_mgr = g.get("canvas").get_container()
+                im_mgr.set_image(im2)  # 不更新snap
+                self.update_canvas()
+        except Exception as e:
+            alert(str(e))
+            print("#"*80)
+            print_exc()
+            print("#"*80)
 
     def reset(self):
         im_mgr = g.get("canvas").get_container()
@@ -197,11 +204,17 @@ class DialogFilter(QDialog, Filter):
 
     def accepted(self):
         """ 将当前图像设置为image """
-        im_arr = self.get_image()
-        if self.check_format(im_arr):
-            im2 = self.processing(im_arr)
-            self.set_image(im2)  # 更新snap
-            self.update_canvas()
+        try:
+            im_arr = self.get_image()
+            if self.check_format(im_arr):
+                im2 = self.processing(im_arr)
+                self.set_image(im2)  # 更新snap
+                self.update_canvas()
+        except Exception as e:
+            alert(str(e))
+            print("#"*80)
+            print_exc()
+            print("#"*80)
 
     def rejected(self):
         """ 取消图像变更 """
