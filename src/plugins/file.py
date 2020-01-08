@@ -20,9 +20,10 @@ class OpenImageFile(Filter):
 
     def open(self, path_pic):
         self.paras["path_img"] = f"\"{path_pic}\""  # commit scripts para
-
-        self.set_image(mvlib.io.imread(path_pic))
+        im_arr = mvlib.io.imread(path_pic)
+        self.set_image(im_arr)
         g.call("prompt", f"载入图像：{path_pic}", 5)
+        return im_arr
 
 
 from PyQt5.QtWidgets import QFileDialog

@@ -19,12 +19,13 @@ class MainWnd(QWidget):
         self.setProperty("class", "bkg")  # for qss
         self._setup_ui()
 
-        self.setWindowTitle("GUI Demo")
-        dir_res = rpath2curr("../res")
-        self.setWindowIcon(QIcon(f"{dir_res}/logo.ico"))
-
         settings = g.get("settings")
-        win_size = settings.get("app", "win_size", "800,600")
+
+        self.setWindowTitle("MVTool图像编辑器")
+        path_icon = settings.get("gui", "icon")
+        self.setWindowIcon(QIcon(path_icon))
+
+        win_size = settings.get("gui", "win_size", "800,600")
         x, y = win_size.split(",")
         self.resize(int(x), int(y))
         # self.move(0, 0)
@@ -33,7 +34,7 @@ class MainWnd(QWidget):
         from PyQt5.QtWidgets import QStatusBar, QSizePolicy
 
         self.status_bar = QStatusBar(self)
-        self.status_bar.showMessage("欢迎访问 GUI-Demo")
+        self.status_bar.showMessage("欢迎访问 MVTool 图像编辑器")
         self.ly_footer.addWidget(self.status_bar)
 
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)

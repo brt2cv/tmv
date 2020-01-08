@@ -54,6 +54,8 @@ class MenubarCreator:
 
 
 from PyQt5.QtWidgets import QToolBar
+from PyQt5.QtCore import QSize
+from core import g
 class ToolbarCreator:
     def __init__(self, parent):
         self.parent = parent
@@ -70,4 +72,10 @@ class ToolbarCreator:
         toolbar = QToolBar(dict_info["name"], self.parent)
         for dict_member in dict_info["members"]:
             add_action(toolbar, dict_member)
+
+        icon_size = g.get("settings").get("gui", "icon_size")
+        if icon_size:
+            icon_size = int(icon_size)
+            toolbar.setIconSize(QSize(icon_size, icon_size))
+        # toolbar.setFixedHeight(36)
         self.list_bars.append(toolbar)
