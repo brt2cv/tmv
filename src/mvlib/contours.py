@@ -252,74 +252,8 @@ def get_box_sides(box):
     return (width, height)
 
 
-class ContoursCollection:
-    def __init__(self, list_cnts):
-        self.cnts = list_cnts
-
-    def __len__(self):
-        return self.size()
-
-    def size(self):
-        return len(self.cnts)
-
-    def show(self, bkg1size, color=(255,255,255), thinckness=3):
-        img = cnts2img(self.cnts, bkg1size, color, thinckness)
-        return img
-
-    def traverse(self, callback):
-        """ 回调格式: callback(cnt) --> any
-            return: list of any
-        """
-        list_created = []
-        for cnt in self.cnts:
-            created = callback(cnt)
-            if created is None:
-                continue
-            list_created.append(created)
-        return list_created
-
-    def get_cnts_range(self, callback):
-        """ 回调格式: callback(cnt) --> int
-            return: tuple(min, max)
-        """
-        list_values = self.traverse(callback)
-        min_ = min(list_values)
-        max_ = max(list_values)
-        return (min_, max_)
-
-    # def get_cnts_max(self, callback):
-    #     max_ = self.get_cnts_range(callback)[1]
-    #     return max_
-
-    # def get_cnts_min(self, callback):
-    #     min_ = self.get_cnts_range(callback)[0]
-    #     return min_
-
-    # def sort_cnts(self, callback):
-    #     """ return a list of ContourData """
-    #     raise Exception("unfinished")
-
-    def filter_cnts(self, callback, range_pair):
-        """ return a ContoursCollection of filters
-            回调格式: callback(cnt) --> int
-        """
-        min_, max_ = range_pair
-        if min_ < 0 and max_ < 0:
-            return self
-
-        results = []
-        for cnt in self.cnts:
-            value = callback(cnt)
-            # if min_ <= value <= max_:
-            #     results.append(cnt)
-            if min_ >= 0 and value < min_:
-                continue
-            if max_ >= 0 and value > max_:
-                continue
-            results.append(cnt)
-
-        collection = ContoursCollection(results)
-        return collection
+#####################################################################
+# 轮廓集合的操作
 
 def _cnts_traverse(list_cnts, callback):
     """ 回调格式: callback(cnt) --> any
@@ -351,6 +285,14 @@ def cnts_sort(list_cnts, callback):
     sort_cnt2val = sorted(cnt2val, key=lambda i: i[1], reverse=True)
     return [cnt for cnt, val in sort_cnt2val]
 
+def cnts_max(list_cnts, callback):
+    assert list_cnts, "传入空数组"
+    return cnts_sort(list_cnts, callback)[0]
+
+def cnts_min(list_cnts, callback):
+    assert list_cnts, "传入空数组"
+    return cnts_sort(list_cnts, callback)[-1]
+
 def filter_cnts(list_cnts, callback, range_pair):
     """ return a ContoursCollection of filters
         回调格式: callback(cnt) --> int
@@ -375,10 +317,3 @@ def filter_cnts(list_cnts, callback, range_pair):
         results.append(cnt)
 
     return results
-
-
-
-
-if __name__ == "__main__":
-    cnts = ContoursCollection([])
-    print(len(cnts))
