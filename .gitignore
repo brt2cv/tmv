@@ -20,6 +20,8 @@ __pycache__/
 *.zip
 *.7z
 *.tar*
+*.db
+*.sqlite[3]
 
 *.py[cod]
 *.ipynb*
