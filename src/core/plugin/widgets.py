@@ -1,5 +1,4 @@
 from utils.qt5wx.wx_unit import *
-from utils.qt5wx.wx_plot import UnitPlot
 
 class TplWidgetsManager:
     def __init__(self, parent):
@@ -80,6 +79,8 @@ class TplWidgetsManager:
         return wx
 
     def makg_pyplot(self, dict_elem):
+        # 去除上端对matplotlib的依赖
+        from utils.qt5wx.wx_plot import UnitPlot
         wx = UnitPlot(
                 self.parent,
                 dict_elem["plot"],
