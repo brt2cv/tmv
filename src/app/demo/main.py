@@ -9,8 +9,9 @@ def export_plugin():
 
 class ModulePlugin:
     def run(self):
-        # self.run_pyqt5()
-        self.run_console()
+        self.timer = None
+        self.run_pyqt5()
+        # self.run_console()
 
     def check_license(self):
         from core.register import checker
@@ -60,10 +61,10 @@ class ModulePlugin:
         from PyQt5.QtWidgets import QApplication
 
         app = QApplication([])
-        self.check_license()
+        # self.check_license()
 
         if callback_mwnd is None:
-            from view.mainwnd import MainWnd
+            from .view.mainwnd import MainWnd
             mwnd = MainWnd(None)
         else:
             mwnd = callback_mwnd()

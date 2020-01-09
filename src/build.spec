@@ -4,12 +4,13 @@
 block_cipher = None
 
 a = Analysis(['./build.py'],
-             pathex=["../..",
-                "../../../env/win64/Lib/rsa",
-                "../../../env/win64/Lib/site-packages"],
+             pathex=[
+                "../env/win64/Lib/rsa",
+                "../env/win64/Lib/site-packages"],
              binaries=[],
              datas=[
-                ("../../core/register/config", "core/register/config"),
+                ("core/register/config", "core/register/config"),
+                ("app/demo/view/ui", "app/demo/view/ui"),
              ],
              hiddenimports=[],
              hookspath=[],
@@ -31,7 +32,7 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=True,
-          icon='../mvtool/res/logo.ico')
+          icon='app/mvtool/res/logo.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
