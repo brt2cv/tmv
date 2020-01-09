@@ -13,7 +13,8 @@ dict_conf = {
     "floatx": "float32",
     "backend": "skimage"
 }
-path_conf = os.path.join(os.environ.get("HOME"), ".mvlib.json")
+dir_home = os.environ.get("HOME", "./user")
+path_conf = os.path.join(dir_home, ".mvlib.json")
 # path_conf = '$HOME/.mvlib.json'
 
 if os.path.exists(path_conf):
