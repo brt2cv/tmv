@@ -1,0 +1,3 @@
+zmq
+json5
+skimage
