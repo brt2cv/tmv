@@ -98,7 +98,7 @@ class LicenseChecker:
 
         local_guid = uuid.getnode()
         # assert local_guid == dict_info["machine"]
-        if local_guid != dict_info["machine"]:
+        if local_guid != int(dict_info["machine"]):
             return 2, "持有证书与当前机器不匹配，请重新申请证书"
 
         trytime = self.get_trytime()
