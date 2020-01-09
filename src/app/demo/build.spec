@@ -3,18 +3,19 @@
 
 block_cipher = None
 
-a = Analysis(['./run.py'],
-             pathex=["../..",
-                "../../runtime/win64/Lib/rsa",
-                "../../runtime/win64/Lib/site-packages"],
+a = Analysis(['../../build_demo.py'],
+             pathex=[
+                "../../../env/win64/Lib/rsa",
+                "../../../env/win64/Lib/site-packages"],
              binaries=[],
              datas=[
                 ("../../core/register/config", "core/register/config"),
+                ("view/ui", "app/demo/view/ui"),
              ],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
-             excludes=["tcl", "tkinter", "PyQt5", "matplotlib", "zmq", "scipy"],
+             excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher,
@@ -31,7 +32,7 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=True,
-          icon='../ocrkit/res/ocr.ico')
+          icon='../mvtool/res/logo.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

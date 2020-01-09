@@ -8,17 +8,16 @@ def export_plugin():
 
 class ModulePlugin:
     def run(self):
-        self.check_license()
-        self.register_global_variable()
-        # self.run_pyqt5()
-        self.run_console()
+        self.timer = None
+        self.run_pyqt5()
+        # self.run_console()
 
     def check_license(self):
         from core.register import checker
         self.timer = None
 
         try:
-            state, reason = checker.check('triage_v0.1')
+            state, reason = checker.check('experienced')
             if state == 0:
                 logger.debug("软件已授权")
                 return
@@ -61,6 +60,8 @@ class ModulePlugin:
         from PyQt5.QtWidgets import QApplication
 
         app = QApplication([])
+        # self.check_license()
+
         if callback_mwnd is None:
             from .view.mainwnd import MainWnd
             mwnd = MainWnd(None)
@@ -79,9 +80,6 @@ class ModulePlugin:
     def run_console(self):
         from utils.imgio import imread
 
-        path_file = "tmp/test.jpg"
+        path_file = "./test.jpg"
         im = imread(path_file)
         print(f"当前图像【{path_file}】的shape = {im.shape}")
-
-    def register_global_variable(self):
-        pass

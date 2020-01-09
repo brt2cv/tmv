@@ -1,6 +1,7 @@
 **/ui/*[!*.ui]
 **/.vscode/*[!demo/]
 
+env/
 runtime/
 build/
 tmp/
