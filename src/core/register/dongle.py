@@ -48,12 +48,12 @@ if __name__ == "__main__":
     protocal = RegCodeTrans(crypto)
     args = getopt()
 
-    import uuid
-    machine_code = uuid.getnode()  # int
+    # import uuid
+    # machine_code = uuid.getnode()  # int
 
     dict_info = {
         "license": "triage_v0.2",
-        "machine": machine_code,
+        "machine": args.uuid,
         "trytime": args.trytime,
         "deadline": args.deadline
     }
