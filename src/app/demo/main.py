@@ -1,6 +1,5 @@
 from utils.log import getLogger
 logger = getLogger(1)
-from PIL import Image
 
 def export_plugin():
     """ return a Plugin-Class Object """
