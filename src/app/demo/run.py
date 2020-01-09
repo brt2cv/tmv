@@ -10,7 +10,7 @@ def chdir_topdir(dir_dst, override=False):
     else:
         sys.path.insert(0, dir_dst_abs)
 
-chdir_topdir("../..", False)  # src
+chdir_topdir("../..", True)  # src
 # import sys; print(sys.path)
 from utils import expy
 expy.venv_expand("../env/win64")
@@ -20,6 +20,5 @@ expy.site_expand("../env/win64/Lib/rsa")
 if __name__ == "__main__":
     from utils.base import import_plugin
 
-    # app_demo = import_plugin("app.demo.main")
-    app_demo = import_plugin("main", package=__package__)
+    app_demo = import_plugin("app.demo.main")
     app_demo.run()

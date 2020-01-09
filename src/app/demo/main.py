@@ -1,12 +1,3 @@
-# 将app/xxx/目录作为项目的顶层目录，
-# 支持相对该目录的`import submodule`导入子包
-import os.path
-from utils.base import rpath2curr
-from utils.expy import path_expand
-dir_curr = os.path.dirname(rpath2curr(__file__))
-path_expand(dir_curr)
-# import sys; print(sys.path)
-
 from utils.log import getLogger
 logger = getLogger(1)
 
@@ -72,7 +63,7 @@ class ModulePlugin:
         # self.check_license()
 
         if callback_mwnd is None:
-            from view.mainwnd import MainWnd
+            from .view.mainwnd import MainWnd
             mwnd = MainWnd(None)
         else:
             mwnd = callback_mwnd()
