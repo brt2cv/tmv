@@ -3,7 +3,7 @@
 
 block_cipher = None
 
-a = Analysis(['../../build.py'],
+a = Analysis(['../../build_demo.py'],
              pathex=[
                 "../../../env/win64/Lib/rsa",
                 "../../../env/win64/Lib/site-packages"],
