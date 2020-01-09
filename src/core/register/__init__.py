@@ -1,6 +1,6 @@
 # Based on: Register Code Generator/Server, [v0.1.4] 2019/12/10
 
-import os.path
+import os
 import uuid
 import json
 from datetime import date
@@ -12,6 +12,20 @@ from .regm.encrypt import RsaCrypto
 
 from utils.log import getLogger
 logger = getLogger()
+
+# 读取配置文件
+from utils.settings import IniConfigSettings, rpath2curr
+settings = IniConfigSettings()
+settings.load(rpath2curr("config/settings.ini"))
+IPADDR = settings.get("server", "ipaddr")
+PORT = int(settings.get("server", "port"))
+
+DIR_REGCONF = settings.get("path", "dir_regconf")
+if not os.path.exists(DIR_REGCONF):
+    os.makedirs(DIR_REGCONF)
+PATH_UUID = os.path.join(DIR_REGCONF, "uuid.txt")
+PATH_CERT = os.path.join(DIR_REGCONF, settings.get("path", "certificate"))
+
 
 class ClientCrypto(RsaCrypto):
     def __init__(self):
@@ -50,7 +64,13 @@ class LicenseChecker:
 
     def check(self, license_code):
         if not os.path.exists(self.path_cert):
-            self._download_license(license_code)
+            # 策略2: 使用本地授权
+            with open(PATH_UUID, "w") as fp:
+                machine_node = uuid.getnode()
+                fp.write(str(machine_node))
+            raise ConnectionError("尚未注册授权的机器。正在生成授权码...")
+
+            # self._download_license(license_code)
             # except TimeoutError:
             #     description = f"无法连接到授权服务器【{self.ipaddr}】，无法获取授权"
             #     logger.error(description)
@@ -115,14 +135,6 @@ class LicenseChecker:
             deadline = date(*list_deadline)
             return deadline
 
-
-# 读取配置文件
-from utils.settings import IniConfigSettings, rpath2curr
-settings = IniConfigSettings()
-settings.load(rpath2curr("config/settings.ini"))
-IPADDR = settings.get("server", "ipaddr")
-PORT = int(settings.get("server", "port"))
-PATH_CERT = settings.get("path", "certificate")
 
 checker = LicenseChecker()
 checker.conn_server(IPADDR, PORT, PATH_CERT)
