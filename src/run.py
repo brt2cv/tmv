@@ -13,6 +13,7 @@
 ###############################################################################
 
 import os.path
+import logging
 
 # 当使用Python-embed-runtime时，需要手动加载cwd至sys.path
 # import os.path
@@ -23,12 +24,6 @@ import os.path
 
 from utils import expy
 from utils.base import import_plugin
-
-# 默认的runtime
-dir_env = "../runtime/win64"
-expy.venv_expand(dir_env)
-
-#####################################################################
 
 def getopt():
     import argparse
@@ -55,7 +50,9 @@ def runApp(path_main, lib_expand: list):
 
 
 if __name__ == '__main__':
-    import logging
+    # 默认的runtime
+    dir_env = "../env/win64"
+    expy.venv_expand(dir_env)
 
     args = getopt()
     if not args.loglevel:  # 设置默认Log-Level

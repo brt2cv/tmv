@@ -22,6 +22,10 @@
                 "plugin": "file.ResizeImageFile"
             },
             {
+                "name": "设置mvlib后端",
+                "plugin": "SetMvlibBackend"
+            },
+            {
                 "name": "开启/关闭 - 远程图像接收",
                 "plugin": "file.RcpImageSwitch"
             }

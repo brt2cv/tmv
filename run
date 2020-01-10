@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 from src.utils import expy
-expy.venv_expand("runtime/win64")
-expy.chdir_topdir("src")
+expy.venv_expand("env/win64")
+expy.topdir("src", True)
+expy.chdir("src")
 
 from src.run import runApp
 runApp("app/mvtool/main.py", [])

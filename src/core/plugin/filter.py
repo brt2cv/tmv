@@ -110,6 +110,7 @@ class DialogFilter(QDialog, Filter):
         """
         super().__init__(parent)
         self.paras = {}  # para_name: value
+        self.widgets = {}  # para_name: widget
         self.needSetupUi = True
 
     def setup_ui(self):
@@ -160,6 +161,7 @@ class DialogFilter(QDialog, Filter):
                 wx.set_slot(partial(self.on_para_changed, para_name, wx))
 
             self.mlayout.addWidget(wx)
+            self.widgets[para_name] = wx
 
     # def on_btn_clicked(self, btn):
     #     try:

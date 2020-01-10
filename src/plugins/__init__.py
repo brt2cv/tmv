@@ -2,7 +2,7 @@ from os.path import dirname, basename, isfile, join
 import glob
 modules = glob.glob(join(dirname(__file__), "*.py"))
 __submodule__ = [ basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('__init__.py')]
-__all__ = __submodule__ + ["ReloadPlugins", "AboutMe"]
+__all__ = __submodule__ + ["ReloadPlugins", "SetMvlibBackend", "AboutMe"]
 
 
 import core
@@ -17,9 +17,39 @@ class ReloadPlugins(Filter):
         reload_package("app/triage/plugins")
 
         # 重载UI
-        core.g.get("mwnd")._setup_menu(isReload=True)
+        core.g.get("mwnd").reload_menu()
         core.info("插件已重载...")
         core.g.call("prompt", "插件已重载...")
+
+
+from mvlib import set_backend, get_backend
+from core.plugin.filter import DialogFilter
+class SetMvlibBackend(DialogFilter):
+    title = "切换MVLIB后端"
+    buttons = ["OK"]
+    view = [{
+        "type": "radio",
+        "name": "MVLib Backend",
+        "val_range": [["pillow", "numpy", "opencv", "scipy", "skimage"]],
+        "para": "backend"
+    }]
+
+    def accepted(self):
+        str_backend = self.widgets["backend"].get_text()
+        set_backend(str_backend)
+        reload_mvlib()
+        core.g.call("prompt", f"Using【{str_backend}】Backend")
+
+    def _set_radio(self, value):
+        return self.view[0]["val_range"][0].index(value)
+
+    def run(self):
+        if self.needSetupUi:
+            self.setup_ui()
+            self.needSetupUi = False
+        curr_backend = get_backend()
+        self.widgets["backend"].set_value(self._set_radio(curr_backend))
+        self.show()
 
 
 from core.plugin import Plugin

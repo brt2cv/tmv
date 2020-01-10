@@ -58,25 +58,9 @@ class MainWnd(QWidget):
         self._setup_menu()
         # self._setup_ctrl()
 
-    def _setup_menu(self, isReload=False):
+    def _setup_menu(self):
         """ 菜单栏和工具栏的加载 """
         from core import menu
-        if isReload:
-            from core.plugin.mgr import PluginManager
-            plug_mgr = PluginManager()
-            plug_mgr.clear()  # 清除原有的plugin实例
-
-            from importlib import reload
-            reload(menu)
-
-            import plugins
-            reload(plugins)
-
-            # 清理ly_header
-            from utils.qt5 import clear_layout
-            clear_layout(self.ly_header)
-            clear_layout(self.ly_sidebar)
-
         menu_conf = rpath2curr("../config/menu.json")
 
         menu_creator = menu.MenubarCreator(self)
@@ -88,6 +72,26 @@ class MainWnd(QWidget):
         for toolbar in toolbar_creator.list_bars:
             toolbar.setOrientation(Qt.Vertical)
             self.ly_sidebar.addWidget(toolbar)
+
+    def reload_menu(self):
+        from core import menu
+
+        from core.plugin.mgr import PluginManager
+        plug_mgr = PluginManager()
+        plug_mgr.clear()  # 清除原有的plugin实例
+
+        from importlib import reload
+        reload(menu)
+
+        import plugins
+        reload(plugins)
+
+        # 清理ly_header
+        from utils.qt5 import clear_layout
+        clear_layout(self.ly_header)
+        clear_layout(self.ly_sidebar)
+
+        self._setup_menu()
 
     def _setup_ctrl(self):
         from utils.qt5wx.wx_unit import UnitSlider
