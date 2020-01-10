@@ -1,4 +1,5 @@
 from .backend import run_backend, include
+from .morphology import kernal
 
 if include("opencv"):
     import cv2
@@ -73,9 +74,20 @@ def threshold(im, thresh="otsu", maxval=255):
         )()
 
 
-def gaussian(im, sigma=0):
-    def run_opencv(ksize=(5, 5)):
-        return cv2.GaussianBlur(im, ksize, sigma)
+def gaussian(im, sigma):
+    """
+    sigma: scalar or sequence of scalars
+    """
+    def run_opencv():
+        """
+        ksize.width和ksize.height必须为正数和奇数，也可以为零，然后根据sigma计算得出
+        sigmas可以为零，则分别从ksize.width和ksize.height计算得出
+        """
+        if isinstance(sigma, int):
+            sigma_x = sigma_y = sigma
+        else:
+            sigma_x, sigma_y = sigma
+        return cv2.GaussianBlur(im, None, sigma_x, sigmaY=sigma_y)
 
     def run_skimage():
         return skimage.filters.gaussian(im, sigma)
@@ -85,21 +97,24 @@ def gaussian(im, sigma=0):
             func_skimage=run_skimage
         )()
 
-def median(im, k):
-    def run_opencv(ksize=5):
-        return cv2.medianBlur(im, ksize)
+def median(im, k: int):
+    def run_opencv():
+        """ k: 必须为奇数 """
+        k_val = k if k % 2 else k+1
+        return cv2.medianBlur(im, k_val)
 
     def run_skimage():
-        return skimage.filters.median(im, k)
+        k_nal = kernal(k, "square")  # 功能被限制了……
+        return skimage.filters.median(im, k_nal)
 
     return run_backend(
             func_opencv=run_opencv,
             func_skimage=run_skimage
         )()
 
-def mean(im, k):
-    def run_opencv(ksize=5):
-        return cv2.blur(im, ksize)
+def mean(im, k: tuple):
+    def run_opencv():
+        return cv2.blur(im, k)
 
     return run_backend(
             func_opencv=run_opencv
