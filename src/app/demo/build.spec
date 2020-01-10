@@ -3,16 +3,16 @@
 
 block_cipher = None
 
-a = Analysis(['../../build_demo.py'],
+a = Analysis(['../../build.py'],
              pathex=[
                 "../../../env/win64/Lib/rsa",
                 "../../../env/win64/Lib/site-packages"],
              binaries=[],
              datas=[
                 ("../../core/register/config", "core/register/config"),
-                ("view/ui", "app/demo/view/ui"),
+                ("view/ui/*.py", "app/demo/view/ui"),
              ],
-             hiddenimports=[],
+             hiddenimports=["app.demo.main"],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],

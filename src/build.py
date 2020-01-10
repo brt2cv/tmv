@@ -1,4 +1,11 @@
-#!/usr/bin/env python
+app = "demo"
+
+# from utils.expy import topdir
+# topdir("app/" + app, False)  # src
+
+# import os, sys
+# print('<<<', os.getcwd())
+# print(">>>", sys.path)
 
 from utils.base import import_plugin
 from multiprocessing import freeze_support
@@ -16,8 +23,6 @@ from multiprocessing import freeze_support
 
 if __name__ == "__main__":
     freeze_support()  # pyinstaller "--onefile" mode 并不适用...
-    import app.demo.main  # 显示导入模块，用于pyinstaller导入模块
-    # import app.demo.view
 
-    app_demo = import_plugin("app.demo.main")  # 必须改！
+    app_demo = import_plugin("app.{}.main".format(app))
     app_demo.run()
