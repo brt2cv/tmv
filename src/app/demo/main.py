@@ -78,8 +78,9 @@ class ModulePlugin:
             # self.timer.join()
 
     def run_console(self):
-        from utils.imgio import imread
+        # from utils.imgio import imread
+        from PIL import Image
 
         path_file = "./test.jpg"
-        im = imread(path_file)
+        im = Image.open(path_file)
         print(f"当前图像【{path_file}】的shape = {im.shape}")
