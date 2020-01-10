@@ -1,27 +1,20 @@
 ###############################################################################
 # Name:         settings
-# Usage:        class PluginSettings(IniConfigSettings):
-#                   PATH_SETTING = "config/settings.ini"
-#                   def __init__(self):
-#                       super().__init__()
-#                       # 载入项目固定路径的配置，实例化时则无需关心是否load
-#                       # path_ini = os.path.abspath(PATH_SETTING)  # 相对工程目录的路径
-#                       path_curr_file = os.path.dirname(__file__)
-#                       path_ini = os.path.join(path_curr_file, PATH_SETTING)  # 相对当前文件的路径
-#                       self.load(path_ini)
-#
+# Usage:        settings = IniConfigSettings()
+#               settings.load(rpath2curr("config/settings.ini")
 # Author:       Bright Li
 # Modified by:
-# Created:      2019/10/09
-# Version:      [0.0.1]
+# Created:      2020-01-07
+# Version:      [0.1.1]
 # RCS-ID:       $$
 # Copyright:    (c) Bright Li
 # Licence:
 ###############################################################################
 
 import json
-from configparser import ConfigParser
+from configparser import ConfigParser, Error
 import os.path
+from .base import rpath2curr
 
 class SettingsBase:
     def __init__(self):
@@ -45,6 +38,7 @@ class SettingsBase:
     def save(self, path_save_as=None):
         pass
 
+
 class JsonSettings(SettingsBase):
     def load(self, path_config):
         assert os.path.exists(path_config), f"Settings导入失败：不存在配置文件【{path_config}】"
@@ -65,14 +59,13 @@ class IniConfigSettings(ConfigParser):  # SettingsBase
         super().__init__()
         self.path = None
 
-    # def get(self, section, option, default=None):
-    #     if not self.has_option(section, option):
-    #         return default
-    #     try:
-    #         print(section, option, default)
-    #         return super().get(section, option)  raw=True!
-    #     except KeyError:
-    #         return default
+    def get(self, section, option, default=None):
+        if not self.has_option(section, option):
+            return default
+        try:
+            return super().get(section, option, raw=True)
+        except KeyError:
+            return default
 
     def load(self, path_config):
         assert os.path.exists(path_config), f"Settings导入失败：不存在配置文件【{path_config}】"
