@@ -12,9 +12,9 @@ class OpenImageFile(Filter):
         file_path = dialog_file_select(g.get("mwnd"), "Images (*.png *.jpg)")
         if not file_path:
             return
-        elif len(file_path) > 1:
-            alert(g.get("mwnd"), "错误", "请勿选择多张图片")
-            return
+        # elif len(file_path) > 1:
+        #     alert(g.get("mwnd"), "错误", "请勿选择多张图片")
+        #     return
         path_pic = file_path[0]
         self.open(path_pic)
 
@@ -24,6 +24,71 @@ class OpenImageFile(Filter):
         self.set_image(im_arr)
         g.call("prompt", f"载入图像：{path_pic}", 5)
         return im_arr
+
+
+import os.path
+class OpenImageFolder(Filter):
+    def run(self):
+        from glob import glob
+        dir_imgs = dialog_file_select(g.get("mwnd"), onlyDir=True)
+        if not dir_imgs:
+            return
+        list_files = glob(os.path.join(dir_imgs[0], "*.jpg"))
+        if not list_files:
+            alert("空文件夹，未筛选到【jpg】图像")
+            return
+        g.register("list_files", list_files, forced=True)
+        self.open_first(list_files)
+
+    def open_first(self, list_files):
+        path_pic = list_files[0]
+        im_arr = mvlib.io.imread(path_pic)
+        self.set_image(im_arr)
+        g.call("prompt", f"载入图像：{path_pic}", 5)
+        g.register("curr_file", 0, forced=True)
+        return im_arr, path_pic
+
+
+class FolderImageNext(Filter):
+    def run(self):
+        list_files = g.get("list_files")
+        if not list_files:
+            alert("尚未选择目标文件夹")
+            return
+        curr_idx = g.get("curr_file") + 1
+        if curr_idx >= len(list_files):
+            alert("已浏览至最后一张图像")
+            return
+        self.open(list_files, curr_idx)
+
+    def open(self, list_files, index):
+        path_pic = list_files[index]
+        im_arr = mvlib.io.imread(path_pic)
+        self.set_image(im_arr)
+        g.call("prompt", f"载入图像：{path_pic}", 5)
+        g.override("curr_file", index)
+        return im_arr, path_pic
+
+
+class FolderImageLast(Filter):
+    def run(self):
+        list_files = g.get("list_files")
+        if not list_files:
+            alert("尚未选择目标文件夹")
+            return
+        curr_idx = g.get("curr_file")
+        if curr_idx <= 0:
+            alert("已浏览至第一张图像")
+            return
+        self.open(list_files, curr_idx-1)
+
+    def open(self, list_files, index):
+        path_pic = list_files[index]
+        im_arr = mvlib.io.imread(path_pic)
+        self.set_image(im_arr)
+        g.call("prompt", f"载入图像：{path_pic}", 5)
+        g.override("curr_file", index)
+        return im_arr, path_pic
 
 
 from PyQt5.QtWidgets import QFileDialog
