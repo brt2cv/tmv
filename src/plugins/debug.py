@@ -1,8 +1,8 @@
 from core.plugin.filter import Filter
 from core import g, info
 
-from .color import ThresholdPlus
-class TestPlugin(ThresholdPlus):
+from .color import GrayStairs
+class TestPlugin(GrayStairs):
     """ 测试插件 """
 
 

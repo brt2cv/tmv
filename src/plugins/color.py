@@ -67,6 +67,38 @@ class ThresholdPlus(Threshold):
         return im_rgb
 
 
+import numpy as np
+class GrayStairs(DialogFilter):
+    """ 灰度等级（色阶） """
+    title = "Gray Stairs"
+    formats = {"mode": "gray"}
+    view = [{
+        "type": "slider",
+        "name": "阈值",
+        "val_init": 0,
+        "val_range": [0, 255],
+        "para": "thresh"
+    },{
+        "type": "slider",
+        "name": "阈值2",
+        "val_init": 255,
+        "val_range": [0, 255],
+        "para": "maxval"
+    }]
+
+    def processing(self, im_arr):
+        # np.subtract(img, para['thr1'], out=img, casting='unsafe')
+        thresh = self.paras["thresh"]
+        maxval = self.paras["maxval"]
+
+        im = np.subtract(im_arr, thresh, casting="unsafe")
+        k = 255 / max(maxval - thresh, 1e-10)
+        im = np.multiply(im, k, casting='unsafe').astype("uint8")
+        im[im_arr < thresh] = 0
+        im[im_arr > maxval] = 255
+        return im
+
+
 class HSV_Filter(DialogFilter):
     """ HSV色值过滤 """
     title = "HSV色值过滤器"

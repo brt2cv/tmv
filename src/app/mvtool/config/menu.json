@@ -82,6 +82,14 @@
                 "plugin": "color.Threshold"
             },
             {
+                "name": "ThresholdPlus",
+                "plugin": "color.ThresholdPlus"
+            },
+            {
+                "name": "灰度色阶",
+                "plugin": "color.GrayStairs"
+            },
+            {
                 "name": "阈值九宫格",
                 "plugin": "color.ArithmeticThreshold"
             },
