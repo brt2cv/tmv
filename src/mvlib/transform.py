@@ -27,14 +27,15 @@ def resize(im, output_shape, antialias=True):
             INTER_CUBIC     - 基于4x4像素邻域的3次插值法
             INTER_LANCZOS4  - 基于8x8像素邻域的Lanczos插值
         """
-        return cv2.resize(im, dsize=output_shape)
+        # 注意：pillow.size 与 ndarray.size 顺序不同
+        h, w = output_shape
+        return cv2.resize(im, dsize=(w, h))
 
     def run_pillow():
         # 开启抗锯齿，耗时增加8倍左右
         resample = Image.ANTIALIAS if antialias else Image.NEAREST
-        # 注意：pillow.size 与 ndarray.size 顺序不同
-        h, w = output_shape
-        return im.resize((w, h), resample)
+        # pillow.size自成体系，无需多余处理（错上加错就OK了）
+        return im.resize(output_shape, resample)
 
     return run_backend(
             func_skimage=run_skimage,

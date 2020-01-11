@@ -1,4 +1,5 @@
 import mvlib
+from utils.imgio import pillow2ndarray
 from core import g, alert
 from core.plugin.filter import Filter, DialogFilter
 
@@ -21,6 +22,22 @@ class OpenImageFile(Filter):
     def open(self, path_pic):
         self.paras["path_img"] = f"\"{path_pic}\""  # commit scripts para
         im_arr = mvlib.io.imread(path_pic)
+
+        isPillow = mvlib.get_backend() == "pillow"
+
+        # 自动压缩图像
+        settings = g.get("settings")
+        if settings.get("img", "compress") == "true":
+            trigger_pixel = int(settings.get("img", "trigger_pixel"))
+            h, w = im_arr.size if isPillow else im_arr.shape[:2]
+            min_ = min(h, w)
+            if min_ > trigger_pixel:  # 触发压缩
+                r = int(min_ / trigger_pixel) +1
+                h_, w_ = int(h/r), int(w/r)
+                im_arr = mvlib.transform.resize(im_arr, (h_, w_))
+
+        if isPillow:
+            im_arr = pillow2ndarray(im_arr)
         self.set_image(im_arr)
         g.call("prompt", f"载入图像：{path_pic}", 5)
         return im_arr
@@ -91,9 +108,10 @@ class FolderImageLast(Filter):
         return im_arr, path_pic
 
 
+import utils  # 视图窗口图像以ndarray存储，保存时pillow后端无法执行save操作
 from PyQt5.QtWidgets import QFileDialog
 class SaveAsImageFile(Filter):
-    scripts = "{output} = mvlib.io.imwrite({path_img}, {im})"
+    scripts = "{output} = utils.imgio.imwrite({path_img}, {im})"
 
     def run(self):
         file_name, str_filter = QFileDialog.getSaveFileName(
@@ -102,7 +120,7 @@ class SaveAsImageFile(Filter):
                                 filter="Images (*.jpg *.png)")
         if file_name:
             ips = self.get_image()
-            mvlib.io.imwrite(file_name, ips)
+            utils.imgio.imwrite(file_name, ips)
             g.call("prompt", f"图像已存储至：{file_name}", 5)
 
 
