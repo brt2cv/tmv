@@ -66,10 +66,19 @@ class IpsFormat:
             # return
 
         backend = self.property.get("backend")
-        if backend and not include(backend):
-            curr_backend = get_backend()
-            warning = f"Backend error: 【{backend}】is required, current backend is 【{curr_backend}】"
-            alert(warning)
-            raise FormatTypeError(warning)
+        if backend:
+            isOk = False
+            if isinstance(backend, str):
+                isOk = include(backend)
+            else:
+                for b_ in backend:
+                    if include(b_):
+                        isOk = True
+                        break
+            if not isOk:
+                curr_backend = get_backend()
+                warning = f"Backend error: 【{backend}】is required, current backend is 【{curr_backend}】"
+                alert(warning)
+                raise FormatTypeError(warning)
 
         return True

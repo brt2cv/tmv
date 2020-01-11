@@ -42,7 +42,7 @@ class Threshold(DialogFilter):
 
 class ThresholdPlus(Threshold):
     """ 高亮极值(0, 255)区域 """
-    formats = {"mode": "gray", "backend": "numpy"}
+    formats = {"mode": "gray", "backend": {"opencv", "skimage"}}
     view = [{
         "type": "slider",
         "name": "阈值",

@@ -20,14 +20,6 @@
                 "name": "Resize",
                 "description": "缩放",
                 "plugin": "file.ResizeImageFile"
-            },
-            {
-                "name": "设置mvlib后端",
-                "plugin": "SetMvlibBackend"
-            },
-            {
-                "name": "开启/关闭 - 远程图像接收",
-                "plugin": "file.RcpImageSwitch"
             }
         ]
     },
@@ -45,18 +37,6 @@
                 "shortcut": "Ctrl+J",
                 "icon": "app/mvtool/res/next.png",
                 "plugin": "edit.Redo"
-            },
-            {
-                "name": "Undo栈状态",
-                "plugin": "edit.UndoDebugger"
-            },
-            {
-                "name": "图像信息",
-                "plugin": "edit.CurrImageInfo"
-            },
-            {
-                "name": "导出脚本",
-                "plugin": "edit.ImgStackScripts"
             }
         ]
     },
@@ -207,6 +187,36 @@
         ]
     },
     {
+        "name": "Debug",
+        "members": [
+            {
+                "name": "设置mvlib后端",
+                "plugin": "debug.SetMvlibBackend"
+            },
+            {
+                "name": "开启/关闭 - 远程图像接收",
+                "plugin": "file.RcpImageSwitch"
+            },
+            {
+                "name": "Undo栈状态",
+                "plugin": "debug.UndoDebugger"
+            },
+            {
+                "name": "图像信息",
+                "plugin": "debug.CurrImageInfo"
+            },
+            {
+                "name": "导出脚本",
+                "plugin": "debug.ImgStackScripts"
+            },
+            {
+                "name": "功能测试",
+                "icon": "app/mvtool/res/verify.png",
+                "plugin": "debug.TestPlugin"
+            }
+        ]
+    },
+    {
         "name": "Help",
         "members": [
             {
@@ -249,7 +259,7 @@
             {
                 "name": "功能测试",
                 "icon": "app/mvtool/res/verify.png",
-                "plugin": "TestPlugin"
+                "plugin": "debug.TestPlugin"
             },
             {
                 "name": "重载插件",
