@@ -129,8 +129,8 @@ class DialogFilter(QDialog, Filter):
             btn_cancel = QPushButton("Cancel", self)
             self.buttonBox.addButton(btn_ok, QDialogButtonBox.AcceptRole)
             self.buttonBox.addButton(btn_cancel, QDialogButtonBox.RejectRole)
-            btn_ok.clicked.connect(self.accepted)
-            btn_cancel.clicked.connect(self.rejected)
+            # btn_ok.clicked.connect(self.accept)  # 与self.buttonBox.accepted重复
+            # btn_cancel.clicked.connect(self.reject)
         else:
             btn_close = QPushButton("Close", self)
             self.buttonBox.addButton(btn_close, QDialogButtonBox.NoRole)
@@ -221,6 +221,14 @@ class DialogFilter(QDialog, Filter):
     def rejected(self):
         """ 取消图像变更 """
         self.reset()
+
+    def accept(self):  # 用于button信号槽固定连接
+        self.accepted()  # 用于子类重写
+        super().accept()
+
+    def reject(self):
+        self.rejected()
+        super().reject()
 
     def closed(self):
         """ 仅关闭对话框 """
