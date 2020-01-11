@@ -247,17 +247,14 @@
                 "plugin": "edit.Redo"
             },
             {
+                "name": "功能测试",
+                "icon": "app/mvtool/res/verify.png",
+                "plugin": "TestPlugin"
+            },
+            {
                 "name": "重载插件",
                 "icon": "app/mvtool/res/resetall.png",
                 "plugin": "ReloadPlugins"
-            },
-            {
-                "name": "功能测试",
-                "icon": "app/mvtool/res/done.png",
-                "plugin": {
-                    "path": "app/mvtool/plugins/demo.py",
-                    "class": "PluginForApp"
-                }
             }
         ]
     }

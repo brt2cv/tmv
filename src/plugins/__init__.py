@@ -2,7 +2,7 @@ from os.path import dirname, basename, isfile, join
 import glob
 modules = glob.glob(join(dirname(__file__), "*.py"))
 __submodule__ = [ basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('__init__.py')]
-__all__ = __submodule__ + ["ReloadPlugins", "SetMvlibBackend", "AboutMe"]
+__all__ = __submodule__ + ["ReloadPlugins", "SetMvlibBackend", "AboutMe", "TestPlugin"]
 
 
 import core
@@ -64,3 +64,8 @@ class AboutMe(Plugin):
         msgbox.setDetailedText('版权：Bright Li\nTel: 18131218231\nE-mail: brt2@qq.com')
         msgbox.setIconPixmap(QPixmap("app/mvtool/res/logo.png"))
         msgbox.exec_()
+
+
+from .color import ThresholdPlus
+class TestPlugin(ThresholdPlus):
+    """ 测试插件 """

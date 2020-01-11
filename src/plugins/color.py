@@ -40,6 +40,32 @@ class Threshold(DialogFilter):
                                        self.paras["thresh"],
                                        self.paras["maxval"])
 
+class ThresholdPlus(Threshold):
+    """ 高亮极值(0, 255)区域 """
+    formats = {"mode": "gray", "backend": "numpy"}
+    view = [{
+        "type": "slider",
+        "name": "阈值",
+        "val_init": 0,
+        "val_range": [0, 255],
+        "para": "thresh"
+    },{
+        "type": "slider",
+        "name": "阈值2",
+        "val_init": 255,
+        "val_range": [0, 255],
+        "para": "maxval"
+    }]
+
+    def processing(self, im_arr):
+        thresh = self.paras["thresh"]
+        maxval = self.paras["maxval"]
+
+        im_rgb = mvlib.color.gray2rgb(im_arr)
+        im_rgb[im_arr < thresh] = (0, 0, 255)
+        im_rgb[im_arr > maxval] = (255, 0, 0)
+        return im_rgb
+
 
 class HSV_Filter(DialogFilter):
     """ HSV色值过滤 """

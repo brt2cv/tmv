@@ -27,18 +27,27 @@ def rgb2gray(im):
     def run_pillow():
         return im.convert("L")
 
+    def run_skimage():
+        im_float64 = skimage.color.rgb2gray(im)
+        return float2ubyte(im_float64)
+
     return run_backend(
             func_pillow=run_pillow,
             func_numpy=run_numpy,
-            func_opencv=run_opencv
+            func_opencv=run_opencv,
+            func_skimage=run_skimage
         )()
 
 def gray2rgb(im):
     def run_opencv():
         return cv2.cvtColor(im, cv2.COLOR_GRAY2BGR)
 
+    def run_skimage():
+        return skimage.color.gray2rgb(im)
+
     return run_backend(
-            func_opencv=run_opencv
+            func_opencv=run_opencv,
+            func_skimage=run_skimage
         )()
 
 def rgb2bgr(im):
