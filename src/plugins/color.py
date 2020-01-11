@@ -67,11 +67,10 @@ class ThresholdPlus(Threshold):
         return im_rgb
 
 
-import numpy as np
 class GrayStairs(DialogFilter):
     """ 灰度等级（色阶） """
     title = "Gray Stairs"
-    formats = {"mode": "gray"}
+    # formats = {"mode": "gray"}  # 支持彩图
     view = [{
         "type": "slider",
         "name": "阈值",
@@ -85,18 +84,69 @@ class GrayStairs(DialogFilter):
         "val_range": [0, 255],
         "para": "maxval"
     }]
+    scripts = "{output} = mvlib.filters.graystairs({im}, {thresh}, {maxval})"
 
     def processing(self, im_arr):
-        # np.subtract(img, para['thr1'], out=img, casting='unsafe')
-        thresh = self.paras["thresh"]
-        maxval = self.paras["maxval"]
+        return mvlib.filters.graystairs(im_arr,
+                                        self.paras["thresh"],
+                                        self.paras["maxval"])
 
-        im = np.subtract(im_arr, thresh, casting="unsafe")
-        k = 255 / max(maxval - thresh, 1e-10)
-        im = np.multiply(im, k, casting='unsafe').astype("uint8")
-        im[im_arr < thresh] = 0
-        im[im_arr > maxval] = 255
-        return im
+
+class Bright_Contrast(DialogFilter):
+    title = "Bright and Contrast"
+    # formats = {"mode": "gray"}  # 支持彩图
+    view = [{
+        "type": "slider",
+        "name": "亮度 ",
+        "val_init": 0,
+        "val_range": [-100, 100],
+        "para": "bright"
+    },{
+        "type": "slider",
+        "name": "对比度",
+        "val_init": 45,
+        "val_range": [1, 89],
+        "para": "contrast"
+    }]
+    scripts = "{output} = mvlib.filters.contrast({im}, {bright}, {contrast})"
+
+    def processing(self, im_arr):
+        return mvlib.filters.contrast(im_arr,
+                                      self.paras["bright"],
+                                      self.paras["contrast"])
+
+
+class HistogramTool(DialogFilter):
+    title = "直方图工具"  # 以及直方图标准化操作
+    # formats = {"mode": "gray"}  # 支持彩图，但彩图没有任何意义
+    view = [{
+        "type": "pyplot",
+        "name": "Histogram"
+    }]
+    scripts = "{output} = mvlib.filters.hist_normalize({im})"
+
+    def setup_ui(self):
+        super().setup_ui()
+        self.resize(400,300)
+
+    def processing(self, im_arr):
+        return mvlib.filters.hist_normalize(im_arr)
+
+    def run(self):
+        def plot(figure):
+            # import mvlib
+            # hist, bins = mvlib.exposure.histogram()
+            axes = figure.add_subplot(111)
+            axes.hist(self.get_image().ravel(), 256)
+
+        if self.check_format():
+            self.view[0]["plot"] = plot
+
+            if self.needSetupUi:
+                self.setup_ui()  # 延迟构造窗口UI
+                self.needSetupUi = False
+            self.show()
+            # 无需自动预览
 
 
 class HSV_Filter(DialogFilter):

@@ -54,16 +54,6 @@
                 "shortcut": "Ctrl+W",
                 "icon": "app/mvtool/res/close.png",
                 "plugin": "view.CloseViewerLabel"
-            },
-            {
-                "name": "图像流程图",
-                "shortcut": "Ctrl+R",
-                "plugin": "view.FlowChartTool"
-            },
-            {
-                "name": "直方图工具",
-                "shortcut": "Ctrl+D",
-                "plugin": "view.HistogramTool"
             }
         ]
     },
@@ -77,17 +67,30 @@
                 "plugin": "color.Gray"
             },
             {
-                "name": "Threshold",
-                "shortcut": "Ctrl+H",
-                "plugin": "color.Threshold"
-            },
-            {
-                "name": "ThresholdPlus",
-                "plugin": "color.ThresholdPlus"
-            },
-            {
-                "name": "灰度色阶",
-                "plugin": "color.GrayStairs"
+                "name": "图像增强",
+                "members": [
+                    {
+                        "name": "Threshold",
+                        "shortcut": "Ctrl+H",
+                        "plugin": "color.Threshold"
+                    },
+                    {
+                        "name": "Threshold（极值高亮）",
+                        "plugin": "color.ThresholdPlus"
+                    },
+                    {
+                        "name": "色阶",
+                        "plugin": "color.GrayStairs"
+                    },
+                    {
+                        "name": "亮度 - 对比度",
+                        "plugin": "color.Bright_Contrast"
+                    },
+                    {
+                        "name": "直方图工具 - 标准化",
+                        "plugin": "color.HistogramTool"
+                    }
+                ]
             },
             {
                 "name": "阈值九宫格",

@@ -1,6 +1,6 @@
 from core import g
 from core.plugin import Plugin
-from core.plugin.filter import Filter, DialogFilter
+from core.plugin.filter import Filter
 
 
 class NewViewerLabel(Filter):
@@ -17,27 +17,8 @@ class CloseViewerLabel(Filter):
         g.call("prompt", f"删除标签【{label}】", 5)
 
 
-class HistogramTool(DialogFilter):
-    title = "直方图工具"
-    buttons = ["Close"]
-    view = [{
-        "type": "pyplot",
-        "name": "Histogram"
-    }]
-
-    def run(self):
-        def plot(figure):
-            # import mvlib
-            # hist, bins = mvlib.exposure.histogram()
-            axes = figure.add_subplot(111)
-            axes.hist(self.get_image().ravel(), 256)
-
-        self.view[0]["plot"] = plot
-        super().run()
-
-
-class FlowChartTool(Plugin):
-    def run(self):
-        import subprocess
-        subprocess.Popen("pyhon3")
+# class FlowChartTool(Plugin):
+#     def run(self):
+#         import subprocess
+#         subprocess.Popen("pyhon3")
 

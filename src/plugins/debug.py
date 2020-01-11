@@ -1,10 +1,11 @@
 from core.plugin.filter import Filter
 from core import g, info
 
-from .color import GrayStairs
-class TestPlugin(GrayStairs):
+from .color import HistogramTool
+class TestPlugin(HistogramTool):
     """ 测试插件 """
 
+#####################################################################
 
 import mvlib
 from core.plugin.filter import DialogFilter
