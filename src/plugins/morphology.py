@@ -11,6 +11,7 @@ class GaussianBlur(DialogFilter):
         只需要修改: class_name、IpyFilter与title
     """
     title = 'Gaussian Smoothing'
+    formats = {"mode": "gray"}
     view = [{
         "type": "slider",
         "name": "sigma_x ",
@@ -34,6 +35,7 @@ class GaussianBlur(DialogFilter):
 
 class MedianBlur(DialogFilter):
     title = 'Median Smoothing'
+    formats = {"mode": "gray"}
     view = [{
         "type": "slider",
         "name": "ksize ",
@@ -49,6 +51,7 @@ class MedianBlur(DialogFilter):
 
 class MeanBlur(DialogFilter):
     title = 'Mean Smoothing'
+    formats = {"mode": "gray"}
     view = [{
         "type": "slider",
         "name": "kernal-width  ",
@@ -70,14 +73,15 @@ class MeanBlur(DialogFilter):
 
 class Erosion(DialogFilter):
     title = "Erosion"
+    formats = {"mode": "gray"}
     view = [{
-        "type": "spinbox",
+        "type": "slider",
         "name": "kernal-width  ",
         "val_init": 3,
         "val_range": [1, 29],
         "para": "k_w"
     },{
-        "type": "spinbox",
+        "type": "slider",
         "name": "kernal-height ",
         "val_init": 3,
         "val_range": [1, 29],
@@ -91,14 +95,15 @@ class Erosion(DialogFilter):
 
 class Dilation(DialogFilter):
     title = "Dilation"
+    formats = {"mode": "gray"}
     view = [{
-        "type": "spinbox",
+        "type": "slider",
         "name": "kernal-width  ",
         "val_init": 3,
         "val_range": [1, 29],
         "para": "k_w"
     },{
-        "type": "spinbox",
+        "type": "slider",
         "name": "kernal-height ",
         "val_init": 3,
         "val_range": [1, 29],
@@ -112,14 +117,15 @@ class Dilation(DialogFilter):
 
 class Opening(DialogFilter):
     title = "Opening"
+    formats = {"mode": "gray"}
     view = [{
-        "type": "spinbox",
+        "type": "slider",
         "name": "kernal-width  ",
         "val_init": 3,
         "val_range": [1, 29],
         "para": "k_w"
     },{
-        "type": "spinbox",
+        "type": "slider",
         "name": "kernal-height ",
         "val_init": 3,
         "val_range": [1, 29],
@@ -133,14 +139,15 @@ class Opening(DialogFilter):
 
 class Closing(DialogFilter):
     title = "Closing"
+    formats = {"mode": "gray"}
     view = [{
-        "type": "spinbox",
+        "type": "slider",
         "name": "kernal-width  ",
         "val_init": 3,
         "val_range": [1, 29],
         "para": "k_w"
     },{
-        "type": "spinbox",
+        "type": "slider",
         "name": "kernal-height ",
         "val_init": 3,
         "val_range": [1, 29],
@@ -154,155 +161,191 @@ class Closing(DialogFilter):
 
 #####################################################################
 
-class GaussianLaplaceBlur(Filter):
-    title = 'Gaussian Laplace'
-    note = ['all', '2int',  'auto_msk', 'auto_snap','preview']
+# class GaussianLaplace(Filter):
+#     title = 'Gaussian Laplace'
 
-    #parameter
-    para = {'sigma':2, 'uniform':False}
-    view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix'),
-            (bool, 'uniform', 'uniform')]
+#     #parameter
+#     para = {'sigma':2, 'uniform':False}
+#     view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix'),
+#             (bool, 'uniform', 'uniform')]
 
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.gaussian_laplace(snap, para['sigma'], output=img)
-        img *= -1
-        if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
+#     #process
+#     def run(self, ips, snap, img, para = None):
+#         nimg.gaussian_laplace(snap, para['sigma'], output=img)
+#         img *= -1
+#         if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
 
-class DoG(Filter):
-    title = 'Difference of Gaussian'
-    note = ['all', 'auto_msk', 'auto_snap', '2int', 'preview']
+# class DoG(Filter):
+#     title = 'Difference of Gaussian'
+#     note = ['all', 'auto_msk', 'auto_snap', '2int', 'preview']
 
-    #parameter
-    para = {'sigma1':0, 'sigma2':2, 'uniform':False}
-    view = [(float, 'sigma1', (0,30), 1,  'sigma1', 'pix'),
-            (float, 'sigma2', (0,30), 1,  'sigma2', ''),
-            (bool, 'uniform', 'uniform')]
+#     #parameter
+#     para = {'sigma1':0, 'sigma2':2, 'uniform':False}
+#     view = [(float, 'sigma1', (0,30), 1,  'sigma1', 'pix'),
+#             (float, 'sigma2', (0,30), 1,  'sigma2', ''),
+#             (bool, 'uniform', 'uniform')]
 
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.gaussian_filter(snap, para['sigma1'], output=img)
-        buf = nimg.gaussian_filter(snap, para['sigma2'], output=img.dtype)
-        img -= buf
-        if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
+#     #process
+#     def run(self, ips, snap, img, para = None):
+#         nimg.gaussian_filter(snap, para['sigma1'], output=img)
+#         buf = nimg.gaussian_filter(snap, para['sigma2'], output=img.dtype)
+#         img -= buf
+#         if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
 
-class Laplace(Filter):
-    title = 'Laplace'
-    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
+# class Laplace(Filter):
+#     title = 'Laplace'
+#     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
 
-    para = {'uniform':False}
-    view = [(bool, 'uniform', 'uniform')]
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.laplace(snap, output=img)
-        img *= -1
-        if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
+#     para = {'uniform':False}
+#     view = [(bool, 'uniform', 'uniform')]
+#     #process
+#     def run(self, ips, snap, img, para = None):
+#         nimg.laplace(snap, output=img)
+#         img *= -1
+#         if para['uniform']: np.add(img, np.mean(ips.range), out=img, casting='unsafe')
 
-class Maximum(Filter):
-    title = 'Maximum'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+class Maximum(DialogFilter):
+    title = 'Maximum滤波'
+    # view = [{  # 支持彩图，但会灰化（相比而言，ImagePy运行正常）
+    #     "type": "slider",
+    #     "name": "kernal-size ",
+    #     "val_init": 3,
+    #     "val_range": [1, 29],
+    #     "para": "k_size"
+    # }]
 
-    #parameter
-    para = {'size':2}
-    view = [(float, 'size', (0,30), 1,  'size', 'pix')]
+    formats = {"mode": "gray", "backend": "scipy"}
+    view = [{  # 仅灰度图支持
+        "type": "slider",
+        "name": "kernal-width  ",
+        "val_init": 3,
+        "val_range": [1, 29],
+        "para": "k_w"
+    },{
+        "type": "slider",
+        "name": "kernal-height ",
+        "val_init": 3,
+        "val_range": [1, 29],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.morphology.maximum({im}, ({k_size}))"
 
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.maximum_filter(snap, para['size'], output=img)
+    def processing(self, im_arr):
+        self.paras["k_size"] = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.filters.maximum(im_arr, self.paras["k_size"])
 
-class Minimum(Filter):
-    title = 'Minimum'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+class Minimum(DialogFilter):
+    title = 'Minimum滤波'
+    formats = {"mode": "gray", "backend": "scipy"}
+    view = [{
+        "type": "slider",
+        "name": "kernal-width  ",
+        "val_init": 3,
+        "val_range": [1, 29],
+        "para": "k_w"
+    },{
+        "type": "slider",
+        "name": "kernal-height ",
+        "val_init": 3,
+        "val_range": [1, 29],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.morphology.minimum({im}, ({k_w}, {k_h}))"
 
-    #parameter
-    para = {'size':2}
-    view = [(float, 'size', (0,30), 1,  'size', 'pix')]
+    def processing(self, im_arr):
+        kernal = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.filters.minimum(im_arr, kernal)
 
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.minimum_filter(snap, para['size'], output=img)
+class Percent(DialogFilter):
+    title = 'Percent滤波'
+    formats = {"mode": "gray", "backend": "scipy"}
+    view = [{
+        "type": "slider",
+        "name": "kernal-width  ",
+        "val_init": 3,
+        "val_range": [1, 29],
+        "para": "k_w"
+    },{
+        "type": "slider",
+        "name": "kernal-height ",
+        "val_init": 3,
+        "val_range": [1, 29],
+        "para": "k_h"
+    }]
+    scripts = "{output} = mvlib.morphology.percentile({im}, ({k_w}, {k_h}))"
 
-class Percent(Filter):
-    title = 'Percent'
-    note = ['all', 'auto_msk', 'auto_snap','preview']
+    def processing(self, im_arr):
+        kernal = (self.paras["k_w"], self.paras["k_h"])
+        return mvlib.filters.percentile(im_arr, kernal)
 
-    #parameter
-    para = {'size':2, 'per':50}
-    view = [(int, 'size', (0,30), 0, 'size', 'pix'),
-            (int, 'per',  (0,100), 0, 'percent', '')]
+class Prewitt(DialogFilter):
+    title = 'Prewitt梯度算子'
+    formats = {"mode": "gray", "backend": "scipy"}
+    view = [{
+        "type": "radio",
+        "name": "axis ",
+        # "val_init": 0,
+        "val_range": [["horizontal", "vertical"]],
+        "para": "axis"
+    }]
+    scripts = "{output} = mvlib.morphology.prewitt({im}, {axis})"
 
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.percentile_filter(snap, para['per'], para['size'], output=img)
+    def processing(self, im_arr):
+        return mvlib.filters.prewitt(im_arr, self.paras["axis"])
 
-class Prewitt(Filter):
-    title = 'Prewitt'
-    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
-    para = {'axis':'both'}
-    view = [(list, 'axis', ['both', 'horizontal', 'vertical'], str, 'direction', 'aixs')]
+class Sobel(DialogFilter):
+    title = 'Sobel梯度算子'
+    formats = {"mode": "gray", "backend": "scipy"}
+    view = [{
+        "type": "radio",
+        "name": "axis ",
+        # "val_init": 0,
+        "val_range": [["horizontal", "vertical", "both"]],
+        "para": "axis"
+    }]
+    scripts = "{output} = mvlib.morphology.sobel({im}, {axis})"
 
-    #process
-    def run(self, ips, snap, img, para = None):
-        if para['axis']=='both':
-            img[:] =  np.abs(nimg.prewitt(snap, axis=0, output=img.dtype))
-            img += np.abs( nimg.prewitt(snap, axis=1, output=img.dtype))
-        else:
-            nimg.prewitt(snap, axis={'horizontal':0,'vertical':1}[para['axis']], output=img)
-            img[:] = np.abs(img)
-        img //= 3
+    def processing(self, im_arr):
+        return mvlib.filters.sobel(im_arr, self.paras["axis"])
 
-class Sobel(Filter):
-    title = 'Sobel'
-    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
-    para = {'axis':'both'}
-    view = [(list, 'axis', ['both', 'horizontal', 'vertical'], str, 'direction', 'aixs')]
-    #process
-    def run(self, ips, snap, img, para = None):
-        if para['axis']=='both':
-            img[:] =  np.abs(nimg.sobel(snap, axis=0, output=img.dtype))
-            img += np.abs( nimg.sobel(snap, axis=1, output=img.dtype))
-        else:
-            nimg.sobel(snap, axis={'horizontal':0,'vertical':1}[para['axis']], output=img)
-            img[:] = np.abs(img)
-        img //= 4
+# class LaplaceSharp(Filter):
+#     title = 'Laplace Sharp'
+#     note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
 
-class LaplaceSharp(Filter):
-    title = 'Laplace Sharp'
-    note = ['all', '2int', 'auto_msk', 'auto_snap','preview']
+#     para = {'weight':0.2}
+#     view = [(float, 'weight', (0,5), 1,  'weight', 'factor')]
+#     #process
+#     def run(self, ips, snap, img, para = None):
+#         nimg.laplace(snap, output=img)
+#         np.multiply(img, -para['weight'], out=img, casting='unsafe')
+#         img += snap
 
-    para = {'weight':0.2}
-    view = [(float, 'weight', (0,5), 1,  'weight', 'factor')]
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.laplace(snap, output=img)
-        np.multiply(img, -para['weight'], out=img, casting='unsafe')
-        img += snap
+# class Variance(Filter):
+#     title = 'Variance'
+#     note = ['all', 'auto_msk', '2float', 'auto_snap','preview']
 
-class Variance(Filter):
-    title = 'Variance'
-    note = ['all', 'auto_msk', '2float', 'auto_snap','preview']
+#     #parameter
+#     para = {'size':2}
+#     view = [(float, 'size', (0,30), 1,  'size', 'pix')]
 
-    #parameter
-    para = {'size':2}
-    view = [(float, 'size', (0,30), 1,  'size', 'pix')]
+#     #process
+#     def run(self, ips, snap, img, para = None):
+#         nimg.uniform_filter(snap**2, para['size'], output=img)
+#         img -= nimg.uniform_filter(snap, para['size'])**2
 
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.uniform_filter(snap**2, para['size'], output=img)
-        img -= nimg.uniform_filter(snap, para['size'])**2
+# class USM(Filter):
+#     title = 'Unsharp Mask'
+#     note = ['all', 'auto_msk', 'auto_snap', '2int', 'preview']
 
-class USM(Filter):
-    title = 'Unsharp Mask'
-    note = ['all', 'auto_msk', 'auto_snap', '2int', 'preview']
+#     #parameter
+#     para = {'sigma':2, 'weight':0.5}
+#     view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix'),
+#             (float, 'weight', (0,5), 1,  'weight', '')]
 
-    #parameter
-    para = {'sigma':2, 'weight':0.5}
-    view = [(float, 'sigma', (0,30), 1,  'sigma', 'pix'),
-            (float, 'weight', (0,5), 1,  'weight', '')]
-
-    #process
-    def run(self, ips, snap, img, para = None):
-        nimg.gaussian_filter(snap, para['sigma'], output=img)
-        img -= snap
-        np.multiply(img, -para['weight'], out=img, casting='unsafe')
-        img += snap
+#     #process
+#     def run(self, ips, snap, img, para = None):
+#         nimg.gaussian_filter(snap, para['sigma'], output=img)
+#         img -= snap
+#         np.multiply(img, -para['weight'], out=img, casting='unsafe')
+#         img += snap
+#         return img

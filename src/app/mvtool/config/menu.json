@@ -185,8 +185,24 @@
                 "plugin": "morphology.Opening"
             },
             {
-                "name": "USM锐化",
-                "plugin": "morphology.USM"
+                "name": "最大值滤波",
+                "plugin": "morphology.Maximum"
+            },
+            {
+                "name": "最小值滤波",
+                "plugin": "morphology.Minimum"
+            },
+            {
+                "name": "百分比滤波",
+                "plugin": "morphology.Percent"
+            },
+            {
+                "name": "Prewitt梯度算子",
+                "plugin": "morphology.Prewitt"
+            },
+            {
+                "name": "Sobel梯度算子",
+                "plugin": "morphology.Sobel"
             }
         ]
     },

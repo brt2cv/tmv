@@ -5,8 +5,8 @@ if include("opencv"):
     import cv2
 if include("skimage"):
     import skimage
-# if include("scipy"):
-#     from scipy import ndimage
+if include("scipy"):
+    import scipy.ndimage as nimg
 if include("numpy"):
     import numpy as np
 if include("pillow"):
@@ -89,11 +89,15 @@ def gaussian(im, sigma):
             sigma_x, sigma_y = sigma
         return cv2.GaussianBlur(im, None, sigma_x, sigmaY=sigma_y)
 
+    def run_scipy():
+        return nimg.gaussian_filter(im, sigma)
+
     def run_skimage():
         return skimage.filters.gaussian(im, sigma)
 
     return run_backend(
             func_opencv=run_opencv,
+            func_scipy=run_scipy,
             func_skimage=run_skimage
         )()
 
@@ -103,12 +107,19 @@ def median(im, k: int):
         k_val = k if k % 2 else k+1
         return cv2.medianBlur(im, k_val)
 
+    def run_scipy():
+        return nimg.median_filter(im, k)
+
     def run_skimage():
-        k_nal = kernal(k, "square")  # 功能被限制了……
+        if isinstance(k, int):
+            k_nal = kernal(k, "square")
+        else:
+            k_nal = kernal(k)
         return skimage.filters.median(im, k_nal)
 
     return run_backend(
             func_opencv=run_opencv,
+            func_scipy=run_scipy,
             func_skimage=run_skimage
         )()
 
@@ -116,14 +127,106 @@ def mean(im, k: tuple):
     def run_opencv():
         return cv2.blur(im, k)
 
+    def run_scipy():
+        return nimg.uniform_filter(im, k)
+
     return run_backend(
-            func_opencv=run_opencv
+            func_opencv=run_opencv,
+            func_scipy=run_scipy
         )()
 
-def filter2D(im, k):
-    def run_opencv(ksize):
-        return cv2.filter2D(im, -1, ksize)
+# def filter2D(im, k):
+#     def run_opencv(ksize):
+#         return cv2.filter2D(im, -1, ksize)
+
+#     return run_backend(
+#             func_opencv=run_opencv
+#         )()
+
+# def laplace(im, uniform=False):
+#     def run_scipy():
+#         im2 = nimg.laplace(im)
+#         im2 *= -1
+#         if uniform:
+#             im2 = np.add(im2, np.mean(ips.range))
+#         return im2
+
+#     return run_backend(
+#             # func_opencv=run_opencv,
+#             func_scipy=run_scipy
+#         )()
+
+# def DOG(im, sigma, sigma2, uniform=False):
+
+# def gaussian_laplace(im, sigma, uniform=False):
+#     def run_scipy():
+#         im2 = nimg.gaussian_laplace(im, sigma)
+#         im2 *= -1
+#         if uniform:
+#             im2 = np.add(im2, np.mean(ips.range))
+#         return im2
+
+#     return run_backend(
+#             # func_opencv=run_opencv,
+#             func_scipy=run_scipy
+#         )()
+
+def maximum(im, k):
+    """ k: int or tuple """
+    def run_scipy():
+        return nimg.maximum_filter(im, k)
 
     return run_backend(
-            func_opencv=run_opencv
+            # func_opencv=run_opencv,
+            func_scipy=run_scipy
+        )()
+
+def minimum(im, k):
+    """ k: int or tuple """
+    def run_scipy():
+        return nimg.minimum_filter(im, k)
+
+    return run_backend(
+            # func_opencv=run_opencv,
+            func_scipy=run_scipy
+        )()
+
+def percentile(im, k):
+    def run_scipy():
+        return nimg.percentile_filter(im, k)
+
+    return run_backend(
+            # func_opencv=run_opencv,
+            func_scipy=run_scipy
+        )()
+
+def prewitt(im, axis: int):
+    orientation = {'horizontal':0, 'vertical':1}
+    if isinstance(axis, str):
+        axis = orientation[axis]
+
+    def run_scipy():
+        return nimg.prewitt(im, axis)
+
+    return run_backend(
+            # func_opencv=run_opencv,
+            func_scipy=run_scipy
+        )()
+
+def sobel(im, axis: int):
+    orientation = {'horizontal':0, 'vertical':1, "both":2}
+    if isinstance(axis, str):
+        axis = orientation[axis]
+
+    def run_scipy():
+        if axis == 2:
+            im_ = im + np.abs(nimg.sobel(im, 0))
+            im2 = im_ + np.abs(nimg.sobel(im_, 1))
+        else:
+            im2 = np.abs(nimg.sobel(im, axis))
+        return im2 // 4
+
+    return run_backend(
+            # func_opencv=run_opencv,
+            func_scipy=run_scipy
         )()
