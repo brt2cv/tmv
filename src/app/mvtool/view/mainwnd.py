@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 
 from utils.base import rpath2curr
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger(1)
 
 

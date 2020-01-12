@@ -6,7 +6,7 @@ import numpy as np
 from utils.imgio import bytes2ndarray
 from ..broker.protocal import ForwardTrans, BROKER_PORT
 
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 class HerosysImageQtTrans(ForwardTrans, QObject):

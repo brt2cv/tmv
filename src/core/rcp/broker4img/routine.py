@@ -4,7 +4,7 @@ from threading import Thread
 from utils.sock.routine import UdpClient, UdpServer, TIMEOUT_RECV
 from utils.socket import UdpFrame
 
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 class ImgFrame(UdpFrame):

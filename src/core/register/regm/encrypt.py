@@ -2,7 +2,7 @@ import os
 import base64
 import rsa
 
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 PUBKEY_FILE = 'public.pem'

@@ -10,7 +10,7 @@ from utils.sock.routine import TcpClient
 from .regm.protocal import RegCodeTrans
 from .regm.encrypt import RsaCrypto
 
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 # 读取配置文件

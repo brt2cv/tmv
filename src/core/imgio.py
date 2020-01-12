@@ -2,7 +2,7 @@ from utils.base import singleton
 import mvlib.io
 from .plugin.filter import Filter
 
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 

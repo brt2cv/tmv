@@ -7,7 +7,7 @@ except ImportError:
 from utils.qt5 import make_action, make_submenu
 from core.plugin.mgr import PluginManager
 
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 plug_mgr = PluginManager()
 
