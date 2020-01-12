@@ -16,7 +16,7 @@ logger = getLogger()
 # 读取配置文件
 from utils.settings import IniConfigSettings, rpath2curr
 settings = IniConfigSettings()
-settings.load(rpath2curr("config/settings.ini"))
+settings.load(rpath2curr("../config/settings.ini"))
 IPADDR = settings.get("server", "ipaddr")
 PORT = int(settings.get("server", "port"))
 
