@@ -9,7 +9,7 @@ def chdir_topdir(dir_dst):
 
 chdir_topdir("../..")  # src
 from utils import expy
-expy.venv_expand("../runtime/win64")
+expy.venv_expand("../env/win64")
 
 from utils.base import import_plugin
 from multiprocessing import freeze_support

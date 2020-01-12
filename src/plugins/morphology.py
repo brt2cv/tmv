@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.ndimage as nimg
 import mvlib
 
 from core.plugin.filter import DialogFilter
