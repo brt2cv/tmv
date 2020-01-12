@@ -30,15 +30,14 @@ class ConfigManager:
         for idx, path_file in enumerate(list_files):
             self.load_conf(series, idx, path_file)
 
-    def get(self, series, top_key, options, default=None):
+    def get(self, series, top_key, options):  # , default=None
+        """ 所有配置都应该至少在一个层级显式定义过，故不再提供default选项 """
         list_levels = self.dict_conf[series]
-        isDefined = False
         for level_settings in reversed(list_levels):
             if level_settings is None:
                 continue
             value = level_settings.get(top_key, options)
             if value is not None:
-                isDefined = True
                 break
             # else:  # debug
             #     if hasattr(self, "times"):
@@ -48,7 +47,8 @@ class ConfigManager:
             #     print(f"第【{self.times}】次查询： 未找到【{top_key}】-【{options}】")
             #     if self.times == 3:
             #         del self.times
-        return value if isDefined else default
+        assert value is not None, f"未定义的【{top_key}】-【{options}】配置项"
+        return value
 
 # 对于core配置，允许直接将ini设定为等级2，即不能通过user重新配置：
 # 原因：类似log的目录，可能在载入user设定之前，配置项已经应用，修改造成前后分裂
