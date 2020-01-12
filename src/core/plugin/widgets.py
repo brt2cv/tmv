@@ -13,11 +13,12 @@ class TplWidgetsManager:
         }
         """
         types = {
-            "edit":     self.make_edit,
-            "slider":   self.make_slider,
-            "spinbox":  self.make_spinbox,
-            "radio":    self.make_radio,
-            "pyplot":   self.makg_pyplot
+            "edit"      : self.make_edit,
+            "slider"    : self.make_slider,
+            "spinbox"   : self.make_spinbox,
+            "radio"     : self.make_radio,
+            "checkbox"  : self.make_checkbox,
+            "pyplot"    : self.makg_pyplot
         }
 
         wx_type = dict_elem["type"]
@@ -69,6 +70,17 @@ class TplWidgetsManager:
     def make_radio(self, dict_elem):
         """ radio 选项 """
         wx = UnitRadio(
+                self.parent,
+                dict_elem.get("name", ""),
+                dict_elem["val_range"],
+                dict_elem.get("val_init", 0),
+                # dict_elem.get("isCheckbox", False),
+                # dict_elem.get("isChecked", False)
+            )
+        return wx
+
+    def make_checkbox(self, dict_elem):
+        wx = UnitCheckBox(
                 self.parent,
                 dict_elem.get("name", ""),
                 dict_elem["val_range"],
