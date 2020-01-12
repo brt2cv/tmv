@@ -142,7 +142,7 @@ class DialogFilter(QDialog, Filter):
             self.buttonBox.addButton(btn_preview, QDialogButtonBox.ResetRole)
             self.buttonBox.addButton(btn_reset, QDialogButtonBox.ResetRole)
             btn_reset.clicked.connect(self.reset)
-            btn_preview.clicked.connect(self.preview)
+            btn_preview.clicked.connect(self._preview)
 
         dlg_layout.addLayout(self.mlayout)
         dlg_layout.addWidget(self.buttonBox)
@@ -183,21 +183,24 @@ class DialogFilter(QDialog, Filter):
     def on_para_changed(self, para_name, wx):
         self.paras[para_name] = wx.get_value()
         if self.support_preview():
-            self.preview()  # 显示窗口时即应用预览
+            self._preview()  # 显示窗口时即应用预览
 
-    def preview(self):
+    def _preview(self):  # 用于self调用
         try:
-            im_arr = self.get_image()
-            if self.check_format(im_arr):
-                im2 = self.processing(im_arr)
-                im_mgr = g.get("canvas").get_container()
-                im_mgr.set_image(im2)  # 不更新snap
-                self.update_canvas()
+            self.preview()  # 用于子类重写
         except Exception as e:
             alert(str(e))
             print("#"*80)
             print_exc()
             print("#"*80)
+
+    def preview(self):
+        im_arr = self.get_image()
+        if self.check_format(im_arr):
+            im2 = self.processing(im_arr)
+            im_mgr = g.get("canvas").get_container()
+            im_mgr.set_image(im2)  # 不更新snap
+            self.update_canvas()
 
     def reset(self):
         im_mgr = g.get("canvas").get_container()
@@ -206,25 +209,26 @@ class DialogFilter(QDialog, Filter):
 
     def accepted(self):
         """ 将当前图像设置为image """
-        try:
-            im_arr = self.get_image()
-            if self.check_format(im_arr):
-                im2 = self.processing(im_arr)
-                self.set_image(im2)  # 更新snap
-                self.update_canvas()
-        except Exception as e:
-            alert(str(e))
-            print("#"*80)
-            print_exc()
-            print("#"*80)
+        im_arr = self.get_image()
+        if self.check_format(im_arr):
+            im2 = self.processing(im_arr)
+            self.set_image(im2)  # 更新snap
+            self.update_canvas()
 
     def rejected(self):
         """ 取消图像变更 """
         self.reset()
 
     def accept(self):  # 用于button信号槽固定连接
-        self.accepted()  # 用于子类重写
-        super().accept()
+        try:
+            self.accepted()  # 用于子类重写
+        except Exception as e:
+            alert(str(e))
+            print("#"*80)
+            print_exc()
+            print("#"*80)
+        else:
+            super().accept()
 
     def reject(self):
         self.rejected()
@@ -241,4 +245,4 @@ class DialogFilter(QDialog, Filter):
                 self.needSetupUi = False
             self.show()
             if self.support_preview():
-                self.preview()  # 显示窗口时即应用预览
+                self._preview()  # 显示窗口时即应用预览
