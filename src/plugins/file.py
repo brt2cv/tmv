@@ -1,7 +1,28 @@
 import mvlib
 from utils.imgio import pillow2ndarray
-from core import g, alert
+from core import g, alert, conf_mgr
 from core.plugin.filter import Filter, DialogFilter
+
+scaling = None  # False if not compress
+def _read_scaling():
+    global scaling
+    if conf_mgr.get("app", "img", "compress") == "true":
+        scaling = int(conf_mgr.get("app", "img", "scaling_min_pixel"))
+    else:
+        scaling = False
+
+def _auto_scaling(im_arr, isPillow):
+    """ 自动压缩图像 """
+    if scaling is None:
+        _read_scaling()
+    if scaling:
+        h, w = im_arr.size if isPillow else im_arr.shape[:2]
+        min_ = min(h, w)
+        if min_ > scaling:  # 触发压缩
+            r = int(min_ / scaling) +1
+            h_, w_ = int(h/r), int(w/r)
+            im_arr = mvlib.transform.resize(im_arr, (h_, w_))
+    return im_arr
 
 
 from utils.qt5 import dialog_file_select
@@ -26,16 +47,7 @@ class OpenImageFile(Filter):
         isPillow = mvlib.get_backend() == "pillow"
 
         # 自动压缩图像
-        settings = g.get("settings")
-        if settings.get("img", "compress") == "true":
-            trigger_pixel = int(settings.get("img", "trigger_pixel"))
-            h, w = im_arr.size if isPillow else im_arr.shape[:2]
-            min_ = min(h, w)
-            if min_ > trigger_pixel:  # 触发压缩
-                r = int(min_ / trigger_pixel) +1
-                h_, w_ = int(h/r), int(w/r)
-                im_arr = mvlib.transform.resize(im_arr, (h_, w_))
-
+        im_arr = _auto_scaling(im_arr, isPillow)
         if isPillow:
             im_arr = pillow2ndarray(im_arr)
         self.set_image(im_arr)
@@ -60,6 +72,7 @@ class OpenImageFolder(Filter):
     def open_first(self, list_files):
         path_pic = list_files[0]
         im_arr = mvlib.io.imread(path_pic)
+        im_arr = _auto_scaling(im_arr, False)
         self.set_image(im_arr)
         g.call("prompt", f"载入图像：{path_pic}", 5)
         g.register("curr_file", 0, forced=True)
@@ -81,6 +94,7 @@ class FolderImageNext(Filter):
     def open(self, list_files, index):
         path_pic = list_files[index]
         im_arr = mvlib.io.imread(path_pic)
+        im_arr = _auto_scaling(im_arr, False)
         self.set_image(im_arr)
         g.call("prompt", f"载入图像：{path_pic}", 5)
         g.override("curr_file", index)
