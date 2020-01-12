@@ -18,7 +18,7 @@ from .. import conf_mgr
 IPADDR = conf_mgr.get("core", "server", "ipaddr")
 PORT = int(conf_mgr.get("core", "server", "port"))
 
-DIR_REGCONF = conf_mgr.get("core", "path", "dir_regconf")
+DIR_REGCONF = conf_mgr.get("core", "path", "dir_conf")
 if not os.path.exists(DIR_REGCONF):
     os.makedirs(DIR_REGCONF)
 PATH_UUID = os.path.join(DIR_REGCONF, "uuid.txt")
