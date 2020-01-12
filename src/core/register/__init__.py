@@ -14,17 +14,15 @@ from core import getLogger
 logger = getLogger()
 
 # 读取配置文件
-from utils.settings import IniConfigSettings, rpath2curr
-settings = IniConfigSettings()
-settings.load(rpath2curr("../config/settings.ini"))
-IPADDR = settings.get("server", "ipaddr")
-PORT = int(settings.get("server", "port"))
+from .. import conf_mgr
+IPADDR = conf_mgr.get("core", "server", "ipaddr")
+PORT = int(conf_mgr.get("core", "server", "port"))
 
-DIR_REGCONF = settings.get("path", "dir_regconf")
+DIR_REGCONF = conf_mgr.get("core", "path", "dir_regconf")
 if not os.path.exists(DIR_REGCONF):
     os.makedirs(DIR_REGCONF)
 PATH_UUID = os.path.join(DIR_REGCONF, "uuid.txt")
-PATH_CERT = os.path.join(DIR_REGCONF, settings.get("path", "certificate"))
+PATH_CERT = os.path.join(DIR_REGCONF, conf_mgr.get("core", "path", "certificate"))
 
 
 class ClientCrypto(RsaCrypto):
