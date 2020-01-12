@@ -1,3 +1,4 @@
+from ctypes import windll
 from core import getLogger
 logger = getLogger()
 
@@ -10,12 +11,6 @@ class ModulePlugin:
     def __init__(self):
         self.license_timer = None
 
-    def __del__(self):
-        print("exit...")
-        if self.license_timer and self.license_timer.is_alive():
-            self.license_timer.cancel()
-            # self.license_timer.join()
-
     def run(self):
         self.load_settings()
         self.run_pyqt5()
@@ -25,7 +20,6 @@ class ModulePlugin:
         conf_mgr.load_conf("app", 1, rpath2curr("config/settings.ini"))
 
     def check_license(self):
-        from ctypes import windll
         from core.register import checker
         from core import progress
 
@@ -47,29 +41,33 @@ class ModulePlugin:
             from threading import Timer
             trytime = checker.get_trytime()
             # 定时器计时
-            def quit_app():
-                from ctypes import windll
-                self.mwnd.close()
-                windll.user32.MessageBoxW(0, reason, "授权警告", 0)
-
-            self.license_timer = Timer(2 + 60 * trytime, quit_app)  # 至少等待0.5s，使self.mwnd启动
+            self.license_timer = Timer(2 + 60 * trytime,  # 至少等待0.5s，使self.mwnd启动
+                                       lambda: self.quit_app(reason))
             self.license_timer.start()
 
-        except (ConnectionError, TimeoutError):
+        except (ConnectionError, TimeoutError) as e:
             # import sys
             # msg = "无法连接到授权服务器，请手动导入授权证书"
             # windll.user32.MessageBoxW(0, msg, "授权警告", 0)
             # sys.exit()
             from threading import Timer
-            def quit_app():
-                self.mwnd.close()
-                windll.user32.MessageBoxW(0, "试用已到期，请尝试连接服务器获取授权证书",
-                                          "授权警告", 0)
 
-            msg = "无法连接到授权服务器，非授权状态下提供10min的试用时长"
+            # msg = "无法连接到授权服务器，非授权状态下提供10min的试用时长"
+            msg = str(e)
             windll.user32.MessageBoxW(0, msg, "授权警告", 0)
-            self.license_timer = Timer(6, quit_app)
+            self.license_timer = Timer(6, lambda: self.quit_app(
+                                       "试用已到期，请尝试连接服务器获取授权证书"))
             self.license_timer.start()
+
+    def quit_app(self, msg):
+        self.mwnd.close()
+        windll.user32.MessageBoxW(0, msg, "授权警告", 0)
+
+    def cancel_timer(self):
+        """ 取消定时器，否则qt无法正常退出 """
+        if self.license_timer and self.license_timer.is_alive():
+            self.license_timer.cancel()
+            # self.license_timer.join()
 
     def run_pyqt5(self, callback_mwnd=None):
         from PyQt5.QtWidgets import QApplication
@@ -78,8 +76,7 @@ class ModulePlugin:
         # self.check_license()
 
         if callback_mwnd is None:
-            from view.mainwnd import MainWnd
-
+            from .view.mainwnd import MainWnd
             self.mwnd = MainWnd(None)
         else:
             self.mwnd = callback_mwnd()
@@ -96,10 +93,10 @@ class ModulePlugin:
 
         app.exec_()
         imgio_mgr.rcp_stop()
+        self.cancel_timer()
 
 
 """ 全局变量声明
-g.get("settings"): IniConfigSettings()
 g.get("mwnd")
 g.get("canvas"): ScrollCanvas()
 g.call("prompt"): mwnd.status_bar.showMessage()
