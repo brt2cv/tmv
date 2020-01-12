@@ -4,7 +4,7 @@ from .. import g, alert
 from .format import IpsFormat, FormatTypeError
 from . import Plugin
 
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 class FilterBase(Plugin):

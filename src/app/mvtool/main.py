@@ -1,4 +1,4 @@
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 def export_plugin():
@@ -21,12 +21,8 @@ class ModulePlugin:
         self.run_pyqt5()
 
     def load_settings(self):
-        from utils.gmgr import g
-        from utils.settings import IniConfigSettings, rpath2curr
-
-        settings = IniConfigSettings()
-        settings.load(rpath2curr("config/settings.ini"))
-        g.register("settings", settings)
+        from core import conf_mgr, rpath2curr
+        conf_mgr.load_conf("app", 1, rpath2curr("config/settings.ini"))
 
     def check_license(self):
         from ctypes import windll

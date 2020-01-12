@@ -6,7 +6,7 @@ from . import Plugin
 from .filter import DialogFilter
 from .adapter import IpyPlugin, PluginAdapter4Ipy
 
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 # 加载默认的插件

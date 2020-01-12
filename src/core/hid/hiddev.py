@@ -7,7 +7,7 @@ from time import sleep
 from threading import Thread, Event
 
 from utils.base import Deletable
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger(1)
 
 BLOCK_TIMEOUT = 0.5

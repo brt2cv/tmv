@@ -1,4 +1,4 @@
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger(1)
 
 class UndoCommand:

@@ -3,8 +3,8 @@
 from PyQt5.QtWidgets import QWidget, QScrollArea
 from PyQt5.QtCore import Qt
 
-from utils.log import getLogger
-logger = getLogger(1)
+from core import getLogger
+logger = getLogger()
 
 
 def delta2units(delta):

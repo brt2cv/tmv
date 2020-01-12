@@ -13,7 +13,7 @@
 from utils.sock.trans import TransBase, json2dict
 
 from utils.imgio import bytes2ndarray, shape2mode
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger()
 
 

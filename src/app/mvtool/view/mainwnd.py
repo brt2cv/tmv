@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 
 from utils.base import rpath2curr
-from utils.log import getLogger
+from core import getLogger
 logger = getLogger(1)
 
 
@@ -19,13 +19,13 @@ class MainWnd(QWidget):
         self.setProperty("class", "bkg")  # for qss
         self._setup_ui()
 
-        settings = g.get("settings")
+        from core import conf_mgr
 
         self.setWindowTitle("MVTool图像编辑器")
-        path_icon = settings.get("gui", "icon")
+        path_icon = conf_mgr.get("app", "gui", "icon")
         self.setWindowIcon(QIcon(path_icon))
 
-        win_size = settings.get("gui", "win_size", "800,600")
+        win_size = conf_mgr.get("app", "gui", "win_size")
         x, y = win_size.split(",")
         self.resize(int(x), int(y))
         # self.move(0, 0)
