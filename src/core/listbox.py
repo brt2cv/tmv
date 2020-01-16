@@ -9,7 +9,7 @@ def dump_exception(e):
     traceback.print_tb(e.__traceback__)
 
 
-class DragListBox(QListWidget):
+class DragListWidget(QListWidget):
     icon_size = 32
 
     def __init__(self, parent=None):

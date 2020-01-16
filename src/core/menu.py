@@ -53,28 +53,47 @@ class MenubarCreator:
             add_action(parent_menu, dict_info)
 
 
+from PyQt5.QtWidgets import QToolBox
+from .listbox import DragListWidget
 class ListBoxCreator:
     def __init__(self, parent):
-        from .listbox import DragListBox
-        self.listbox = DragListBox(parent)
+        self.parent = parent
 
     def load_conf(self, path_conf):
         with open(path_conf, "r", encoding='utf8') as fp:
             dict_conf = json.load(fp)
 
         plug_list = "listbox" if "listbox" in dict_conf else "menubar"
+        top_box = QToolBox(self.parent)
         for menu_group_info in dict_conf[plug_list]:
-            self.make_label(self.listbox, menu_group_info)
+            self.make_unit(top_box, menu_group_info)
+        self.listbox = top_box
 
-    def make_label(self, parent_listbox, dict_info):
-        if "members" in dict_info:
-            node_name = dict_info["name"]
-            submenu = make_submenu(parent_menu, node_name)
-            # 展开submenu
-            for elem in dict_info["members"]:  # 递归
-                self.make_label(parent_listbox, elem)
-        else:
-            parent_listbox.make_item(dict_info)
+    # def make_label(self, parent_listbox, dict_info):
+    #     if "members" in dict_info:
+    #         node_name = dict_info["name"]
+    #         submenu = make_submenu(parent_menu, node_name)
+    #         # 展开submenu
+    #         for elem in dict_info["members"]:  # 递归
+    #             self.make_label(parent_listbox, elem)
+    #     else:
+    #         parent_listbox.make_item(dict_info)
+
+    def make_unit(self, parent_box, dict_group):
+        """ parent_box: a QToolBox widget """
+        unit_list = DragListWidget(parent_box)
+        for dict_member in dict_group["members"]:
+            if "members" in dict_member:
+                # box = QToolBox(self.parent)
+                # self.make_unit(box, dict_member)
+                # unit_list.addItem(box)
+                assert True, f"目前尚不支持超过2级菜单的结构"
+                unit_list.addItem(dict_member["name"])
+
+            else:
+                unit_list.make_item(dict_member)
+
+        parent_box.addItem(unit_list, dict_group["name"])
 
 
 from PyQt5.QtWidgets import QToolBar
