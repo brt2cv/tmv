@@ -1,8 +1,27 @@
 from core.plugin.filter import Filter
 from core import g, info
 
-from .color import HistogramTool
-class TestPlugin(HistogramTool):
+
+from core.plugin import Plugin
+from utils.base import rpath2curr
+class ListBoxDialog(Plugin):
+    # def __init__(self):
+
+    def run(self):
+        from core.menu import ListBoxCreator
+        from utils.qt5 import make_dialog
+
+        def make_listbox(parent):
+            opt_mgr = ListBoxCreator(parent)
+            opt_mgr.load_conf("app/mvtool/config/menu.json")
+            return opt_mgr.listbox
+
+        dlg = make_dialog(g.get("mwnd"),
+                          make_listbox)
+        dlg.show()
+
+# from .color import HistogramTool
+class TestPlugin(ListBoxDialog):
     """ 测试插件 """
 
 #####################################################################
@@ -85,3 +104,5 @@ class ImgStackScripts(Filter):
         msgbox.setCancelButtonText("关闭")
         msgbox.setTextValue("\n".join(list_scripts))
         msgbox.show()
+
+
