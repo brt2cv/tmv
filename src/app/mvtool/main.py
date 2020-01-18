@@ -20,7 +20,7 @@ class ModulePlugin:
         conf_mgr.load_conf("app", 1, rpath2curr("config/settings.ini"))
 
     def check_license(self):
-        from core.register import checker
+        from core.register import LicenseChecker
         from core import progress
 
         # windll.user32.MessageBoxW(0, "正在检查授权状态...", "授权检查", 0)
@@ -28,6 +28,7 @@ class ModulePlugin:
         progress("授权检查", "正在检查授权状态...", 150)
 
         try:
+            checker = LicenseChecker()
             state, reason = checker.check('experienced')
             if state == 0:
                 logger.debug("软件已授权")

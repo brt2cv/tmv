@@ -13,10 +13,11 @@ class ModulePlugin:
         # self.run_console()
 
     def check_license(self):
-        from core.register import checker
+        from core.register import LicenseChecker
         self.timer = None
 
         try:
+            checker = LicenseChecker()
             state, reason = checker.check('experienced')
             if state == 0:
                 logger.debug("软件已授权")

@@ -1,4 +1,4 @@
-# Based on: Register Code Generator/Server, [v0.1.4] 2019/12/10
+# Based on: Register Code Generator/Server, [v0.1.5] 2020-01-18
 
 import os
 import uuid
@@ -9,20 +9,6 @@ import rsa
 from utils.sock.routine import TcpClient
 from .regm.protocal import RegCodeTrans
 from .regm.encrypt import RsaCrypto
-
-from core import getLogger
-logger = getLogger()
-
-# 读取配置文件
-from .. import conf_mgr
-IPADDR = conf_mgr.get("core", "server", "ipaddr")
-PORT = int(conf_mgr.get("core", "server", "port"))
-
-DIR_REGCONF = conf_mgr.get("core", "path", "dir_conf")
-if not os.path.exists(DIR_REGCONF):
-    os.makedirs(DIR_REGCONF)
-PATH_UUID = os.path.join(DIR_REGCONF, "uuid.txt")
-PATH_CERT = os.path.join(DIR_REGCONF, conf_mgr.get("core", "path", "certificate"))
 
 
 class ClientCrypto(RsaCrypto):
@@ -38,15 +24,30 @@ VrNkR/XfAv1NwzaOneSnSc82CY65kgu1/cB8Tm9+dpT8/qigQcai38QTZ+Vwj+E4
 
 #####################################################################
 
+from utils.base import singleton
+@singleton
 class LicenseChecker:
     def __init__(self):
         self.crypto = ClientCrypto()
         self.dict_license = None
+        self.read_conf()  # 延迟读取配置
 
-    def conn_server(self, ipaddr, port, path_cert):
-        self.ipaddr = ipaddr
-        self.port = port
-        self.path_cert = path_cert
+    def read_conf(self):
+        from .. import conf_mgr
+
+        self.ipaddr = conf_mgr.get("core", "server", "ipaddr")
+        self.port = int(conf_mgr.get("core", "server", "port"))
+
+        DIR_REGCONF = conf_mgr.get("core", "path", "dir_conf")
+        if not os.path.exists(DIR_REGCONF):
+            os.makedirs(DIR_REGCONF)
+        self.path_uuid = os.path.join(DIR_REGCONF, "uuid.txt")
+        self.path_cert = os.path.join(DIR_REGCONF, conf_mgr.get("core", "path", "certificate"))
+
+    # def conn_server(self, ipaddr, port, path_cert):
+    #     self.ipaddr = ipaddr
+    #     self.port = port
+    #     self.path_cert = path_cert
 
     def _download_license(self, license_code):
         client = TcpClient((self.ipaddr, self.port))
@@ -63,7 +64,7 @@ class LicenseChecker:
     def check(self, license_code):
         if not os.path.exists(self.path_cert):
             # 策略2: 使用本地授权
-            with open(PATH_UUID, "w") as fp:
+            with open(self.path_uuid, "w") as fp:
                 machine_node = uuid.getnode()
                 fp.write(str(machine_node))
             raise ConnectionError("尚未注册授权的机器。正在生成授权码...")
@@ -132,10 +133,6 @@ class LicenseChecker:
             list_deadline = [int(x) for x in list_datestr]
             deadline = date(*list_deadline)
             return deadline
-
-
-checker = LicenseChecker()
-checker.conn_server(IPADDR, PORT, PATH_CERT)
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ import json
 from datetime import date, timedelta
 from utils.sock.trans import TransBase, json2dict
 
-from core import getLogger
+from utils.log import getLogger
 logger = getLogger()
 
 class RegCodeTrans(TransBase):
