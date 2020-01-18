@@ -11,6 +11,10 @@ class ConfigManager:
 
     def load_conf(self, series, level, path_file):
         """ 支持导入ini/json文件 """
+        if not osp.exists(path_file):
+            # logger.warning(f"为找到配置文件：【{path_file}】")
+            return
+
         ext = osp.splitext(path_file)[1]
         if ext == ".ini":
             settings = IniConfigSettings()
