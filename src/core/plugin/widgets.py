@@ -95,7 +95,6 @@ class TplWidgetsManager:
         from utils.qt5wx.wx_plot import UnitPlot
         wx = UnitPlot(
                 self.parent,
-                dict_elem["plot"],
                 dict_elem.get("name", "")
             )
         return wx

@@ -39,7 +39,7 @@ class SetMvlibBackend(DialogFilter):
     }]
 
     def accepted(self):
-        str_backend = self.widgets["backend"].get_text()
+        str_backend = self.widgets["MVLib Backend"].get_text()
         mvlib.set_backend(str_backend)
         mvlib.reload()
         g.call("prompt", f"Using【{str_backend}】Backend")
@@ -52,7 +52,7 @@ class SetMvlibBackend(DialogFilter):
             self.setup_ui()
             self.needSetupUi = False
         curr_backend = mvlib.get_backend()
-        self.widgets["backend"].set_value(self._set_radio(curr_backend))
+        self.widgets["MVLib Backend"].set_value(self._set_radio(curr_backend))
         self.show()
 
 

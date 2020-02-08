@@ -78,6 +78,11 @@ class Filter(FilterBase):
         ips = im_mgr.get_snap()
         return ips
 
+    def get_curr_image(self):
+        im_mgr = g.get("canvas").get_container()
+        ips = im_mgr.get_image()
+        return ips
+
     def set_image(self, im_arr):
         """ 将处理完成的图像，更新到主界面 """
         g.get("canvas").set_image(im_arr)
@@ -153,15 +158,14 @@ class DialogFilter(QDialog, Filter):
         tpl_wx_mgr = TplWidgetsManager(self)
         for dict_wx in self.view:
             wx = tpl_wx_mgr.parse_elem(dict_wx)
+
             para_name = dict_wx.get("para")
             if para_name:
-                para_val = dict_wx.get("val_init", 0)
-                if "para" in dict_wx:
-                    self.paras[para_name] = para_val
+                self.paras[para_name] = dict_wx.get("val_init", 0)
                 wx.set_slot(partial(self.on_para_changed, para_name, wx))
 
             self.mlayout.addWidget(wx)
-            self.widgets[para_name] = wx
+            self.widgets[dict_wx["name"]] = wx
 
     # def on_btn_clicked(self, btn):
     #     try:

@@ -132,19 +132,42 @@ class HistogramTool(DialogFilter):
     def processing(self, im_arr):
         return mvlib.filters.hist_normalize(im_arr)
 
+    def preview(self):
+        super().preview()
+
+        def plot_overlay(figure):
+            im_curr = self.get_curr_image()
+            # 不清理之前的axes，叠加绘制
+            axes = figure.get_axes()[0]
+            axes.hist(im_curr.ravel(), 255)
+
+        unit_plot = self.widgets["Histogram"]
+        unit_plot.show(plot_overlay)
+
+    def reset(self):
+        super().reset()
+        unit_plot = self.widgets["Histogram"]
+        unit_plot.show(self.update_plot)
+
+    def update_plot(self, figure):
+        list_axes = figure.get_axes()
+        axes = list_axes[0] if list_axes else figure.add_subplot(111)
+        axes.clear()
+
+        # import mvlib
+        # hist, bins = mvlib.exposure.histogram()
+        axes.hist(self.get_image().ravel(), 255)
+
     def run(self):
-        def plot(figure):
-            # import mvlib
-            # hist, bins = mvlib.exposure.histogram()
-            axes = figure.add_subplot(111)
-            axes.hist(self.get_image().ravel(), 256)
-
         if self.check_format():
-            self.view[0]["plot"] = plot
-
             if self.needSetupUi:
                 self.setup_ui()  # 延迟构造窗口UI
                 self.needSetupUi = False
+
+            # 更新pyplot显示
+            unit_plot = self.widgets["Histogram"]
+            unit_plot.show(self.update_plot)
+
             self.show()
             # 无需自动预览
 
