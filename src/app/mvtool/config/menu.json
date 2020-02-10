@@ -15,11 +15,6 @@
                 "icon": "app/mvtool/res/save.png",
                 "shortcut": "Ctrl+S",
                 "plugin": "file.SaveAsImageFile"
-            },
-            {
-                "name": "Resize",
-                "description": "缩放",
-                "plugin": "file.ResizeImageFile"
             }
         ]
     },
@@ -55,6 +50,41 @@
                 "icon": "app/mvtool/res/close.png",
                 "plugin": "view.CloseViewerLabel"
             }
+        ]
+    },
+    {
+        "name": "Image",
+        "members": [
+            {
+                "name": "Resize",
+                "description": "缩放",
+                "plugin": "image.ResizeImage"
+            },
+            {
+                "name": "Rescale",
+                "description": "比例缩放",
+                "plugin": "image.RescaleImage"
+            },
+            // {
+            //     "name": "Flip",
+            //     "description": "翻转-镜像",
+            //     "plugin": "image.FlipImage"
+            // },
+            {
+                "name": "Rotate",
+                "description": "比例缩放",
+                "plugin": "image.RotateImage"
+            },
+            // {
+            //     "name": "Projection",
+            //     "description": "投影",
+            //     "plugin": "image.Projection"
+            // },
+            // {
+            //     "name": "Affine",
+            //     "description": "仿射变换",
+            //     "plugin": "image.AffineImage"
+            // }
         ]
     },
     {

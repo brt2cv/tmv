@@ -1,7 +1,7 @@
 import mvlib
 from utils.imgio import pillow2ndarray
 from core import g, alert, conf_mgr
-from core.plugin.filter import Filter, DialogFilter
+from core.plugin.filter import Filter
 
 scaling = None  # False if not compress
 def _read_scaling():
@@ -136,35 +136,6 @@ class SaveAsImageFile(Filter):
             ips = self.get_image()
             utils.imgio.imwrite(file_name, ips)
             g.call("prompt", f"图像已存储至：{file_name}", 5)
-
-
-class ResizeImageFile(DialogFilter):
-    title = "Resize Image"
-    view = [{
-        "type": "edit",
-        "name": "width  ",
-        "isCheckbox": False,
-        "para": "width"
-    },{
-        "type": "edit",
-        "name": "height ",
-        "isCheckbox": False,
-        "para": "height"
-    }]
-    scripts = "{output} = mvlib.transform.resize({im}, {size})"
-
-    def processing(self, im_arr):
-        width = int(self.paras["width"])
-        height = int(self.paras["height"])
-        self.paras["size"] = [width, height]  # commit scripts para
-        return mvlib.transform.resize(im_arr, self.paras["size"])
-
-    def run(self):
-        ips = self.get_image()
-        w, h = ips.shape[:2]
-        self.view[0]["val_init"] = w
-        self.view[1]["val_init"] = h
-        super().run()
 
 
 from core.imgio import ImgIOManager
