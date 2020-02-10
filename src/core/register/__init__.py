@@ -49,31 +49,30 @@ class LicenseChecker:
     #     self.port = port
     #     self.path_cert = path_cert
 
-    def _download_license(self, license_code):
-        client = TcpClient((self.ipaddr, self.port))
-        protocal = RegCodeTrans(self.crypto)
-        protocal.set_cert_path(self.path_cert)
-        client.set_protocal(protocal)
+    def manual_authorize(self):
+        """ 策略2: 使用本地授权 """
+        with open(self.path_uuid, "w") as fp:
+            machine_node = uuid.getnode()
+            fp.write(str(machine_node))
+        return machine_node
 
-        # client.listen()
-        client.protocal.register(license_code)  # 注册license
-        client.recv_whole()
-        # client.join()
-        client.stop()
-
-    def check(self, license_code):
+    def check(self, version: list):
         if not os.path.exists(self.path_cert):
-            # 策略2: 使用本地授权
-            with open(self.path_uuid, "w") as fp:
-                machine_node = uuid.getnode()
-                fp.write(str(machine_node))
-            raise ConnectionError("尚未注册授权的机器。正在生成授权码...")
+            try:
+                client = TcpClient((self.ipaddr, self.port))
+                protocal = RegCodeTrans(self.crypto)
+                protocal.set_cert_path(self.path_cert)
+                client.set_protocal(protocal)
 
-            # self._download_license(license_code)
-            # except TimeoutError:
-            #     description = f"无法连接到授权服务器【{self.ipaddr}】，无法获取授权"
-            #     logger.error(description)
-            #     return 2, description
+                # client.listen()
+                client.protocal.register(version)  # 注册license
+                client.recv_whole()
+                # client.join()
+                client.stop()
+
+            except TimeoutError:
+                description = f"无法连接到授权服务器【{self.ipaddr}】，无法获取授权"
+                return 2, description
 
         status = self._check_certificate(self.path_cert)
         # self.state, self.description = status

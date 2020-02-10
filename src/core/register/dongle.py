@@ -38,7 +38,7 @@ def getopt():
     parser = argparse.ArgumentParser("MVTool加密狗", description="")
     parser.add_argument("uuid", action="store", help="注册机器的UUID编码")
     parser.add_argument("-t", "--trytime", action="store", default=1, help="试运行的时长")
-    parser.add_argument("-d", "--deadline", action="store", default="2020-01-30", help="授权截止日期")
+    parser.add_argument("-d", "--deadline", action="store", help="授权截止日期")  # 2020-01-30
     return parser.parse_args()
 
 
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     # machine_code = uuid.getnode()  # int
 
     dict_info = {
-        "license": "triage_v0.2",
+        # "license": "triage_v1.0",
         "machine": args.uuid,
         "trytime": args.trytime,
         "deadline": args.deadline

@@ -38,6 +38,12 @@ class RegCodeTrans(TransBase):
     #     else:
     #         self.ask_for_pubkey()
 
+    def load_strategy(self):
+        # 权限管理策略
+        with open(os.path.join(
+            os.path.dirname(__file__), "strategy.json"), "r") as fp:
+            self.strategy = json.load(fp)
+
     ###########################################################################
     def reply(self, msg: bytes, sock1addr=None):
         # logger.debug("接收到消息：【{}】".format(msg))
@@ -96,19 +102,19 @@ class RegCodeTrans(TransBase):
         with open("./pem/public.pem", "wb") as fp:
             fp.write(bytes_pubkey)
 
-    def register(self, license):
+    def register(self, version: list):
+        """ version: ["triage", "v1.0.1"] """
         import uuid
         machine_code = uuid.getnode()  # int
 
         dict_msg = {
             "type": "Register",
-            "license": license,
+            "version": version,
             "machine_id": machine_code
         }
         self.send_cmd(dict_msg)
 
     def reply_register(self, dict_msg, sock1addr):
-        license = dict_msg["license"]
         dict_msg_ret = {"type": "Register"}
 
         # license的唯一性(有限个机器)检查
@@ -132,14 +138,18 @@ class RegCodeTrans(TransBase):
         """ return a text """
         # 查询license有效期，在此实现有效期认证逻辑...
         dict_info = {
-            "license": dict_msg["license"],
+            "version": dict_msg["version"],
             "machine": dict_msg["machine_id"],
-            "trytime": STRATEGY["unauthorized"].get("trytime", "0")
+            "trytime": self.strategy["unauthorized"].get("trytime", "0")
         }
 
-        license = dict_msg["license"]
-        if license in STRATEGY:
-            stratergy = STRATEGY[license]
+        version = dict_msg["version"]
+        # if version in self.strategy:
+        try:
+            stratergy = self.strategy
+            for part in version:
+                stratergy = stratergy[part]
+
             if "trytime" in stratergy:
                 dict_info["trytime"] = stratergy["trytime"]
             if "deadline" in stratergy:
@@ -148,6 +158,8 @@ class RegCodeTrans(TransBase):
                 probation = int(stratergy["probation"])
                 deadline = date.today() + timedelta(days=probation)
                 dict_info["deadline"] = deadline.isoformat()
+        except KeyError:
+            logger.error(f"未知的version:【{version}】")
 
         certificate = json.dumps(dict_info)
         signature = self.crypto.sign(certificate).decode()
