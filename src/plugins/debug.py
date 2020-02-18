@@ -1,23 +1,22 @@
 from core.plugin.filter import Filter
-from core import g, info, conf_mgr
+from core import g, info
 
 
 from core.plugin import Plugin
-class DragList(Plugin):
+class DragListbox(Plugin):
     def run(self):
-        from core.menu import ListBoxCreator
+        from app.mvtool.view.draglist import ListBoxCreator
         from utils.qt5 import make_dialog
 
         def make_listbox(parent):
-            path_conf_draglist = conf_mgr.get("app", "conf", "draglist")
-            return ListBoxCreator(parent, path_conf_draglist).widget()
+            return ListBoxCreator(parent).widget()
 
         dlg = make_dialog(g.get("mwnd"),
                           make_listbox)
         dlg.show()
 
 # from .color import HistogramTool
-class TestPlugin(DragList):
+class TestPlugin(DragListbox):
     """ 测试插件 """
 
 #####################################################################
