@@ -268,7 +268,49 @@
         ]
     }
 ],
-"listbox": [
+"toolbar": [
+    {
+        "name": "Default",
+        "members": [
+            {
+                "name": "新建标签",
+                "icon": "app/mvtool/res/New.png",
+                "plugin": "view.NewViewerLabel"
+            },
+            {
+                "name": "打开图像",
+                "icon": "app/mvtool/res/open.png",
+                "plugin": "file.OpenImageFile"
+            },
+            {
+                "name": "图像另存",
+                "icon": "app/mvtool/res/save.png",
+                 "plugin": "file.SaveAsImageFile"
+            },
+            {
+                "name": "撤销",
+                "icon": "app/mvtool/res/prev.png",
+                "plugin": "edit.Undo"
+            },
+            {
+                "name": "恢复",
+                "icon": "app/mvtool/res/next.png",
+                "plugin": "edit.Redo"
+            },
+            {
+                "name": "功能测试",
+                "icon": "app/mvtool/res/verify.png",
+                "plugin": "debug.TestPlugin"
+            },
+            {
+                "name": "重载插件",
+                "icon": "app/mvtool/res/resetall.png",
+                "plugin": "ReloadPlugins"
+            }
+        ]
+    }
+],
+"draglist": [
     {
         "name": "Color",
         "members": [
@@ -401,48 +443,6 @@
             {
                 "name": "Sobel梯度算子",
                 "plugin": "morphology.Sobel"
-            }
-        ]
-    }
-],
-"toolbar": [
-    {
-        "name": "Default",
-        "members": [
-            {
-                "name": "新建标签",
-                "icon": "app/mvtool/res/New.png",
-                "plugin": "view.NewViewerLabel"
-            },
-            {
-                "name": "打开图像",
-                "icon": "app/mvtool/res/open.png",
-                "plugin": "file.OpenImageFile"
-            },
-            {
-                "name": "图像另存",
-                "icon": "app/mvtool/res/save.png",
-                 "plugin": "file.SaveAsImageFile"
-            },
-            {
-                "name": "撤销",
-                "icon": "app/mvtool/res/prev.png",
-                "plugin": "edit.Undo"
-            },
-            {
-                "name": "恢复",
-                "icon": "app/mvtool/res/next.png",
-                "plugin": "edit.Redo"
-            },
-            {
-                "name": "功能测试",
-                "icon": "app/mvtool/res/verify.png",
-                "plugin": "debug.TestPlugin"
-            },
-            {
-                "name": "重载插件",
-                "icon": "app/mvtool/res/resetall.png",
-                "plugin": "ReloadPlugins"
             }
         ]
     }

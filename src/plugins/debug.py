@@ -1,27 +1,23 @@
 from core.plugin.filter import Filter
-from core import g, info
+from core import g, info, conf_mgr
 
 
 from core.plugin import Plugin
-from utils.base import rpath2curr
-class ListBoxDialog(Plugin):
-    # def __init__(self):
-
+class DragList(Plugin):
     def run(self):
         from core.menu import ListBoxCreator
         from utils.qt5 import make_dialog
 
         def make_listbox(parent):
-            opt_mgr = ListBoxCreator(parent)
-            opt_mgr.load_conf("app/mvtool/config/menu.json")
-            return opt_mgr.listbox
+            path_conf_draglist = conf_mgr.get("app", "conf", "draglist")
+            return ListBoxCreator(parent, path_conf_draglist).widget()
 
         dlg = make_dialog(g.get("mwnd"),
                           make_listbox)
         dlg.show()
 
 # from .color import HistogramTool
-class TestPlugin(ListBoxDialog):
+class TestPlugin(DragList):
     """ 测试插件 """
 
 #####################################################################

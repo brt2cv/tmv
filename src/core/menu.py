@@ -54,20 +54,21 @@ class MenubarCreator:
 
 
 from PyQt5.QtWidgets import QToolBox
-from .listbox import DragListWidget
 class ListBoxCreator:
-    def __init__(self, parent):
+    def __init__(self, parent, path_conf):
         self.parent = parent
 
-    def load_conf(self, path_conf):
         with open(path_conf, "r", encoding='utf8') as fp:
             dict_conf = json.load(fp)
 
-        plug_list = "listbox" if "listbox" in dict_conf else "menubar"
+        plug_list = "draglist" if "draglist" in dict_conf else "menubar"
         top_box = QToolBox(self.parent)
         for menu_group_info in dict_conf[plug_list]:
             self.make_unit(top_box, menu_group_info)
         self.listbox = top_box
+
+    def widget(self):
+        return self.listbox
 
     # def make_label(self, parent_listbox, dict_info):
     #     if "members" in dict_info:
@@ -81,6 +82,8 @@ class ListBoxCreator:
 
     def make_unit(self, parent_box, dict_group):
         """ parent_box: a QToolBox widget """
+        from .draglist import DragListWidget
+
         unit_list = DragListWidget(parent_box)
         for dict_member in dict_group["members"]:
             if "members" in dict_member:
@@ -103,6 +106,7 @@ icon_size = -1
 def _get_iconsize():
     """ 运行时加载 """
     global icon_size
+
     from core import conf_mgr
     icon_size = conf_mgr.get("app", "gui", "icon_size")
     icon_size = int(icon_size) if icon_size else None
