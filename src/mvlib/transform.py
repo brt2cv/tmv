@@ -45,25 +45,32 @@ def resize(im, output_shape, antialias=True):
         )()
 
 def rescale(im, scale):
-    """ scale could be float or tuple like [0.2, 0.3] """
+    """ scale could be float or tuple(row, colulmn) like [0.2, 0.3] """
+    shape = list(im.shape)
+    try:
+        # fx, fy = scale
+        nLen = len(scale)
+        assert nLen <= len(shape), f"当前图像的shape为【{shape}】，不支持{nLen}个缩放参数【{scale}】"
+        list_scale = list(reversed(scale))  # 调换为(column, row)
+    except TypeError:  # scale 为 float
+        list_scale = [scale, scale]
+    list_scale += [1] * (len(shape) -2)
+
     def run_skimage():
-        return transform.rescale(im, scale)
+        return transform.rescale(im, list_scale)
 
     def run_opencv():
-        try:
-            fx, fy = scale
-        except TypeError:
-            fx = fy = scale
-        return cv2.resize(im, None, fx, fy)
+        return cv2.resize(im, None, list_scale[0], list_scale[1])
 
     return run_backend(
             func_skimage=run_skimage,
             func_opencv=run_opencv
         )()
 
-def rotate(im, angle):
+def rotate(im, angle, expand=False):
+    """ angle: 逆时针角度 """
     def run_skimage():
-        return transform.rotate(im, angle)
+        return transform.rotate(im, angle, resize=expand)
 
     def run_opencv():
         # cv2.flip(im, flipCode)  # 翻转
@@ -74,7 +81,7 @@ def rotate(im, angle):
 
     def run_pillow():
         # expand：如果设为True，会放大图像的尺寸，以适应旋转后的新图像
-        return im.rotate(angle, expand=False)
+        return im.rotate(angle, expand)
 
     return run_backend(
             func_skimage=run_skimage,
@@ -92,4 +99,54 @@ def pyramid(im, downscale, method="gaussian"):
 
     return run_backend(
             func_skimage=run_skimage,
+        )()
+
+def flip(im, orientation="left_right"):
+    """ orientation: "left_right", "top_bottom" """
+    def run_pillow():
+        return im.transpose({"left_right": Image.FLIP_LEFT_RIGHT,
+                             "top_bottom": Image.FLIP_TOP_BOTTOM}[orientation])
+
+    return run_backend(
+            func_pillow=run_pillow
+        )()
+
+def crop(im, list_pnts):
+    """ size: left,upper,right,lower """
+    nSize = len(list_pnts)
+    if nSize < 4:
+        list_pnts += [None] * (4 - nSize)
+    for idx in range(2):
+        if list_pnts[idx] is None:
+            list_pnts[idx] = 0
+    for idx in range(2,4):
+        if list_pnts[idx] is None:
+            list_pnts[idx] = im.shape[idx-2]
+
+    def run_numpy():
+        return im[list_pnts[1]:list_pnts[3],
+                  list_pnts[0]:list_pnts[2]]
+
+    def run_pillow():
+        return im.crop(list_pnts)
+
+    return run_backend(
+            func_numpy=run_numpy,
+            func_pillow=run_pillow
+        )()
+
+def crop2(im, letf_top: list, size: list):
+    """ 以增量的方式划取ROI """
+    list_pnts = letf_top + [letf_top[0]+size[0], letf_top[1]+size[1]]
+
+    def run_numpy():
+        return im[list_pnts[1]:list_pnts[3],
+                  list_pnts[0]:list_pnts[2]]
+
+    def run_pillow():
+        return im.crop(list_pnts)
+
+    return run_backend(
+            func_numpy=run_numpy,
+            func_pillow=run_pillow
         )()
