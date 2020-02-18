@@ -141,17 +141,22 @@ class MainEntrance:
 
             self.license_timer.start()
 
-    def run_pyqt5(self, MainWndClass, license: bool):
+    def run_pyqt5(self, MainWndClass, check_license: bool):
         from PyQt5.QtWidgets import QApplication
 
         app = QApplication([])
-        if license:
+        if check_license:
             self.check_license()
 
         self.mwnd = MainWndClass(None)
         self.mwnd.show()
+        self.after_mwnd_show()
+
         app.exec_()
         self.cancel_timer()
 
+    def after_mwnd_show(self):
+        """ 在初始化完成后的动作，一般用于自动加载（测试） """
+
     def run(self):
-        pass
+        """ 需要在子类中定义实际运行的调用过程 """
