@@ -67,8 +67,11 @@ if __name__ == '__main__':
         },
         "triage": {
             "path_main": "app/triage/main.py",
-            "lib_expand": ["$dir/rsa"]
+            # "lib_expand": ["$dir/rsa"]
         },
+        "ocrkit": {
+            "path_main": "app/OCRKit/main.py"
+        }
     }
 
     lib_expand = []
