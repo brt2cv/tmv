@@ -65,6 +65,9 @@ if __name__ == '__main__':
         "tmv": {
             "path_main": "app/mvtool/main.py"
         },
+        "viewer": {
+            "path_main": "app/viewer/main.py"
+        },
         "triage": {
             "path_main": "app/triage/main.py",
             # "lib_expand": ["$dir/rsa"]
