@@ -4,7 +4,6 @@
 test -z $1 && action="pull" || action=$1
 
 m_utils="git@gitee.com:brt2/utils.git"
-m_mvlib="git@gitee.com:brt2/mvlib.git"
 # git remote add "m-${dir_module}" $m_utils
 
 function sub_module_pull () {
@@ -33,8 +32,6 @@ branch=$3
 
 if [ $action == "push" ]; then
     sub_module_push src/utils/ $m_utils dev
-    sub_module_push src/mvlib/ $m_mvlib dev
 else
     sub_module_pull src/utils/ $m_utils dev
-    sub_module_pull src/mvlib/ $m_mvlib dev
 fi
