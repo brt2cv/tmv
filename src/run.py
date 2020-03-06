@@ -76,7 +76,7 @@ if __name__ == '__main__':
             # "lib_expand": ["$dir/rsa"]
         },
         "ocrkit": {
-            "path_main": "app/OCRKit/main.py"
+            "path_main": "app/ocrkit/main.py"
         }
     }
 
