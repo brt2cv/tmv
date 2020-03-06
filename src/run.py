@@ -51,7 +51,7 @@ def runApp(path_main, lib_expand: list):
 
 if __name__ == '__main__':
     # 默认的runtime
-    dir_env = "../env/win64"
+    dir_env = "../env"
     expy.venv_expand(dir_env)
 
     args = getopt()

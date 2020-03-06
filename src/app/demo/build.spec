@@ -5,8 +5,7 @@ block_cipher = None
 
 a = Analysis(['../../build.py'],
              pathex=[
-                "../../../env/win64/Lib/rsa",
-                "../../../env/win64/Lib/site-packages"],
+                "../../../env/Lib/site-packages"],
              binaries=[],
              datas=[
                 ("../../core/register/config", "core/register/config"),
