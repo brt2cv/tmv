@@ -62,6 +62,9 @@ if __name__ == '__main__':
 
     # 快捷选项
     MAP_APP = {
+        "serial": {
+            "path_main": "app/serial/main.py"
+        },
         "tmv": {
             "path_main": "app/mvtool/main.py"
         },
