@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
+import os
 from src.utils import expy
+
 expy.venv_expand("env")
 expy.topdir("src", True)
-expy.chdir("src")
+os.chdir("src")
 
+import sys
 from src.run import runApp
-runApp("app/mvtool/main.py", [])
+runApp(sys.argv[1], [])
