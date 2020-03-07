@@ -60,6 +60,8 @@ function pip_init () {
     fi
 }
 
+user_passwd=""
+
 # git-clone下载源码
 repo_serial_http="https://gitee.com/brt2/tmv-serial.git"
 
@@ -74,8 +76,20 @@ repo_tesseract_http="https://gitee.com/brt2/tesseract.git"
 repo_vkb_http="https://gitee.com/brt2/tmv-vkb.git"
 repo_ocrkit_http="https://gitee.com/brt2/tmv-ocrkit.git"
 
+function replace_https () {
+https=$1
+
+    if [ -z $user_passwd ]; then
+        # 使用ssh方式clone
+        tmp=${https/https:\/\//git@}
+        echo ${tmp/.com\//.com:}
+    else
+        echo ${https/:\/\//:\/\/$user_passwd@}
+    fi
+}
+
 function clone_and_pip_install () {
-http_git=$1
+http_git=`replace_https $1`  # 增加passwd
 clone_to=$2
 
     # git clone http://***.git
@@ -125,5 +139,6 @@ if [ $action == "push" ]; then
 elif [ $action == "pull" ]; then
     sub_module_pull src/utils/ $m_utils dev
 else
+    read -p "请输入gitee.com的【账户名:密码】 : " user_passwd
     load_app $action
 fi
