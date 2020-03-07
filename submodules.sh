@@ -71,6 +71,7 @@ repo_heroje_hid_device_http="https://gitee.com/brt2/heroje-hid_device.git"
 repo_viewer_http="https://gitee.com/brt2/tmv-viewer.git"
 
 repo_tesseract_http="https://gitee.com/brt2/tesseract.git"
+repo_vkb_http="https://gitee.com/brt2/tmv-vkb.git"
 repo_ocrkit_http="https://gitee.com/brt2/tmv-ocrkit.git"
 
 function clone_and_pip_install () {
@@ -109,6 +110,7 @@ app=$1
             clone_and_pip_install $repo_viewer_http ./src/app/viewer
 
             clone_and_pip_install $repo_tesseract_http ./src/plugins/tesseract
+            clone_and_pip install $repo_vkb_http ./src/plugins/vkb
             clone_and_pip_install $repo_ocrkit_http ./src/app/${app}
         else
             # git clone "https://gitee.com/brt2/tmv-${app}.git" ./src/app/${app}
