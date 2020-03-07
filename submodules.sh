@@ -1,9 +1,10 @@
 #!/bin/bash
-# Usage: submodule [push|pull]
+# Usage: submodule [push|pull|update|app_module]
 
-test -z $1 && action="pull" || action=$1
+test -z $1 && echo "Error: 请显式定义操作!" && exit
+action=$1
 
-m_utils="git@gitee.com:brt2/utils.git"
+m_utils="https://gitee.com/brt2/utils.git"
 # git remote add "m-${dir_module}" $m_utils
 
 function sub_module_pull () {
@@ -63,18 +64,20 @@ function pip_init () {
 user_passwd=""
 
 # git-clone下载源码
-repo_serial_http="https://gitee.com/brt2/tmv-serial.git"
+repo_serial_http="https://gitee.com/brt2/tmv-serial.git"; dir_serial="./src/app/serial"
 
-repo_mvlib_http="https://gitee.com/brt2/mvlib.git"
-repo_mvtool_http="https://gitee.com/brt2/tmv-mvtool.git"
-repo_triage_http="https://gitee.com/brt2/tmv-triage.git"
+repo_mvlib_http="https://gitee.com/brt2/mvlib.git"; dir_mvlib="./src/plugins/mvlib"
+repo_mvtool_http="https://gitee.com/brt2/tmv-mvtool.git"; dir_mvtool="./src/app/mvtool"
+repo_triage_http="https://gitee.com/brt2/tmv-triage.git"; dir_triage="./src/app/triage"
 
-repo_heroje_hid_device_http="https://gitee.com/brt2/heroje-hid_device.git"
-repo_viewer_http="https://gitee.com/brt2/tmv-viewer.git"
+repo_heroje_hid_device_http="https://gitee.com/brt2/heroje-hid_device.git"; dir_heroje_hid_device="./src/plugins/heroje_hid_device"
+repo_viewer_http="https://gitee.com/brt2/tmv-viewer.git"; dir_viewer="./src/app/viewer"
 
-repo_tesseract_http="https://gitee.com/brt2/tesseract.git"
-repo_vkb_http="https://gitee.com/brt2/tmv-vkb.git"
-repo_ocrkit_http="https://gitee.com/brt2/tmv-ocrkit.git"
+repo_tesseract_http="https://gitee.com/brt2/tesseract.git"; dir_tesseract="./src/plugins/tesseract"
+repo_vkb_http="https://gitee.com/brt2/tmv-vkb.git"; dir_vkb="./src/plugins/vkb"
+repo_ocrkit_http="https://gitee.com/brt2/tmv-ocrkit.git"; dir_ocrkit="./src/app/ocrkit"
+
+repo_list=($dir_serial $heroje_hid_device $mvtool $dir_triage $dir_heroje_hid_device $dir_viewer $dir_tesseract $dir_vkb $dir_ocrkit)
 
 function replace_https () {
 https=$1
@@ -115,17 +118,20 @@ app=$1
         echo "子目录已存在 --> ./src/app/${app}"
     else
         if [ $app == "serial" ]; then
-            clone_and_pip_install $repo_serial_http ./src/app/${app}
+            clone_and_pip_install $repo_serial_http $dir_serial
         elif [ $app == "mvtool" ]; then
-            clone_and_pip_install $repo_mvlib_http ./src/plugins/mvlib
-            clone_and_pip_install $repo_mvtool_http ./src/app/${app}
+            clone_and_pip_install $repo_mvlib_http $dir_mvlib
+            clone_and_pip_install $repo_mvtool_http $dir_mvtool
+        elif [ $app == "triage" ]; then
+            clone_and_pip_install $repo_mvlib_http $dir_mvlib
+            clone_and_pip_install $repo_triage_http $dir_triage
         elif [ $app == "ocrkit" ]; then
-            clone_and_pip_install $repo_heroje_hid_device_http ./src/plugins/heroje_hid_device
-            clone_and_pip_install $repo_viewer_http ./src/app/viewer
+            clone_and_pip_install $repo_heroje_hid_device_http $dir_heroje_hid_device
+            clone_and_pip_install $repo_viewer_http $dir_viewer
 
-            clone_and_pip_install $repo_tesseract_http ./src/plugins/tesseract
-            clone_and_pip install $repo_vkb_http ./src/plugins/vkb
-            clone_and_pip_install $repo_ocrkit_http ./src/app/${app}
+            clone_and_pip_install $repo_tesseract_http $dir_tesseract
+            clone_and_pip install $repo_vkb_http $dir_vkb
+            clone_and_pip_install $repo_ocrkit_http $dir_ocrkit
         else
             # git clone "https://gitee.com/brt2/tmv-${app}.git" ./src/app/${app}
             echo "[Error] 未知的app名称，请检查"
@@ -140,5 +146,11 @@ elif [ $action == "pull" ]; then
     sub_module_pull src/utils/ $m_utils dev
 else
     read -p "请输入gitee.com的【账户名:密码】 : " user_passwd
-    load_app $action
+    if [ $action == "update" ]; then
+        for dir in ${repo_list[*]}; do
+            test -d $dir && echo -n "$dir --> " && git pull
+        done
+    else
+        load_app $action
+    fi
 fi
