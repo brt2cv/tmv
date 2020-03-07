@@ -3,8 +3,8 @@
 # Usage:
 # Author:       Bright Li
 # Modified by:
-# Created:      2020-01-07
-# Version:      [0.1.2]
+# Created:      2020-03-06
+# Version:      [0.1.3]
 # RCS-ID:       $$
 # Copyright:    (c) Bright Li
 # Licence:
@@ -18,10 +18,13 @@ from .debug import get_caller_path
 # logger = getLogger()
 
 isPy3 = sys.version_info.major >= 3
-# isPy36 = sys.version_info[0:2] >= (3, 6)
+# isPy36 = sys.version_info[:2] >= (3, 6)
+
+from platform import system
+isWindows = system() == "Windows"
 
 if isPy3:
-    if sys.version_info[0:2] >= (3, 6):
+    if sys.version_info[:2] >= (3, 6):
         from pathlib import Path
         def isPath(f):
             return isinstance(f, (bytes, str, Path))
@@ -51,7 +54,7 @@ def rpath2abs(path_rel, start=None):
 
 #####################################################################
 
-_instance = {}  # 略显丑陋
+_instance = {}  # 略显丑陋，进程不安全（Python多进程不共享全局变量）
 def singleton(cls):
     # 对于单例类，无法通过继承的方式节省代码
     def inner():

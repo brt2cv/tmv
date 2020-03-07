@@ -13,8 +13,7 @@ def chdir_topdir(dir_dst, override=False):
 chdir_topdir("../..", True)  # src
 # import sys; print(sys.path)
 from utils import expy
-expy.venv_expand("../env/win64")
-expy.site_expand("../env/win64/Lib/rsa")
+expy.venv_expand("../env")
 
 
 if __name__ == "__main__":

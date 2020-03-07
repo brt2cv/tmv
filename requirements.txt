@@ -1,7 +1,2 @@
-imageio
-Pillow
-numpy
-matplotlib
-opencv-python
 PyQt5==5.12
 rsa

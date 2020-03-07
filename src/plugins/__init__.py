@@ -6,12 +6,21 @@ __all__ = __submodule__ + ["ReloadPlugins", "AboutMe"]
 
 
 import core
-from mvlib import reload as reload_mvlib
+
 from core.plugin.filter import Filter
 from utils.base import reload_package
+
+try:
+    from mvlib import reload as reload_mvlib
+    has_mvlib = True
+except ImportError:
+    has_mvlib = False
+
 class ReloadPlugins(Filter):
     def run(self):
-        reload_mvlib()  # 重载mvlib依赖
+        if has_mvlib:
+            reload_mvlib()  # 重载mvlib依赖
+
         # _import_submodules(True)  # 重载插件
         reload_package("plugins")
         reload_package("app/triage/plugins")

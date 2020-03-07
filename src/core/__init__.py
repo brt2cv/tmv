@@ -77,7 +77,10 @@ def progress(title, msg, steps):
 
 
 logger = getLogger()
-from ctypes import windll
+from utils.base import isWindows
+if isWindows:
+    from ctypes import windll
+
 class MainEntrance:
     """ 默认支持License授权的入口类 """
     LicenseID = ""  # "triage"

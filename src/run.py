@@ -51,7 +51,7 @@ def runApp(path_main, lib_expand: list):
 
 if __name__ == '__main__':
     # 默认的runtime
-    dir_env = "../env/win64"
+    dir_env = "../env"
     expy.venv_expand(dir_env)
 
     args = getopt()
@@ -62,6 +62,9 @@ if __name__ == '__main__':
 
     # 快捷选项
     MAP_APP = {
+        "serial": {
+            "path_main": "app/serial/main.py"
+        },
         "tmv": {
             "path_main": "app/mvtool/main.py"
         },
@@ -73,7 +76,7 @@ if __name__ == '__main__':
             # "lib_expand": ["$dir/rsa"]
         },
         "ocrkit": {
-            "path_main": "app/OCRKit/main.py"
+            "path_main": "app/ocrkit/main.py"
         }
     }
 
