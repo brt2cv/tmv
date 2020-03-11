@@ -28,9 +28,9 @@ class Canvas(QWidget):
     selectionChanged = pyqtSignal(bool)
     shapeMoved = pyqtSignal()
     drawingPolygon = pyqtSignal(bool)
+    interactMouseClicked = pyqtSignal()
 
     CREATE, EDIT = list(range(2))
-
     epsilon = 11.0
 
     def __init__(self, *args, **kwargs):
@@ -62,6 +62,8 @@ class Canvas(QWidget):
         self.setFocusPolicy(Qt.WheelFocus)
         self.verified = False
         self.drawSquare = False
+
+        self.interacting = False
 
     def setDrawingColor(self, qColor):
         self.drawingLineColor = qColor
@@ -213,6 +215,16 @@ class Canvas(QWidget):
 
     def mousePressEvent(self, ev):
         pos = self.transformPos(ev.pos())
+
+        if self.interacting:
+            if ev.button() == Qt.LeftButton:
+                if self.outOfPixmap(pos):
+                    QMessageBox.warning(self, "Error", "选取点位超出图像区域，请重新选取")
+                    return
+
+                self.selected_pos = [int(pos.x()), int(pos.y())]
+                self.interactMouseClicked.emit()
+                return
 
         if ev.button() == Qt.LeftButton:
             if self.drawing():
